@@ -33,7 +33,7 @@ Text on a family colour is white, except on data (amber) where it is ink. Both p
 
 ## Type
 
-- Body and titles: Inter Tight (Google Fonts). 400 body, 600 labels, 700 titles.
+- Body and titles: Inter Tight, self-hosted from `public/fonts` (no request to Google). 400 body, 600 labels, 700 titles.
 - Mono: IBM Plex Mono. 400 and 600. Used for values, chips, zone labels, legend.
 - Node title 21px/24px, weight 700, letter-spacing -0.01em.
 - Node kind 12px, opacity .85 on the family band.
