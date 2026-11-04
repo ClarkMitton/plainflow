@@ -183,12 +183,12 @@
 
   "verdict": [
     { "id": "stop", "label": "No, not like this", "when": "stop_count > 0", "say": "This hits a hard line. Each one below says why, and how to get past it." },
-    { "id": "not_like_this", "label": "Not like this", "when": "blocked_count > 0", "say": "Your organisation's policy doesn't allow this route. The red wire says why, and gives two ways out." },
+    { "id": "not_like_this", "label": "Not this way", "when": "blocked_count > 0", "say": "Your organisation's policy doesn't allow this route. The red wire says why, and gives two ways out." },
     { "id": "consult", "label": "Only after asking the ICO", "when": "consult_count > 0", "say": "Try the ways out first. If the risk stays high, the ICO must be consulted before this starts." },
-    { "id": "needs_owner", "label": "Needs someone to own the risk", "when": "outcome != 'not_required' && risk_owner == null", "say": "There's risk left to accept. Someone with the authority to change the project has to own it and decide. The DPO advises; they don't approve." },
-    { "id": "owner_decides", "label": "{risk_owner} decides, once these are done", "when": "outcome != 'not_required'", "say": "{risk_owner} decides whether to accept the risk that's left, in writing, once the to do items are done. The DPO's advice is recorded either way." },
-    { "id": "go_once", "label": "Go once these are done", "when": "open_count > 0", "say": "This can go ahead once the items marked to do are done." },
-    { "id": "go", "label": "Go", "when": "true", "say": "Nothing open. Keep the screening record with the flow." }
+    { "id": "needs_owner", "label": "Yes, if someone senior signs it off", "when": "outcome != 'not_required' && risk_owner == null", "say": "Some risk is left, and someone with the authority to change the project has to accept it in writing. Say who under 'Who decides'. The DPO advises; they don't approve." },
+    { "id": "owner_decides", "label": "Yes, once {risk_owner} signs it off", "when": "outcome != 'not_required'", "say": "Once the to do items are done, {risk_owner} decides whether to accept the risk that's left, in writing. The DPO's advice is recorded either way." },
+    { "id": "go_once", "label": "Yes, once these are done", "when": "open_count > 0", "say": "This can go ahead once the items marked to do are done." },
+    { "id": "go", "label": "Yes", "when": "true", "say": "Nothing left to do. Keep the screening record with the flow." }
   ],
 
   "always_human": {
@@ -217,9 +217,9 @@
       { "id": "vulnerable", "label": "vulnerable", "kind": "toggle", "face": true, "sentence": "Are they in a position where they can't easily say no or understand what's happening?", "example": "Learners, patients, people in care." }
     ],
     "data": [
-      { "id": "identifiability", "label": "names on it", "kind": "choice", "face": true, "options": [["named", "Named"], ["pseudonymised", "Pseud"], ["anonymised", "Anon"], ["aggregated", "Agg"]], "sentence": "Can you tell who someone is from this?", "example": "Named has their name on it; pseudonymised uses a code you can look up; anonymised nobody can look up; aggregated is totals only." },
-      { "id": "about_performance", "label": "how they're doing", "kind": "toggle", "face": true, "sentence": "Does it say anything about a named person's performance, progress, behaviour or needs?", "example": "Marks, attendance, support notes." },
-      { "id": "special_category", "label": "special category", "kind": "toggle", "face": true, "sentence": "Does it reveal health, ethnicity, religion, sexual orientation, union membership, biometrics, or criminal matters?", "example": "SEND notes, a sick note, a dietary requirement that reveals religion." },
+      { "id": "identifiability", "label": "names on it", "kind": "choice", "face": true, "options": [["named", "Names"], ["pseudonymised", "Coded"], ["anonymised", "Anonymous"], ["aggregated", "Totals"]], "sentence": "Can you tell who someone is from this?", "example": "Names means their name is on it; coded means a code you can look up; anonymous means nobody can look up who it is; totals means numbers only." },
+      { "id": "about_performance", "label": "says how they're doing", "kind": "toggle", "face": true, "sentence": "Does it say anything about a named person's performance, progress, behaviour or needs?", "example": "Marks, attendance, support notes." },
+      { "id": "special_category", "label": "health, SEND or similar", "kind": "toggle", "face": true, "sentence": "Does it reveal health, ethnicity, religion, sexual orientation, union membership, biometrics, or criminal matters?", "example": "SEND notes, a sick note, a dietary requirement that reveals religion." },
       { "id": "free_text_or_audio", "label": "free text or audio", "kind": "toggle", "face": false, "sentence": "Does it include open text or recordings where anything could be written or said?", "example": "Essays, meeting recordings, comments boxes." },
       { "id": "new_purpose", "label": "held for another reason", "kind": "toggle", "face": false, "sentence": "Did you already have this data for a different reason?", "example": "Attendance data now used to predict dropout." },
       { "id": "new_collection", "label": "newly collected", "kind": "toggle", "face": false, "sentence": "Are you collecting something you didn't collect before?", "example": "A new form, a new login." },
@@ -229,7 +229,7 @@
       { "id": "scores", "label": "scores people", "kind": "toggle", "face": true, "sentence": "Does it produce a mark, grade, score, rank or prediction about a person?", "example": "A suggested grade, a risk score, a 'likely to pass' flag." },
       { "id": "decides_alone", "label": "decides without a human", "kind": "toggle", "face": true, "sentence": "Could the outcome happen with nobody checking it?", "example": "An automatic fail, an automatic referral." },
       { "id": "staff_can_override", "label": "staff can override", "kind": "toggle", "face": true, "sentence": "Can a person change every output before it counts?", "example": "A teacher can alter any suggested mark." },
-      { "id": "privacy_notice_linked", "label": "privacy notice covers it", "kind": "toggle", "face": true, "sentence": "Have the people been told about this use, somewhere they'd see it?", "example": "A line in the student privacy notice." },
+      { "id": "privacy_notice_linked", "label": "people have been told", "kind": "toggle", "face": true, "sentence": "Have the people been told about this use, somewhere they'd see it?", "example": "A line in the student privacy notice." },
       { "id": "ongoing", "label": "ongoing", "kind": "toggle", "face": false, "sentence": "Does it keep running rather than happen once?", "example": "Weekly monitoring vs one survey." },
       { "id": "whole_cohort", "label": "whole cohort", "kind": "toggle", "face": false, "sentence": "Does it cover everyone in a large group?", "example": "All students in a college vs one class." },
       { "id": "tracks_behaviour", "label": "tracks behaviour", "kind": "toggle", "face": false, "sentence": "Does it log what individuals do, where they are, or what they click?", "example": "Login times per student, location, browsing." },
@@ -237,8 +237,8 @@
     ],
     "system": [
       { "id": "is_ai", "label": "is AI", "kind": "toggle", "face": true, "sentence": "Does it use AI, machine learning or generative models anywhere?", "example": "Copilot, AI Builder, a model behind an app." },
-      { "id": "output_type", "label": "output", "kind": "choice", "face": true, "options": [["draft", "Draft"], ["suggestion", "Suggest"], ["score", "Score"], ["decision", "Decide"]], "sentence": "What does it hand back?", "example": "A draft email; a suggested mark; a score; a pass or fail." },
-      { "id": "validated_by_person", "label": "checked by a person", "kind": "toggle", "face": true, "sentence": "Does someone check the output before it's used?", "example": "A teacher reads the feedback before it goes out." },
+      { "id": "output_type", "label": "it hands back", "kind": "choice", "face": true, "options": [["draft", "Draft"], ["suggestion", "Suggestion"], ["score", "Score"], ["decision", "Decision"]], "sentence": "What does it hand back?", "example": "A draft email; a suggested mark; a score; a pass or fail." },
+      { "id": "validated_by_person", "label": "a person checks it", "kind": "toggle", "face": true, "sentence": "Does someone check the output before it's used?", "example": "A teacher reads the feedback before it goes out." },
       { "id": "staff_can_override", "label": "staff can override", "kind": "toggle", "face": false, "sentence": "Can a person change any output?", "example": "A teacher edits the suggested feedback before sending." }
     ],
     "company": [
@@ -246,8 +246,8 @@
       { "id": "decides_purpose", "label": "decides the purpose", "kind": "toggle", "face": false, "sentence": "Does this company choose why the data is used?", "example": "A partner that runs its own research on the data." },
       { "id": "decides_means", "label": "decides the means", "kind": "toggle", "face": false, "sentence": "Does this company choose how it's processed?", "example": "A supplier that picks which data to collect and how." },
       { "id": "own_purposes", "label": "uses it for its own purposes", "kind": "toggle", "face": false, "sentence": "Does it use your data for product improvement, analytics or marketing?", "example": "Free tiers often do." },
-      { "id": "trains_on_inputs", "label": "trains on inputs", "kind": "toggle", "face": true, "sentence": "Could your data be used to train their models?", "example": "Consumer chatbots often train on chats unless you opt out." },
-      { "id": "keeps_data", "label": "keeps data", "kind": "toggle", "face": true, "sentence": "Do they retain prompts, uploads, outputs or logs?", "example": "30 day log retention." }
+      { "id": "trains_on_inputs", "label": "trains on your data", "kind": "toggle", "face": true, "sentence": "Could your data be used to train their models?", "example": "Consumer chatbots often train on chats unless you opt out." },
+      { "id": "keeps_data", "label": "keeps a copy", "kind": "toggle", "face": true, "sentence": "Do they retain prompts, uploads, outputs or logs?", "example": "30 day log retention." }
     ]
   },
 

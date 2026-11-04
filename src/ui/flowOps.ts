@@ -1,5 +1,6 @@
 // Flow editing helpers. Pure functions over the flow JSON; the engine never sees React.
 import cardsJson from "../../data/cards.json";
+import sentenceJson from "../../data/sentence.json";
 import { tierOfData } from "../engine/derive";
 import type { EdgeKind, Flow, FlowEdge, FlowNode, NodeType, RuleSet } from "../engine/types";
 
@@ -131,43 +132,88 @@ export function applyProduct(flow: Flow, systemId: string, productId: string | n
 
 export interface Sentence {
   role: string;
-  data: string[];
-  about: string;
-  aboutGroup: string;
+  /** Each kind of data: a choice from sentence.json, or typed in. */
+  data: { kind: string | null; label: string }[];
+  about: { kind: string | null; label: string };
   under18: "all_adults" | "some_under_18" | "all_under_18";
-  product: string;
-  purpose: string;
+  /** A product from the directory, or a tool typed in. */
+  product: string | null;
+  otherTool: { name: string; ai: boolean } | null;
+  purpose: { kind: string | null; label: string };
 }
+
+type SentenceChoices = typeof sentenceJson;
+export const sentenceChoices = sentenceJson as SentenceChoices;
+
+export function emptySentence(): Sentence {
+  return { role: "", data: [{ kind: null, label: "" }], about: { kind: null, label: "" }, under18: "some_under_18", product: null, otherTool: null, purpose: { kind: null, label: "" } };
+}
+
+export function exampleSentence(): Sentence {
+  const ex = sentenceChoices.example;
+  const kind = (id: string) => sentenceChoices.data.find((d) => d.id === id)!;
+  const about = sentenceChoices.about.find((a) => a.id === ex.about)!;
+  return {
+    role: ex.role,
+    data: ex.data.map((id) => ({ kind: id, label: kind(id).label })),
+    about: { kind: about.id, label: about.label },
+    under18: about.age_mix as Sentence["under18"],
+    product: ex.product,
+    otherTool: null,
+    purpose: { kind: ex.purpose, label: sentenceChoices.purposes.find((x) => x.id === ex.purpose)!.label },
+  };
+}
+
+export function sentenceComplete(s: Sentence): boolean {
+  return !!s.role.trim() && s.data.every((d) => d.label.trim()) && !!s.about.label.trim() && (!!s.product || !!s.otherTool?.name.trim()) && !!s.purpose.label.trim();
+}
+
+const short = (label: string) => label.replace(/\s*\(.*\)$/, "");
 
 /** The story builder: each slot becomes a node, laid out like the worked example. */
 export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boolean, tierPinned: number | null = null): Flow {
   let flow = emptyFlow(retrospective);
-  const product = set.products.products[s.product];
-  const dataTitles = s.data.map((d) => d.trim()).filter(Boolean);
-  flow.title = `${product?.name.replace(/^Microsoft 365 /, "") ?? "Tool"} ${s.purpose ? "for " + s.purpose.toLowerCase() : ""}`.trim();
-  flow.story = `A ${s.role.toLowerCase()} puts ${dataTitles.join(" and ").toLowerCase()} into ${product?.name ?? "a tool"}${product?.company ? `, run by ${set.products.companies[product.company]?.name}` : ""}, to ${s.purpose.toLowerCase()}.`;
+  const product = s.product ? set.products.products[s.product] : null;
+  const toolName = product?.name.replace(/^Microsoft 365 /, "") ?? s.otherTool?.name.trim() ?? "Tool";
+  const dataTitles = s.data.map((d) => short(d.label).trim()).filter(Boolean);
+  const purposeLabel = s.purpose.label.trim();
+  flow.title = `${toolName} ${purposeLabel ? "for " + purposeLabel.toLowerCase() : ""}`.trim();
+  flow.story = `A ${s.role.trim().toLowerCase()} puts ${dataTitles.join(" and ").toLowerCase()} into ${product?.name ?? toolName}${product?.company ? `, run by ${set.products.companies[product.company]?.name}` : ""}, to ${purposeLabel.toLowerCase()}.`;
 
+  const aboutKind = sentenceChoices.about.find((a) => a.id === s.about.kind);
   const subjects = newNode("people", { x: 40, y: 30 });
-  Object.assign(subjects, { title: s.about || "People" });
+  subjects.title = s.about.label.trim() ? s.about.label.trim()[0].toUpperCase() + s.about.label.trim().slice(1) : "People";
   subjects.levers.age_mix = s.under18;
-  subjects.fields.group = s.aboutGroup;
+  subjects.fields.group = aboutKind?.group ?? "other";
 
   const actor = newNode("people", { x: 40, y: 250 + dataTitles.length * 300 });
-  actor.title = s.role || "Staff";
+  actor.title = s.role.trim() || "Staff";
+  actor.levers.age_mix = "all_adults";
   actor.fields.group = "staff";
 
+  const purposeKind = sentenceChoices.purposes.find((x) => x.id === s.purpose.kind);
   const purpose = newNode("purpose", { x: 360, y: 460 });
-  purpose.title = s.purpose ? s.purpose[0].toUpperCase() + s.purpose.slice(1) : "Purpose";
-  purpose.levers.scores = /mark|grade|score|rank|predict|assess/i.test(s.purpose);
+  purpose.title = purposeLabel ? purposeLabel[0].toUpperCase() + purposeLabel.slice(1) : "Purpose";
+  if (purposeKind) Object.assign(purpose.levers, purposeKind.levers);
+  else purpose.levers.scores = /mark|grade|score|rank|predict|assess/i.test(purposeLabel);
 
   const system = newNode("system", { x: 360, y: 160 });
-  system.title = product?.name.replace(/^Microsoft 365 /, "") ?? "Tool";
+  system.title = toolName;
+  if (s.otherTool) system.levers.is_ai = s.otherTool.ai;
 
-  const dataNodes = dataTitles.map((t, i) => {
+  const dataNodes = s.data.filter((d) => d.label.trim()).map((entry, i) => {
+    const t = short(entry.label).trim();
+    const kind = sentenceChoices.data.find((x) => x.id === entry.kind);
     const d = newNode("data", { x: 40, y: 220 + i * 300 }, flow);
     d.title = t[0].toUpperCase() + t.slice(1);
-    d.levers.about_performance = /work|mark|grade|attend|progress|behaviour|support|note|assess/i.test(t);
-    d.levers.free_text_or_audio = /work|essay|note|comment|record|audio|recording/i.test(t);
+    if (kind) {
+      Object.assign(d.levers, kind.levers);
+      d.fields.categories = [...kind.categories];
+    } else {
+      d.levers.about_performance = /work|mark|grade|attend|progress|behaviour|support|note|assess/i.test(t);
+      d.levers.free_text_or_audio = /work|essay|note|comment|record|audio|recording/i.test(t);
+      d.levers.special_category = /health|send|medical|safeguard|disab|religio|ethnic/i.test(t);
+    }
     d.fields.about = [subjects.id];
     // Starting from a tier: begin inside it, so the Q&A only offers what that tier allows.
     if (tierPinned != null) {
@@ -183,6 +229,13 @@ export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boole
   for (const d of dataNodes) flow = connect(flow, d.id, system.id);
   flow = connect(flow, system.id, purpose.id);
   if (s.product) flow = applyProduct(flow, system.id, s.product, set);
+  if (!s.product && s.otherTool?.name.trim()) {
+    // A tool we don't know: the company behind it is unknown too, so it gets the supplier questions and Tier 1 at most.
+    const company = newNode("company", { x: BOUNDARY_X + 60, y: 120 });
+    company.title = s.otherTool.name.trim();
+    flow.nodes = [...flow.nodes, company];
+    flow = connect(flow, system.id, company.id);
+  }
   if (tierPinned != null) Object.assign(flow, { mode: "tier_first", tier_pinned: tierPinned });
   flow.changelog = [{ at: new Date().toISOString(), who: flow.owner ?? "", what: "created from sentence builder", reopened: [] }];
   return flow;
@@ -226,7 +279,7 @@ export function tidy(flow: Flow, heightOf: (id: string) => number | undefined): 
     ...flow,
     nodes: flow.nodes.map((n) => {
       const p = pos.get(n.id) ?? n.position;
-      return { ...n, position: p, inside: p.x + 130 < BOUNDARY_X };
+      return { ...n, position: p, inside: p.x + 140 < BOUNDARY_X };
     }),
   };
 }

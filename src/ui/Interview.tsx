@@ -87,11 +87,9 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
         </div>
       )}
 
-      <div style={{ display: "flex", gap: 10, marginTop: 22, flexWrap: "wrap" }}>
-        <button type="button" className="btn" disabled={idx === 0 || !visible.includes(s)} onClick={() => setCursor(visible[idx - 1]?.key ?? null)}>Back</button>
-        <button type="button" className="btn" onClick={() => { setSkipped([...skipped, s.key]); setCursor(null); }}>Not sure, skip</button>
-        <span className="spacer" />
-        <button type="button" className="btn" onClick={onDone}>Skip to the drawing</button>
+      <div className="qnav">
+        {idx > 0 && visible.includes(s) && <button type="button" className="linkish" onClick={() => setCursor(visible[idx - 1]?.key ?? null)}>Back</button>}
+        <button type="button" className="linkish" onClick={() => { setSkipped([...skipped, s.key]); setCursor(null); }}>Not sure, skip this one</button>
       </div>
     </div>
   );
@@ -103,10 +101,13 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
           <p className="lab">{flow.retrospective ? "Checking something already in use" : "A new idea"}</p>
           <p className="story">{flow.story}</p>
 
-          <div className="progress" aria-label={`Question ${Math.min(idx + 1, visible.length)} of ${visible.length}`}>
-            {visible.map((s) => (
-              <button key={s.key} type="button" className={`${s === step ? "on" : ""} ${s.key in answered ? "done" : ""}`} onClick={() => setCursor(s.key)} title={s.ask} />
-            ))}
+          <div className="progress-row">
+            <div className="progress" aria-label={`Question ${Math.min(idx + 1, visible.length)} of ${visible.length}`}>
+              {visible.map((s) => (
+                <button key={s.key} type="button" className={`${s === step ? "on" : ""} ${s.key in answered ? "done" : ""}`} onClick={() => setCursor(s.key)} title={s.ask} />
+              ))}
+            </div>
+            {step && <button type="button" className="linkish" onClick={onDone}>Skip the rest and draw it</button>}
           </div>
 
           {step ? ask(step) : anyway ? ask(anyway) : (
@@ -132,9 +133,9 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
           {assumed.length > 0 && (
             <div className="assumed">
               <button type="button" className="linkish" onClick={() => setShowAssumed(!showAssumed)} aria-expanded={showAssumed}>
-                {assumed.length} question{assumed.length === 1 ? "" : "s"} we didn't need to ask
+                {assumed.length} question{assumed.length === 1 ? "" : "s"} skipped
               </button>
-              <span className="mu"> · no answer would change the result right now, so we kept the guess from your sentence. It's recorded as assumed.</span>
+              <span className="mu"> · nothing you could answer would change the result yet.</span>
               {showAssumed && (
                 <ul className="plain">
                   {assumed.map((s) => (
@@ -198,15 +199,14 @@ function LivePanel({ flow, d, set }: { flow: Flow; d: Derivation; set: RuleSet }
   const policy = policyAnswer(flow, d, set);
   return (
     <aside className="live">
-      <p className="lab">So far</p>
+      <p className="lab">{Object.keys(flow.answers ?? {}).length ? "So far" : "Starting point, from your sentence"}</p>
       <div className="liverow">
         <span className="q">Can I do it?</span>
-        <strong className={["stop", "not_like_this"].includes(d.verdict.id) ? "rq" : undefined}>{d.verdict.label}</strong>
+        <strong className={["stop", "not_like_this", "consult"].includes(d.verdict.id) ? "rq" : undefined}>{d.verdict.label}</strong>
       </div>
       <div className="liverow">
-        <span className="q">How sensitive is the data? (<Term t="tier" />)</span>
-        <strong>Tier {tier}: {set.rules.tiers[String(tier)].label}</strong>
-        <span className="mu">{set.rules.tiers[String(tier)].plain}</span>
+        <span className="q">How sensitive is the data?</span>
+        <strong><Term t="tier">Level {tier}</Term>: {set.rules.tiers[String(tier)].label.toLowerCase()}</strong>
       </div>
       <div className="liverow">
         <span className="q">Does policy allow it?</span>
@@ -214,7 +214,7 @@ function LivePanel({ flow, d, set }: { flow: Flow; d: Derivation; set: RuleSet }
       </div>
       <div className="liverow">
         <span className="q">Do I need a <Term t="DPIA" />?</span>
-        <strong>{set.rules.outcome.labels[d.outcome]}</strong>
+        <strong>{({ not_required: "Not needed", recommended: "Recommended", required: "A full one is needed" } as Record<string, string>)[d.outcome] ?? d.outcome}</strong>
       </div>
       <div className="liverow">
         <span className="q">Things to do</span>

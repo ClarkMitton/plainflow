@@ -136,7 +136,7 @@ describe("bright lines and risk ownership", () => {
     expect(d.bright_lines).toEqual([]);
     expect(d.verdict.id).toBe("needs_owner");
     const owned = derive({ ...flow, risk_owner: "Deputy principal" }, ruleSet);
-    expect(owned.verdict.label).toBe("Deputy principal decides, once these are done");
+    expect(owned.verdict.label).toBe("Yes, once Deputy principal signs it off");
   });
 
   it("consent from students is a hard stop", () => {

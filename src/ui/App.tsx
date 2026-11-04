@@ -99,7 +99,8 @@ export function App() {
       setLever: (id, lever, value) => {
         const n = flow.nodes.find((x) => x.id === id);
         const def = n ? ruleSet.rules.levers[n.type].find((l) => l.id === lever) : undefined;
-        const said = typeof value === "boolean" ? `turned ${value ? "on" : "off"}` : `set to ${String(value).replace(/_/g, " ")}`;
+        const optionLabel = def?.options?.find(([v]) => v === value)?.[1];
+        const said = typeof value === "boolean" ? `turned ${value ? "on" : "off"}` : `set to ${optionLabel ?? String(value).replace(/_/g, " ")}`;
         update(applyLever(flow, id, lever, value), `${n?.title}: "${def?.label ?? lever.replace(/_/g, " ")}" ${said}`);
       },
       setField: (id, field, value) => update(patchNode(id, (n) => ({ ...n, fields: { ...n.fields, [field]: value } })), null),
@@ -131,32 +132,23 @@ export function App() {
       <div className="app">
         <div className="topbar">
           <input className="title" value={flow.title} onChange={(e) => setFlow({ ...flow, title: e.target.value })} aria-label="Flow title" title={titleWarn ?? ""} style={titleWarn ? { color: "var(--rq)" } : undefined} />
-          <span className="meta">
-            {flow.status.replace("_", " ")} {flow.version} · {flow.nodes.length} nodes · {d.open_count} to do{flow.retrospective ? " · already in use" : ""}
-          </span>
+          <span className="meta">{flow.status.replace("_", " ")} · {d.open_count} to do</span>
           <span className="spacer" />
           <div className="seg" role="tablist" aria-label="View">
-            {(["questions", "canvas", "screening", "rules"] as View[]).map((v) => (
-              <button key={v} type="button" className={view === v ? "on" : ""} onClick={() => setView(v)}>{v[0].toUpperCase() + v.slice(1)}</button>
+            {([["questions", "Questions"], ["canvas", "Canvas"], ["screening", "Record"], ["rules", "Rules"]] as [View, string][]).map(([v, label]) => (
+              <button key={v} type="button" className={view === v ? "on" : ""} onClick={() => setView(v)}>{label}</button>
             ))}
             {flow.pinned && <button type="button" className={view === "compare" ? "on" : ""} onClick={() => setView("compare")}>Compare</button>}
           </div>
-          <div className="seg" aria-label="Mode">
-            <button type="button" className={flow.mode === "flow_first" ? "on" : ""} onClick={() => update({ ...flow, mode: "flow_first", tier_pinned: null }, "switched to flow first")}>Flow first</button>
-            <button type="button" className={flow.mode === "tier_first" ? "on" : ""} onClick={() => update({ ...flow, mode: "tier_first", tier_pinned: Math.max(...Object.values(d.tiers), 0) }, "switched to tier first")}>Tier first</button>
-          </div>
-          <button type="button" className="btn" onClick={() => { update({ ...flow, pinned: { nodes: structuredClone(flow.nodes), edges: structuredClone(flow.edges) } }, "pinned as A"); }}>
-            {flow.pinned ? "Re-pin A" : "Pin as A"}
+          <button type="button" className="btn dk" style={{ boxShadow: "4px 4px 0 var(--paperwork)" }} onClick={() => downloadJson(`${flow.title.replace(/[^\w-]+/g, "-").toLowerCase()}.plainflow.json`, flow)}>
+            Save
           </button>
-          <button type="button" className="btn dk" style={{ boxShadow: "4px 4px 0 var(--paperwork)" }} onClick={() => downloadJson(`${flow.title.replace(/[^\w-]+/g, "-").toLowerCase()}.flow.json`, flow)}>
-            Save JSON
-          </button>
-          <button type="button" className="btn" onClick={() => { if (confirm("Close this flow? Save it first if you want to keep it.")) { setFlow(null); setSelected(null); } }}>Close</button>
+          <button type="button" className="btn" onClick={() => { if (confirm("Close this? Save it first if you want to keep it.")) { setFlow(null); setSelected(null); } }}>Close</button>
         </div>
 
         {flow.mode === "tier_first" && view === "canvas" && (
           <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "8px 16px", borderBottom: "2px solid var(--ink)", background: "var(--paper-2)" }}>
-            <span className="lab">Tier set first</span>
+            <span className="lab">Staying inside a level</span>
             <div className="seg sm">
               {[0, 1, 2, 3].map((t) => (
                 <button key={t} type="button" className={pinnedTier === t ? "on" : ""} onClick={() => update({ ...flow, tier_pinned: t }, `tier set to ${t}`)}>T{t}</button>
@@ -172,7 +164,17 @@ export function App() {
           {view === "canvas" && (
             <ReactFlowProvider>
               <div className="stage">
-                <Canvas onChange={update} reveal={reveal} />
+                <Canvas
+                  onChange={update}
+                  reveal={reveal}
+                  pin={() => update({ ...flow, pinned: { nodes: structuredClone(flow.nodes), edges: structuredClone(flow.edges) } }, "pinned a copy to compare")}
+                  pinned={!!flow.pinned}
+                  toggleTier={() =>
+                    flow.mode === "tier_first"
+                      ? update({ ...flow, mode: "flow_first", tier_pinned: null }, "building freely again")
+                      : update({ ...flow, mode: "tier_first", tier_pinned: Math.max(...Object.values(d.tiers), 0) }, "staying inside a level")
+                  }
+                />
                 {selNode && (
                   <Drawer
                     node={selNode}

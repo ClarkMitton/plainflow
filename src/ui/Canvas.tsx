@@ -20,9 +20,12 @@ interface Props {
   onChange(next: Flow, what: string): void;
   /** Just built from the Q&A: draw the nodes one by one, then the wires. */
   reveal?: boolean;
+  pin(): void;
+  pinned: boolean;
+  toggleTier(): void;
 }
 
-export function Canvas({ onChange, reveal = false }: Props) {
+export function Canvas({ onChange, reveal = false, pin, pinned, toggleTier }: Props) {
   const { flow, d, select, trace, setTrace } = useFlow();
   const { fitView } = useReactFlow();
   const [rfNodes, setRfNodes] = useState<Node<CardData>[]>([]);
@@ -79,7 +82,7 @@ export function Canvas({ onChange, reveal = false }: Props) {
         const c = moved.find((m) => m.type === "position" && m.id === n.id);
         if (!c || c.type !== "position" || !c.position) return n;
         const position = { x: Math.round(c.position.x / 12) * 12, y: Math.round(c.position.y / 12) * 12 };
-        const inside = position.x + 130 < BOUNDARY_X;
+        const inside = position.x + 140 < BOUNDARY_X;
         if (inside !== n.inside) crossed = `${n.title} moved ${inside ? "inside" : "outside"} the organisation`;
         return { ...n, position, inside };
       });
@@ -169,6 +172,9 @@ export function Canvas({ onChange, reveal = false }: Props) {
         <span className="sep" />
         <button type="button" onClick={tidyUp} title="Lay it out left to right, in the order the data travels">Tidy up</button>
         <button type="button" onClick={foldAll} title="Fold every node to its title, or open them all">{allFolded ? "Unfold all" : "Fold all"}</button>
+        <span className="sep" />
+        <button type="button" onClick={pin} title="Keep a copy of the canvas as it is now, then change things and compare">{pinned ? "Re-pin" : "Pin to compare"}</button>
+        <button type="button" onClick={toggleTier} className={flow.mode === "tier_first" ? "on" : ""} title="Grey out anything that would take the data above a chosen level">{flow.mode === "tier_first" ? "Build freely" : "Stay in a level"}</button>
         <span className="sep" />
         <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <span style={{ width: 20, height: 5, background: "var(--data)" }} />

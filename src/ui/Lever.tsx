@@ -57,7 +57,8 @@ export function Lever({ nodeId, def, value, lockReason, variant }: Props) {
   }
 
   return (
-    <div className={`r tip${ringed ? " ring" : ""}`}>
+    <div className={`r tip${ringed ? " ring" : ""}${def.kind === "choice" ? " choice" : ""}`}>
+      {def.kind === "choice" && <span className="rl">{def.label}</span>}
       {def.kind === "toggle" ? (
         <>
           {lockReason ? null : control}

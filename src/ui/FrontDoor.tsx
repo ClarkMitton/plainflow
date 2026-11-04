@@ -2,10 +2,9 @@ import { useRef, useState } from "react";
 import example from "../../data/example-copilot-marking.json";
 import type { Flow, RuleSet } from "../engine/types";
 import { APP_NAME } from "./brand";
-import { GROUP_LABEL } from "./context";
-import { flowFromSentence, type Sentence } from "./flowOps";
+import { emptySentence, exampleSentence, flowFromSentence, sentenceChoices, sentenceComplete, type Sentence } from "./flowOps";
 import { nameWarning } from "./names";
-import { Glossed, Term } from "./plain";
+import { Glossed } from "./plain";
 
 type Route = null | "new" | "existing" | "tier";
 
@@ -15,6 +14,7 @@ interface Props {
   onOpen(flow: Flow, to: "questions" | "canvas"): void;
 }
 
+/** One question, three answers, then one sentence. Everything else is a small link. */
 export function FrontDoor({ set, onOpen }: Props) {
   const [route, setRoute] = useState<Route>(null);
   const [tier, setTier] = useState<number | null>(null);
@@ -27,46 +27,47 @@ export function FrontDoor({ set, onOpen }: Props) {
       if (!Array.isArray(flow.nodes) || !Array.isArray(flow.edges)) throw new Error("not a flow");
       onOpen(flow, "canvas");
     } catch {
-      setError("That file isn't a saved flow.");
+      setError("That file isn't something saved from here.");
     }
   };
 
   const pick = (r: Route) => { setRoute(r); if (r !== "tier") setTier(null); };
+  const showSentence = route === "new" || route === "existing" || (route === "tier" && tier != null);
 
   return (
     <div className="page">
       <div className="inner">
         <p className="lab">{APP_NAME}</p>
-        <h1 style={{ fontSize: 44 }}>Got an idea that uses people's data?<br />Let's see what it needs.</h1>
-        <p className="lede">
-          Answer a few plain questions. {APP_NAME} draws your idea as a picture, tells you whether policy allows it and what you need to do, and shows the one change that would make it easier. No legal knowledge needed.
-        </p>
+        <h1 style={{ fontSize: 40 }}>Want to use a tool with people's data?</h1>
+        <p className="lede">Describe the idea in one sentence, answer a few plain questions, and {APP_NAME} will tell you whether it's allowed, what it needs, and the one change that would make it easier.</p>
 
+        <p className="lab" style={{ marginTop: 28 }}>What are you checking?</p>
         <div className="door">
-          <button type="button" onClick={() => pick("new")} style={route === "new" ? { boxShadow: "6px 6px 0 var(--data)" } : undefined}>
-            <strong>I've got an idea</strong>
-            <span>Something you'd like to start doing. Check it before it begins.</span>
+          <button type="button" className={route === "new" ? "on" : ""} onClick={() => pick("new")}>
+            <strong>A new idea</strong>
+            <span>Something you'd like to start doing.</span>
           </button>
-          <button type="button" onClick={() => pick("existing")} style={route === "existing" ? { boxShadow: "6px 6px 0 var(--data)" } : undefined}>
-            <strong>Check something we already use</strong>
-            <span>A tool that's been running a while. It's never too late to check.</span>
+          <button type="button" className={route === "existing" ? "on" : ""} onClick={() => pick("existing")}>
+            <strong>Something we already use</strong>
+            <span>A tool that's been running a while.</span>
           </button>
-          <button type="button" onClick={() => pick("tier")} style={route === "tier" ? { boxShadow: "6px 6px 0 var(--data)" } : undefined}>
-            <strong>Start from the data tier</strong>
-            <span>You know how sensitive the data is. See what's allowed at that level, then build inside it.</span>
+          <button type="button" className={route === "tier" ? "on" : ""} onClick={() => pick("tier")}>
+            <strong>How sensitive data can be used</strong>
+            <span>Pick a level and see what's allowed there.</span>
           </button>
         </div>
         {error && <div className="box alert">{error}</div>}
 
         {route === "tier" && <TierPicker set={set} tier={tier} setTier={setTier} />}
 
-        {(route === "new" || route === "existing" || (route === "tier" && tier != null)) && (
+        {showSentence && (
           <SentenceBuilder key={`${route}${tier}`} set={set} retrospective={route === "existing"} tier={route === "tier" ? tier : null} onBuild={(f) => onOpen(f, "questions")} />
         )}
 
-        <p style={{ marginTop: 36, display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <button type="button" className="btn" onClick={() => onOpen(structuredClone(example) as unknown as Flow, "canvas")}>Open the worked example: Copilot marking</button>
-          <button type="button" className="btn" onClick={() => file.current?.click()}>Open a saved flow</button>
+        <p className="links">
+          <button type="button" className="linkish" onClick={() => onOpen(structuredClone(example) as unknown as Flow, "canvas")}>See a finished example</button>
+          <span className="mu"> · </span>
+          <button type="button" className="linkish" onClick={() => file.current?.click()}>Open something you saved</button>
         </p>
         <input ref={file} type="file" accept="application/json,.json" hidden onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
       </div>
@@ -87,13 +88,13 @@ function TierPicker({ set, tier, setTier }: { set: RuleSet; tier: number | null;
   };
   return (
     <div style={{ marginBottom: 26 }}>
-      <p className="lab">Which is the most sensitive data your idea uses? (<Term t="tier" />)</p>
+      <p className="lab">How sensitive is the most sensitive data you'd use?</p>
       <div className="tiers">
         {[0, 1, 2, 3].map((t) => {
           const x = set.rules.tiers[String(t)];
           return (
             <button key={t} type="button" className={`tiercard${tier === t ? " on" : ""}`} onClick={() => setTier(t)}>
-              <span className="num">Tier {t}</span>
+              <span className="num">Level {t}</span>
               <strong>{x.label}</strong>
               <span>{x.plain}</span>
               <span className="mu">For example: {x.examples}</span>
@@ -107,28 +108,61 @@ function TierPicker({ set, tier, setTier }: { set: RuleSet; tier: number | null;
   );
 }
 
+const OTHER = "__other__";
+
+/** A dropdown that reads as a word in a sentence. "Something else..." reveals a box to type in. */
+function Slot({ value, kind, options, placeholder, onPick, onType, label }: {
+  value: string;
+  kind: string | null;
+  options: { id: string; label: string }[];
+  placeholder: string;
+  label: string;
+  onPick(id: string, label: string): void;
+  onType(text: string): void;
+}) {
+  const other = kind === OTHER;
+  const warn = other ? nameWarning(value) : null;
+  return (
+    <span className="slot">
+      <select
+        aria-label={label}
+        value={other ? OTHER : kind ?? ""}
+        className={kind ? "" : "empty"}
+        onChange={(e) => {
+          const id = e.target.value;
+          if (id === OTHER) onPick(OTHER, "");
+          else onPick(id, options.find((o) => o.id === id)?.label ?? "");
+        }}
+      >
+        <option value="" disabled>{placeholder}</option>
+        {options.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
+        <option value={OTHER}>{sentenceChoices.other_label}</option>
+      </select>
+      {other && <input autoFocus value={value} placeholder="type it here" aria-label={`${label}, typed`} onChange={(e) => onType(e.target.value)} />}
+      {warn && <span className="warn" role="alert">{warn}</span>}
+    </span>
+  );
+}
+
 function SentenceBuilder({ set, retrospective, tier, onBuild }: { set: RuleSet; retrospective: boolean; tier: number | null; onBuild(f: Flow): void }) {
-  const [s, setS] = useState<Sentence>({
-    role: "Teacher",
-    data: ["student work"],
-    about: "Students",
-    aboutGroup: "learners",
-    under18: "some_under_18",
-    product: "m365_copilot",
-    purpose: "suggest a mark",
-  });
+  const [s, setS] = useState<Sentence>(emptySentence);
   const [since, setSince] = useState("");
   const up = (p: Partial<Sentence>) => setS({ ...s, ...p });
-  const warnings = [s.role, s.about, s.purpose, ...s.data].map(nameWarning).filter(Boolean);
+  const roles = sentenceChoices.roles.map((r) => ({ id: r, label: r }));
+  const products = Object.entries(set.products.products).map(([id, p]) => ({ id, label: p.name }));
 
   const tooHigh = (productId: string) => {
-    if (tier == null) return false;
+    if (tier == null || tier === 0) return false;
     const company = set.products.products[productId]?.company;
     if (!company) return false;
     const list = set.rules.sanctioned.list;
     const max = list[company]?.max_tier ?? list[productId]?.max_tier ?? set.rules.sanctioned.unlisted_max_tier;
-    return max < tier && tier > 0;
+    return max < tier;
   };
+  const productOptions = products.map((p) => (tooHigh(p.id) ? { ...p, label: `${p.label} (not at level ${tier})` } : p));
+  const roleKind = s.role ? (roles.some((r) => r.id === s.role) ? s.role : OTHER) : null;
+  const toolKind = s.product ? s.product : s.otherTool ? OTHER : null;
+  const ready = sentenceComplete(s) && !(s.product && tooHigh(s.product));
 
   const go = () => {
     const flow = flowFromSentence(s, set, retrospective, tier);
@@ -137,44 +171,90 @@ function SentenceBuilder({ set, retrospective, tier, onBuild }: { set: RuleSet; 
   };
 
   return (
-    <div className="panel" style={{ padding: 24, boxShadow: "6px 6px 0 var(--ink)" }}>
-      <p className="lab" style={{ marginBottom: 8 }}>First, say it in one sentence</p>
+    <div className="panel sentence-panel">
+      <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
+        <p className="lab">Say it in one sentence</p>
+        <span className="spacer" />
+        <button type="button" className="linkish" onClick={() => setS(exampleSentence())}>Fill in an example</button>
+      </div>
       <div className="sentence">
-        A <input value={s.role} onChange={(e) => up({ role: e.target.value })} size={10} aria-label="Who does it" />
+        A{" "}
+        <Slot label="Who does it" value={s.role} kind={roleKind} options={roles} placeholder="who?" onPick={(id, label) => up({ role: id === OTHER ? "" : label })} onType={(t) => up({ role: t })} />
         {retrospective ? " has been putting " : " wants to put "}
         {s.data.map((d, i) => (
-          <span key={i}>
+          <span key={i} className="slotgroup">
             {i > 0 && " and "}
-            <input value={d} onChange={(e) => up({ data: s.data.map((x, j) => (j === i ? e.target.value : x)) })} size={12} aria-label="What data" />
+            <Slot
+              label={`Which data${i ? ` (${i + 1})` : ""}`}
+              value={d.label}
+              kind={d.kind}
+              options={sentenceChoices.data}
+              placeholder="which data?"
+              onPick={(id, label) => up({ data: s.data.map((x, j) => (j === i ? { kind: id, label } : x)) })}
+              onType={(t) => up({ data: s.data.map((x, j) => (j === i ? { ...x, label: t } : x)) })}
+            />
+            {i > 0 && <button type="button" className="remove" aria-label="Remove this data" onClick={() => up({ data: s.data.filter((_, j) => j !== i) })}>×</button>}
           </span>
         ))}
-        <button type="button" className="btn sm" onClick={() => up({ data: [...s.data, ""] })} style={{ verticalAlign: "middle", marginRight: 6 }}>and ___</button>
-        about{" "}
-        <input value={s.about} onChange={(e) => up({ about: e.target.value })} size={9} aria-label="About whom" />
-        into{" "}
-        <select value={s.product} onChange={(e) => up({ product: e.target.value })} aria-label="Which tool">
-          {Object.entries(set.products.products).map(([id, p]) => (
-            <option key={id} value={id} disabled={tooHigh(id)}>{p.name}{tooHigh(id) ? ` (not at Tier ${tier})` : ""}</option>
-          ))}
-        </select>{" "}
-        to <input value={s.purpose} onChange={(e) => up({ purpose: e.target.value })} size={14} aria-label="What for" />.
+        {s.data.length < 4 && s.data[s.data.length - 1].label && (
+          <button type="button" className="linkish add" onClick={() => up({ data: [...s.data, { kind: null, label: "" }] })}>+ and more</button>
+        )}
+        {" "}about{" "}
+        <Slot
+          label="About whom"
+          value={s.about.label}
+          kind={s.about.kind}
+          options={sentenceChoices.about}
+          placeholder="whom?"
+          onPick={(id, label) => {
+            const a = sentenceChoices.about.find((x) => x.id === id);
+            up({ about: { kind: id, label }, under18: (a?.age_mix as Sentence["under18"]) ?? s.under18 });
+          }}
+          onType={(t) => up({ about: { kind: OTHER, label: t } })}
+        />
+        {" "}into{" "}
+        <Slot
+          label="Which tool"
+          value={s.otherTool?.name ?? ""}
+          kind={toolKind}
+          options={productOptions}
+          placeholder="which tool?"
+          onPick={(id) => (id === OTHER ? up({ product: null, otherTool: { name: "", ai: false } }) : up({ product: id, otherTool: null }))}
+          onType={(t) => up({ otherTool: { name: t, ai: s.otherTool?.ai ?? false } })}
+        />
+        {" "}to{" "}
+        <Slot
+          label="What for"
+          value={s.purpose.label}
+          kind={s.purpose.kind}
+          options={sentenceChoices.purposes}
+          placeholder="do what?"
+          onPick={(id, label) => up({ purpose: { kind: id, label } })}
+          onType={(t) => up({ purpose: { kind: OTHER, label: t } })}
+        />
+        .
       </div>
 
-      <div style={{ display: "flex", gap: 28, flexWrap: "wrap", marginTop: 18, alignItems: "flex-end" }}>
-        <label className="field">
-          <span>Any of them under 18?</span>
-          <div className="seg sm">
-            {([["all_adults", "No"], ["some_under_18", "Some"], ["all_under_18", "All"]] as const).map(([v, l]) => (
-              <button key={v} type="button" className={s.under18 === v ? "on" : ""} onClick={() => up({ under18: v })}>{l}</button>
-            ))}
-          </div>
-        </label>
-        <label className="field">
-          <span>They are</span>
-          <select value={s.aboutGroup} onChange={(e) => up({ aboutGroup: e.target.value })}>
-            {Object.entries(GROUP_LABEL).map(([v, l]) => <option key={v} value={v}>{l}</option>)}
-          </select>
-        </label>
+      <div className="sentence-extras">
+        {s.otherTool && (
+          <label className="field">
+            <span>Does that tool use AI?</span>
+            <div className="seg sm">
+              <button type="button" className={!s.otherTool.ai ? "on" : ""} onClick={() => up({ otherTool: { ...s.otherTool!, ai: false } })}>No</button>
+              <button type="button" className={s.otherTool.ai ? "on" : ""} onClick={() => up({ otherTool: { ...s.otherTool!, ai: true } })}>Yes</button>
+            </div>
+          </label>
+        )}
+        {s.about.label && (
+          <label className="field">
+            <span>Any of them under 18?</span>
+            <div className="seg sm">
+              {([["all_adults", "No"], ["some_under_18", "Some"], ["all_under_18", "All"]] as const).map(([v, l]) => (
+                <button key={v} type="button" className={s.under18 === v ? "on" : ""} onClick={() => up({ under18: v })}>{l}</button>
+              ))}
+            </div>
+          </label>
+        )}
         {retrospective && (
           <label className="field">
             <span>Running since</span>
@@ -182,10 +262,13 @@ function SentenceBuilder({ set, retrospective, tier, onBuild }: { set: RuleSet; 
           </label>
         )}
         <span className="spacer" />
-        <button type="button" className="btn dk" style={{ boxShadow: "4px 4px 0 var(--data)" }} onClick={go} disabled={tooHigh(s.product)}>Next: a few questions</button>
+        <button type="button" className="btn dk" style={{ boxShadow: "4px 4px 0 var(--data)" }} onClick={go} disabled={!ready}>
+          Next
+        </button>
       </div>
-      {warnings.length > 0 && <div className="warn" style={{ marginTop: 10 }}>{warnings[0]}</div>}
-      <p className="mu" style={{ marginTop: 14, fontSize: 13 }}>Use roles and groups, never people's names. Then about a dozen yes or no questions, and we draw it.</p>
+      <p className="mu" style={{ marginTop: 12, fontSize: 13 }}>
+        {s.product && tooHigh(s.product) ? `That tool isn't approved for level ${tier}. Pick another, or a lower level.` : "Roles and groups, never people's names. Next: a few quick questions, then we draw it."}
+      </p>
     </div>
   );
 }

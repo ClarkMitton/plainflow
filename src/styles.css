@@ -53,7 +53,7 @@ input, select, textarea { font: inherit; color: var(--ink); }
 .seg.sm button { padding: 3px 9px; font-size: 12px; font-family: var(--mono); }
 
 /* Nodes */
-.n { background: var(--paper); border: 2px solid var(--ink); width: 260px; position: relative; }
+.n { background: var(--paper); border: 2px solid var(--ink); width: 280px; position: relative; }
 .n.sel { outline: 3px solid var(--ink); outline-offset: 3px; }
 .n.hl { outline: 3px solid var(--data); outline-offset: 3px; }
 .n.ghost { opacity: .45; }
@@ -302,3 +302,44 @@ table.tbl code, code.x { font-family: var(--mono); font-size: 12px; background: 
   .n.appear, .reveal .react-flow__edge { animation: none; }
 }
 .route { position: absolute; left: -2px; top: calc(100% + 6px); background: var(--ink); color: var(--paper); font-size: 13px; line-height: 1.4; padding: 6px 12px; max-width: 760px; box-shadow: 4px 4px 0 var(--data); }
+
+/* Front door: one question, then one sentence */
+.door button.on { box-shadow: 6px 6px 0 var(--data); }
+.door button span { font-size: 14px; }
+.links { margin-top: 28px; font-size: 14px; }
+.links .linkish { font-family: var(--sans); font-size: 14px; font-weight: 500; }
+.sentence-panel { padding: 22px 24px; box-shadow: 6px 6px 0 var(--ink); margin-top: 8px; }
+.sentence { font-size: 22px; line-height: 2.2; }
+.slot { display: inline-flex; align-items: center; gap: 6px; position: relative; }
+.slot select { font-size: 20px; font-weight: 600; border: 0; border-bottom: 3px solid var(--ink); background: var(--paper-2); padding: 0 4px; margin: 0 2px; max-width: 320px; cursor: pointer; }
+.slot select.empty { color: var(--muted-2); font-weight: 500; font-style: italic; background: var(--paper); border-bottom-style: dashed; }
+.slot input { font-size: 20px; font-weight: 600; border: 0; border-bottom: 3px solid var(--data); background: var(--paper); padding: 0 4px; width: 220px; }
+.slot .warn { position: absolute; top: 100%; left: 0; font-size: 12px; line-height: 1.3; width: 260px; background: var(--paper); z-index: 2; }
+.slotgroup { white-space: nowrap; }
+.remove { border: 0; background: transparent; font-size: 20px; line-height: 1; padding: 0 4px; color: var(--muted); cursor: pointer; vertical-align: middle; }
+.remove:hover { color: var(--rq); }
+.linkish.add { font-size: 13px; vertical-align: middle; margin: 0 6px; }
+.sentence-extras { display: flex; gap: 28px; flex-wrap: wrap; margin-top: 18px; align-items: flex-end; }
+
+.r.choice { flex-direction: column; align-items: flex-start; gap: 3px; padding: 5px 16px 6px; min-height: 0; }
+.r.choice .rl { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.palette button.on { background: var(--ink); color: var(--paper); padding: 2px 6px; }
+
+/* The three facts behind the answer: one line each, open for more */
+.facts { border: 2px solid var(--ink); }
+.fact + .fact { border-top: 1px solid var(--rule); }
+.fact > button { width: 100%; display: flex; align-items: center; gap: 8px; padding: 9px 12px; border: 0; background: transparent; text-align: left; cursor: pointer; font-size: 14px; }
+.fact > button:hover { background: var(--paper-2); }
+.fact .fl { color: var(--muted); flex: none; width: 92px; }
+.fact .fv { flex: 1; font-weight: 700; }
+.fact .chev { font-family: var(--mono); color: var(--muted-2); }
+.fact .fm { padding: 0 12px 12px; font-size: 13px; line-height: 1.45; }
+.fact.open > button { background: var(--paper-2); }
+.rail { gap: 18px; }
+.qnav { display: flex; gap: 18px; margin-top: 18px; }
+.progress-row { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+.progress-row .progress { flex: 1; margin: 0; }
+.progress-row .linkish { white-space: nowrap; font-weight: 400; }
+.liverow { padding: 8px 0; }
+.palette button { white-space: nowrap; }
+.palette { flex-wrap: nowrap; max-width: calc(100% - 32px); overflow-x: auto; }

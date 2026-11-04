@@ -11,7 +11,8 @@ export function NodeCard({ data }: NodeProps & { data: CardData }) {
   const { d, set, flow, selected, highlight, select, trace, setTrace, setCollapse } = useFlow();
   const facts = d.facts[node.id] ?? {};
   const locks = d.locks[node.id] ?? {};
-  const face = set.rules.levers[node.type].filter((l) => l.face);
+  // Staff are adults; their age chips are noise.
+  const face = set.rules.levers[node.type].filter((l) => l.face && !(node.type === "people" && node.fields.group === "staff" && l.id === "age_mix"));
   const hidden = set.rules.levers[node.type].length - face.length;
 
   const personalIn = flow.edges.some((e) => e.to === node.id && (d.edges[e.id]?.tier ?? -1) >= 1);
@@ -125,7 +126,7 @@ export function NodeCard({ data }: NodeProps & { data: CardData }) {
           : null}
         {hidden > 0 && (
           <div className="r more nodrag" style={{ cursor: "pointer" }} onClick={() => select(node.id)}>
-            + {hidden} more in the drawer
+            + {hidden} more · open
           </div>
         )}
       </div>}

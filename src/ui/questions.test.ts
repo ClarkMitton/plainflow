@@ -6,12 +6,12 @@ import { isDecisive, stepsFor } from "./questions";
 
 const sentence = (product: string): Sentence => ({
   role: "Teacher",
-  data: ["student work"],
-  about: "Students",
-  aboutGroup: "learners",
+  data: [{ kind: "work", label: "student work (essays, assignments)" }],
+  about: { kind: "students", label: "students" },
   under18: "some_under_18",
   product,
-  purpose: "suggest a mark",
+  otherTool: null,
+  purpose: { kind: "mark", label: "suggest a mark" },
 });
 
 function asked(product: string) {
