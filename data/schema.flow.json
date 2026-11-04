@@ -185,6 +185,45 @@
         "type": "string"
       },
       "description": "Q&A answers keyed by question id and node id. Questions not listed were assumed, because no answer would have changed the result."
+    },
+    "source": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Set when the flow was opened from a GDPR Repo Scanner report rather than drawn by hand.",
+      "properties": {
+        "kind": {
+          "const": "scan"
+        },
+        "repo": {
+          "type": "string"
+        },
+        "score": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "risk": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scanned_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
     }
   },
   "$defs": {

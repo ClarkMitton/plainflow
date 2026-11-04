@@ -1,0 +1,412 @@
+{
+  "repo": "ClarkMitton__play-anywhere",
+  "scannedAt": "2026-11-04T17:52:37.739Z",
+  "findings": [
+    {
+      "type": "sensitive-data-logged",
+      "category": "logging",
+      "line": 62,
+      "evidence": "console.error(\"Failed to create session:\", error);",
+      "riskScore": 10,
+      "file": "src\\routes\\index.tsx"
+    },
+    {
+      "type": "verified-flow:supabase.storage.upload",
+      "category": "persistence",
+      "line": 321,
+      "evidence": "const { error } = await supabase.storage",
+      "riskScore": 15,
+      "file": "src\\routes\\admin.tsx",
+      "isVerifiedFlow": true,
+      "confidence": 0.65,
+      "tags": [
+        "USER_DATA_STORAGE"
+      ],
+      "flowDescription": "file_upload → supabase.storage.upload"
+    },
+    {
+      "type": "sensitive-data-logged",
+      "category": "logging",
+      "line": 97,
+      "evidence": "console.error(\"Failed to create test session:\", error);",
+      "riskScore": 10,
+      "file": "src\\routes\\admin.test.tsx"
+    },
+    {
+      "type": "verified-flow:supabase.storage.upload",
+      "category": "persistence",
+      "line": 186,
+      "evidence": "const { error } = await supabase.storage.from(\"lesson-media\").upload(path, file);",
+      "riskScore": 15,
+      "file": "src\\routes\\admin.designer.$lessonId.tsx",
+      "isVerifiedFlow": true,
+      "confidence": 0.65,
+      "tags": [
+        "USER_DATA_STORAGE"
+      ],
+      "flowDescription": "file_upload → supabase.storage.upload"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "@supabase/supabase-js",
+      "category": "Backend/data",
+      "gdprRelevance": 15
+    }
+  ],
+  "verifiedFlows": [
+    {
+      "source": "file_upload",
+      "sink": "supabase.storage.upload",
+      "file": "src\\routes\\admin.tsx",
+      "line": 321,
+      "evidence": "const { error } = await supabase.storage",
+      "dataType": "UNKNOWN",
+      "confidence": 0.65,
+      "tags": [
+        "USER_DATA_STORAGE"
+      ]
+    },
+    {
+      "source": "file_upload",
+      "sink": "supabase.storage.upload",
+      "file": "src\\routes\\admin.designer.$lessonId.tsx",
+      "line": 186,
+      "evidence": "const { error } = await supabase.storage.from(\"lesson-media\").upload(path, file);",
+      "dataType": "UNKNOWN",
+      "confidence": 0.65,
+      "tags": [
+        "USER_DATA_STORAGE"
+      ]
+    }
+  ],
+  "auditCards": [
+    {
+      "title": "Untyped data flows to supabase.storage.upload",
+      "riskLevel": "NEEDS_REVIEW",
+      "confidence": 0.65,
+      "flow": "file_upload → supabase.storage.upload",
+      "evidence": {
+        "file": "src\\routes\\admin.tsx",
+        "line": 321,
+        "code": "const { error } = await supabase.storage"
+      },
+      "whyItMatters": "Personal data sourced from file_upload flows to supabase.storage.upload, which may constitute GDPR-relevant processing requiring a lawful basis.",
+      "whyThisWasFlagged": [
+        "File or media content uploaded to cloud storage",
+        "Media files may contain biometric or personal data (faces, voices, names)"
+      ],
+      "whatIsNOTTrue": [
+        "Framework presence (Express, React, Fastify) is not itself a GDPR risk factor",
+        "Importing fs or a database library is not a risk — only confirmed usage with user data matters",
+        "Environment variables are not personal data unless proven to carry user identifiers",
+        "The existence of a sink (e.g. fs.writeFile) without a proven user-data source is not flagged"
+      ],
+      "tags": [
+        "USER_DATA_STORAGE"
+      ],
+      "needsReview": true,
+      "clarifyingQuestions": [
+        {
+          "id": "upload-people-media",
+          "question": "Do the files uploaded here include photos, audio or video of people (faces or voices)?",
+          "escalatesTo": "HIGH",
+          "dpiaTrigger": "Possible biometric / special-category data (GDPR Art. 9)"
+        },
+        {
+          "id": "upload-children",
+          "question": "Could the uploads relate to children or students (under 18) or other vulnerable people?",
+          "escalatesTo": "HIGH",
+          "dpiaTrigger": "Processing children's / vulnerable people's data"
+        }
+      ]
+    },
+    {
+      "title": "Untyped data flows to supabase.storage.upload",
+      "riskLevel": "NEEDS_REVIEW",
+      "confidence": 0.65,
+      "flow": "file_upload → supabase.storage.upload",
+      "evidence": {
+        "file": "src\\routes\\admin.designer.$lessonId.tsx",
+        "line": 186,
+        "code": "const { error } = await supabase.storage.from(\"lesson-media\").upload(path, file);"
+      },
+      "whyItMatters": "Personal data sourced from file_upload flows to supabase.storage.upload, which may constitute GDPR-relevant processing requiring a lawful basis.",
+      "whyThisWasFlagged": [
+        "File or media content uploaded to cloud storage",
+        "Media files may contain biometric or personal data (faces, voices, names)"
+      ],
+      "whatIsNOTTrue": [
+        "Framework presence (Express, React, Fastify) is not itself a GDPR risk factor",
+        "Importing fs or a database library is not a risk — only confirmed usage with user data matters",
+        "Environment variables are not personal data unless proven to carry user identifiers",
+        "The existence of a sink (e.g. fs.writeFile) without a proven user-data source is not flagged"
+      ],
+      "tags": [
+        "USER_DATA_STORAGE"
+      ],
+      "needsReview": true,
+      "clarifyingQuestions": [
+        {
+          "id": "upload-people-media",
+          "question": "Do the files uploaded here include photos, audio or video of people (faces or voices)?",
+          "escalatesTo": "HIGH",
+          "dpiaTrigger": "Possible biometric / special-category data (GDPR Art. 9)"
+        },
+        {
+          "id": "upload-children",
+          "question": "Could the uploads relate to children or students (under 18) or other vulnerable people?",
+          "escalatesTo": "HIGH",
+          "dpiaTrigger": "Processing children's / vulnerable people's data"
+        }
+      ]
+    }
+  ],
+  "auditSummary": {
+    "repo": "ClarkMitton__play-anywhere",
+    "overallRisk": "MEDIUM",
+    "confidence": 0.65,
+    "verifiedFlowCount": 2,
+    "externalTransferCount": 0,
+    "storageCount": 2,
+    "loggingCount": 0,
+    "aiFlowCount": 0,
+    "potentialPatternCount": 4,
+    "conclusion": "2 verified personal data flow(s) detected: 2 storage flow(s). Each flow has a confirmed user input source linked to a data sink.",
+    "nonFindings": [
+      "No confirmed logging of personal data",
+      "No authentication library detected — identity management may be absent"
+    ],
+    "dpoSummary": {
+      "overview": "Personal data processing was confirmed in this repository. Specifically: user data is stored (2 confirmed instances). Each finding below is supported by direct evidence in the code.",
+      "problems": [
+        {
+          "description": "Files or media are being uploaded to cloud storage. Uploaded files may contain personal information such as faces, names, or voice recordings. (src\\routes\\admin.tsx, line 321)",
+          "badge": "VERIFIED_FLOW",
+          "colour": "RED"
+        },
+        {
+          "description": "Files or media are being uploaded to cloud storage. Uploaded files may contain personal information such as faces, names, or voice recordings. (src\\routes\\admin.designer.$lessonId.tsx, line 186)",
+          "badge": "VERIFIED_FLOW",
+          "colour": "RED"
+        },
+        {
+          "description": "Logging is set up in this app — worth checking logs don't capture personal data. (src\\routes\\index.tsx)",
+          "badge": "CAPABILITY_ONLY",
+          "colour": "AMBER"
+        },
+        {
+          "description": "Database or file storage code is present in this app, but we couldn't confirm personal data is being written to it. (src\\routes\\admin.tsx)",
+          "badge": "CAPABILITY_ONLY",
+          "colour": "AMBER"
+        },
+        {
+          "description": "Logging is set up in this app — worth checking logs don't capture personal data. (src\\routes\\admin.test.tsx)",
+          "badge": "CAPABILITY_ONLY",
+          "colour": "AMBER"
+        },
+        {
+          "description": "Database or file storage code is present in this app, but we couldn't confirm personal data is being written to it. (src\\routes\\admin.designer.$lessonId.tsx)",
+          "badge": "CAPABILITY_ONLY",
+          "colour": "AMBER"
+        },
+        {
+          "description": "Your app connects to Supabase (Cloud data/storage) — a direct call to its API was found in the code. Confirm whether any personal data is sent to it, and where it is stored. (package.json)",
+          "badge": "CAPABILITY_ONLY",
+          "colour": "AMBER"
+        },
+        {
+          "description": "This app can capture photos, audio or video (camera/microphone access was found in the code). Recordings of people are likely to contain biometric or special-category data — and in an education setting, children's data. Treat any such uploads as high-risk until you confirm what they contain. (src\\routes\\admin.designer.$lessonId.tsx)",
+          "badge": "CAPABILITY_ONLY",
+          "colour": "RED"
+        }
+      ],
+      "workingWell": [
+        "No names, email addresses, phone numbers or other identifiers confirmed as being stored",
+        "No advertising or analytics tracking libraries found"
+      ],
+      "actionItems": [
+        {
+          "action": "Add a Privacy Notice (also called a Privacy Policy) to your app. It must explain what personal data you collect, why you collect it, how long you keep it, and who can access it. This is required by GDPR Article 13.",
+          "type": "CODE_CHANGE",
+          "priority": "HIGH"
+        },
+        {
+          "action": "Document these data flows in your Records of Processing Activities. Every organisation that handles personal data must keep a written record of what they process and why (GDPR Article 30).",
+          "type": "POLICY",
+          "priority": "HIGH"
+        },
+        {
+          "action": "Make sure stored personal data can be deleted when a user asks (the 'Right to Erasure' under GDPR Article 17). Add a way for users to request deletion of their account or data.",
+          "type": "CODE_CHANGE",
+          "priority": "MEDIUM"
+        },
+        {
+          "action": "This app captures photos, audio or video. If these show or record identifiable people, that is likely biometric / special-category data (GDPR Article 9) and, for under-18s, children's data (Article 8). You need an Article 9 condition, a DPIA, clear consent/notice, strict retention limits, and access controls. Confirm exactly what is captured and stored.",
+          "type": "DPIA",
+          "priority": "HIGH"
+        },
+        {
+          "action": "File uploads need extra care. Before uploading, tell users what you do with their files, how long you keep them, and who can see them. If uploads might contain photos of people, this could require a DPIA.",
+          "type": "DPIA",
+          "priority": "MEDIUM"
+        },
+        {
+          "action": "Your app integrates third-party / cloud services (Supabase). For each one, confirm whether personal data is sent to it, put a Data Processing Agreement in place with the supplier, and check where it stores and processes data. A location outside the UK/EEA needs a documented international-transfer safeguard (GDPR Articles 44–49).",
+          "type": "POLICY",
+          "priority": "MEDIUM"
+        },
+        {
+          "action": "Confirm the hosting region / data residency for each external service listed above. This is usually not visible in the code — ask the supplier (or check their dashboard) whether personal data stays in the UK/EEA. This feeds the DPIA (international transfers) and the IT System Requirements Assessment.",
+          "type": "REVIEW",
+          "priority": "MEDIUM"
+        }
+      ],
+      "riskLevel": "MEDIUM",
+      "riskReason": "Limited personal data handling was confirmed. Review the items above and make sure a lawful basis exists for each data flow before going live."
+    },
+    "dpiaScreening": {
+      "dpiaRecommended": true,
+      "detectedTriggers": [
+        "Captures photos / audio / video of people (possible biometric special-category data)",
+        "Sends data to third-party service(s) (Supabase) — possible international transfer"
+      ],
+      "questions": [
+        {
+          "id": "dpia-automated-decisions",
+          "question": "Is personal data used to make automated decisions about people, or to profile them (scoring, ranking, flagging, eligibility)?",
+          "escalatesTo": "HIGH",
+          "dpiaTrigger": "Systematic profiling or automated decision-making with significant effects"
+        },
+        {
+          "id": "dpia-special-category",
+          "question": "Could the system process special-category data (health, ethnicity, religion, sexual orientation, biometric or genetic data)?",
+          "escalatesTo": "HIGH",
+          "dpiaTrigger": "Processing of special-category data on a large scale"
+        },
+        {
+          "id": "dpia-children",
+          "question": "Does the processing involve children or other vulnerable people?",
+          "escalatesTo": "HIGH",
+          "dpiaTrigger": "Processing data of children or vulnerable data subjects"
+        },
+        {
+          "id": "dpia-scale",
+          "question": "Is personal data processed on a large scale, or combined/matched from several different sources?",
+          "escalatesTo": "HIGH",
+          "dpiaTrigger": "Large-scale processing; combining or matching data from multiple sources"
+        },
+        {
+          "id": "dpia-monitoring",
+          "question": "Does the system systematically monitor people, or track their location or behaviour?",
+          "escalatesTo": "HIGH",
+          "dpiaTrigger": "Systematic monitoring; tracking of location or behaviour"
+        },
+        {
+          "id": "dpia-media-capture",
+          "question": "We detected camera/microphone use. Do the photos, audio or video include identifiable people (faces or voices)?",
+          "escalatesTo": "HIGH",
+          "dpiaTrigger": "Biometric / special-category data captured from people"
+        }
+      ]
+    },
+    "thirdPartyServices": [
+      {
+        "name": "Supabase",
+        "category": "Cloud data/storage",
+        "isAI": false,
+        "detectedVia": [
+          "dependency",
+          "endpoint",
+          "env-var"
+        ],
+        "evidence": [
+          {
+            "file": "package.json",
+            "line": 1,
+            "snippet": "dependency: @supabase/supabase-js"
+          },
+          {
+            "file": ".env",
+            "line": 2,
+            "snippet": "SUPABASE_URL=\"https://sxrhecwyhqwdwwfawojn.supabase.co\""
+          },
+          {
+            "file": ".env",
+            "line": 2,
+            "snippet": "SUPABASE_URL=\"https://sxrhecwyhqwdwwfawojn.supabase.co\""
+          }
+        ],
+        "residencyKnown": false
+      }
+    ],
+    "residencyNotes": [
+      "Supabase: the hosting region / data residency cannot be determined from the code. Confirm with the supplier where personal data is stored and processed (UK/EEA or elsewhere); a non-UK/EEA location requires an international-transfer safeguard (GDPR Articles 44–49)."
+    ],
+    "mediaCapture": {
+      "detected": true,
+      "evidence": [
+        {
+          "file": "src\\routes\\admin.designer.$lessonId.tsx",
+          "line": 1659,
+          "snippet": "media file input (accept image/video/audio): accept=\"video/mp4,video/webm\""
+        },
+        {
+          "file": "src\\routes\\admin.designer.$lessonId.tsx",
+          "line": 1681,
+          "snippet": "media file input (accept image/video/audio): accept=\"image/png,image/jpeg,image/webp,image/gif\""
+        },
+        {
+          "file": "src\\hooks\\use-webcam-broadcast.ts",
+          "line": 54,
+          "snippet": "camera/microphone access (getUserMedia): const s = await navigator.mediaDevices.getUserMedia({"
+        }
+      ]
+    },
+    "security": [
+      {
+        "area": "User access control",
+        "status": "attention",
+        "detail": "A managed database/back-end (e.g. Supabase/Firebase) was detected. Confirm Row Level Security (or equivalent rules) is enabled on every table holding personal data, that service-role keys are never exposed to the browser, and that staff accounts use least-privilege and MFA.",
+        "mapsTo": "Cyber Essentials: User access control · NCSC Cloud Security Principle 9 · GDPR Art. 32"
+      },
+      {
+        "area": "Secure configuration",
+        "status": "attention",
+        "detail": "API keys / secrets are configured for one or more services. Confirm secrets are NOT committed to the repository (use environment variables/secret storage), are rotated periodically, and grant the minimum scope needed. Remove any default or shared credentials.",
+        "mapsTo": "Cyber Essentials: Secure configuration · NCSC Cloud Security Principle 10"
+      },
+      {
+        "area": "Supplier assurance",
+        "status": "attention",
+        "detail": "External suppliers were detected (Supabase). For each, confirm they hold Cyber Essentials (or an equivalent such as ISO 27001/SOC 2), put a Data Processing Agreement in place, and record them in your supplier due-diligence.",
+        "mapsTo": "PPN 014/25 supplier assurance · DfE Cloud solution standards"
+      },
+      {
+        "area": "Data residency",
+        "status": "attention",
+        "detail": "Confirm where each external service stores and processes personal data. A non-UK/EEA location needs a documented international-transfer safeguard.",
+        "mapsTo": "NCSC Cloud Security Principle 2 · GDPR Art. 44–49 · IT Assessment: data residency"
+      },
+      {
+        "area": "Not visible to a code scan",
+        "status": "cannot-check",
+        "detail": "Firewalls, security update management (patching), malware protection, device/endpoint security and account MFA are organisation/infrastructure controls that cannot be seen in application code. Confirm these separately as part of your Cyber Essentials certification.",
+        "mapsTo": "Cyber Essentials: Firewalls · Security update management · Malware protection"
+      }
+    ]
+  },
+  "summary": {
+    "gdprScore": 31,
+    "riskLevel": "MEDIUM",
+    "totalFindings": 4,
+    "breakdown": {
+      "externalTransfer": 0,
+      "persistence": 28,
+      "identity": 0,
+      "logging": 0,
+      "ai": 0,
+      "dependencies": 3
+    }
+  }
+}

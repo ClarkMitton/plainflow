@@ -1,0 +1,9 @@
+{
+  "note": "Sibling tools linked from the front door. 'url' is where the tool runs; swap the GitHub link for the live address once it's deployed. Plainflow can open the scanner's JSON report as a flow (see src/ui/scanImport.ts).",
+  "scanner": {
+    "name": "GDPR Repo Scanner",
+    "url": "https://github.com/ClarkMitton/Node-TypeScript-API",
+    "blurb": "Already built the app? Paste its GitHub link and the scanner reads the code: where personal data goes, which outside services and AI it calls, and whether a DPIA looks likely.",
+    "then": "Save the report as JSON and open it here to get the same answer on the canvas."
+  }
+}

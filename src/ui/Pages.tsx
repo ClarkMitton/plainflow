@@ -172,6 +172,19 @@ export function ScreeningPage({ flow, d, set }: { flow: Flow; d: Derivation; set
         <p className="lab">Screening record · draft {flow.version}</p>
         <h1>{flow.title}</h1>
         {flow.story && <p className="lede" style={{ fontSize: 17, color: "var(--ink)" }}>{flow.story}</p>}
+        {flow.source?.kind === "scan" && (
+          <div className="box info" style={{ maxWidth: 720 }}>
+            <p className="lab" style={{ marginBottom: 4 }}>From a code scan</p>
+            <div>
+              {flow.source.repo && <a href={flow.source.repo} target="_blank" rel="noreferrer">{flow.source.repo}</a>}
+              {flow.source.score != null && <> · scanner score {flow.source.score}/100, {String(flow.source.risk ?? "").toLowerCase()}</>}
+              {flow.source.scanned_at && <> · scanned {flow.source.scanned_at.slice(0, 10)}</>}
+            </div>
+            {flow.source.triggers.length > 0 && (
+              <ul className="plain">{flow.source.triggers.map((t) => <li key={t}>{t}</li>)}</ul>
+            )}
+          </div>
+        )}
         <div style={{ display: "flex", gap: 40, flexWrap: "wrap", margin: "18px 0" }}>
           <div><p className="lab">Outcome</p><div className="big">{set.rules.outcome.labels[d.outcome]}</div></div>
           <div><p className="lab">Mandatory yes</p><div className="big">{d.mandatory_yes}</div></div>

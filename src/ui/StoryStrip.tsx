@@ -38,6 +38,19 @@ export function StoryStrip() {
       </Fragment>
     ));
 
+  // A flow opened from a code scan reads differently: the app handles data and sends it to services.
+  if (flow.source?.kind === "scan") {
+    return (
+      <div className="story-strip" aria-label="The story of this flow">
+        {trace && trace.data.length > 0 && <Route />}
+        {systems.length ? list(systems) : "The app"} handles {data.length ? list(data, true) : "data"}
+        {subjects.length > 0 && <> about {list(subjects, true)}</>}
+        {companies.length > 0 && <>, and sends it to {list(companies)}</>}
+        {purposes.length > 0 && <>, to {list(purposes, true)}</>}.
+      </div>
+    );
+  }
+
   return (
     <div className="story-strip" aria-label="The story of this flow">
       {trace && trace.data.length > 0 && <Route />}

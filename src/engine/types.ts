@@ -49,6 +49,8 @@ export interface Flow {
   risk_owner?: string | null;
   /** What was asked in the Q&A and how it was answered, keyed by question and node. Anything not here was assumed. */
   answers?: Record<string, string>;
+  /** Where the flow came from when it wasn't drawn by hand: a code scan. */
+  source?: { kind: "scan"; repo: string; score: number | null; risk: string | null; triggers: string[]; scanned_at: string | null } | null;
   changelog?: ChangeEntry[];
 }
 

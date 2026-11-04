@@ -98,7 +98,7 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
     <div className="page">
       <div className="inner interview">
         <div>
-          <p className="lab">{flow.retrospective ? "Checking something already in use" : "A new idea"}</p>
+          <p className="lab">{flow.source?.kind === "scan" ? "Checking an app from its code" : flow.retrospective ? "Checking something already in use" : "A new idea"}</p>
           <p className="story">{flow.story}</p>
 
           <div className="progress-row">
@@ -199,7 +199,7 @@ function LivePanel({ flow, d, set }: { flow: Flow; d: Derivation; set: RuleSet }
   const policy = policyAnswer(flow, d, set);
   return (
     <aside className="live">
-      <p className="lab">{Object.keys(flow.answers ?? {}).length ? "So far" : "Starting point, from your sentence"}</p>
+      <p className="lab">{Object.keys(flow.answers ?? {}).length ? "So far" : flow.source?.kind === "scan" ? "Starting point, from the code scan" : "Starting point, from your sentence"}</p>
       <div className="liverow">
         <span className="q">Can I do it?</span>
         <strong className={["stop", "not_like_this", "consult"].includes(d.verdict.id) ? "rq" : undefined}>{d.verdict.label}</strong>

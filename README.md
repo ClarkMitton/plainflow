@@ -46,6 +46,8 @@ data/
   questions.json              the plain-English Q&A that sets levers before the flow is drawn
   glossary.json               plain meanings for jargon, shown on hover wherever the word appears
   cards.json                  shared company cards (filled once, reused by every flow)
+  tools.json                  sibling tools linked from the front door (the GDPR Repo Scanner)
+  examples/                   a real scanner report, used as a test fixture
 mockups/
   Master.html                 A5, flow first, the main canvas
   TierFirst.html              A5, tier first
@@ -58,6 +60,10 @@ mockups/
 ```
 
 The mockups are static HTML. Open them in a browser. They were drawn on a design canvas and converted, so expect minor overlaps; they are references for layout and style, not pixel specs.
+
+## Opening a code scan
+
+The GDPR Repo Scanner (github.com/ClarkMitton/Node-TypeScript-API) reads an app's code and reports where personal data goes. Save its JSON report and open it on the front door: `src/ui/scanImport.ts` turns the report into a flow (the app as the system, each service as a company, each kind of data it saw as a data node), the Q&A asks what code can't tell, and the canvas gives the same answer it gives a sentence. Set the scanner's live address in `data/tools.json`.
 
 ## Running it
 

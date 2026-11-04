@@ -1,12 +1,14 @@
 import { useRef, useState } from "react";
 import example from "../../data/example-copilot-marking.json";
+import tools from "../../data/tools.json";
 import type { Flow, RuleSet } from "../engine/types";
 import { APP_NAME } from "./brand";
 import { emptySentence, exampleSentence, flowFromSentence, sentenceChoices, sentenceComplete, type Sentence } from "./flowOps";
 import { nameWarning } from "./names";
 import { Glossed } from "./plain";
+import { flowFromScan, isScanReport } from "./scanImport";
 
-type Route = null | "new" | "existing" | "tier";
+type Route = null | "new" | "existing" | "tier" | "scan";
 
 interface Props {
   set: RuleSet;
@@ -21,13 +23,19 @@ export function FrontDoor({ set, onOpen }: Props) {
   const [error, setError] = useState<string | null>(null);
   const file = useRef<HTMLInputElement>(null);
 
+  /** A saved flow opens on the canvas; a scanner report becomes a flow and goes to the Q&A, since code can't answer everything. */
   const upload = async (f: File) => {
     try {
-      const flow = JSON.parse(await f.text()) as Flow;
+      const parsed = JSON.parse(await f.text()) as unknown;
+      if (isScanReport(parsed)) {
+        onOpen(flowFromScan(parsed, set), "questions");
+        return;
+      }
+      const flow = parsed as Flow;
       if (!Array.isArray(flow.nodes) || !Array.isArray(flow.edges)) throw new Error("not a flow");
       onOpen(flow, "canvas");
     } catch {
-      setError("That file isn't something saved from here.");
+      setError("That file isn't something saved from here, or a scanner report.");
     }
   };
 
@@ -55,7 +63,28 @@ export function FrontDoor({ set, onOpen }: Props) {
             <strong>How sensitive data can be used</strong>
             <span>Pick a level and see what's allowed there.</span>
           </button>
+          <button type="button" className={route === "scan" ? "on" : ""} onClick={() => pick("scan")}>
+            <strong>An app we've built</strong>
+            <span>Scan its code, then open the report here.</span>
+          </button>
         </div>
+
+        {route === "scan" && (
+          <div className="panel sentence-panel scanpanel">
+            <p className="lab">Two steps</p>
+            <ol className="steps">
+              <li>
+                <strong>Scan the code.</strong> <Glossed text={tools.scanner.blurb} />{" "}
+                <a href={tools.scanner.url} target="_blank" rel="noreferrer">Open the {tools.scanner.name} ↗</a>
+              </li>
+              <li>
+                <strong>Open the report here.</strong> {tools.scanner.then}{" "}
+                <button type="button" className="btn sm" onClick={() => file.current?.click()}>Open a scanner report</button>
+              </li>
+            </ol>
+            <p className="mu" style={{ fontSize: 13, margin: "10px 0 0" }}>The scan sees where data goes in the code. It can't see ages, legal reasons or who signs, so a few questions follow, then the picture.</p>
+          </div>
+        )}
         {error && <div className="box alert">{error}</div>}
 
         {route === "tier" && <TierPicker set={set} tier={tier} setTier={setTier} />}
