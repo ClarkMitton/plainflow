@@ -17,8 +17,9 @@ import { Interview } from "./Interview";
 import { RulesPage, ScreeningPage } from "./Pages";
 import { describeChange } from "./plain";
 import { Rail, type LastChange } from "./Rail";
+import { ScanReport } from "./ScanReport";
 
-type View = "questions" | "canvas" | "screening" | "rules" | "compare";
+type View = "questions" | "canvas" | "screening" | "report" | "rules" | "compare";
 const STORE = "plainflow.current";
 
 function loadSaved(): Flow | null {
@@ -155,6 +156,7 @@ export function App() {
             {([["questions", "Questions"], ["canvas", "Canvas"], ["screening", "Record"], ["rules", "Rules"]] as [View, string][]).map(([v, label]) => (
               <button key={v} type="button" className={view === v ? "on" : ""} onClick={() => { setView(v); setReplay(0); }}>{label}</button>
             ))}
+            {flow.source?.kind === "scan" && flow.source.report != null && <button type="button" className={view === "report" ? "on" : ""} onClick={() => { setView("report"); setReplay(0); }}>Report</button>}
             {flow.pinned && <button type="button" className={view === "compare" ? "on" : ""} onClick={() => setView("compare")}>Compare</button>}
           </div>
           <PrivacyNote onCleared={() => { setFlow(null); setSelected(null); }} />
@@ -234,6 +236,7 @@ export function App() {
             delayMs={view === "canvas" && reveal ? (flow.nodes.length * 0.18 + 1.6) * 1000 : 400}
           />
           {view === "rules" && <RulesPage set={ruleSet} />}
+          {view === "report" && <ScanReport flow={flow} />}
           {view === "compare" && flow.pinned && (
             <Compare
               flow={flow}

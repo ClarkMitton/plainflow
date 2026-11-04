@@ -52,7 +52,7 @@ export interface Flow {
   /** False until the person has looked at the picture and asked for the answer. The rail stays quiet until then. */
   checked?: boolean;
   /** Where the flow came from when it wasn't drawn by hand: a code scan. */
-  source?: { kind: "scan"; repo: string; score: number | null; risk: string | null; triggers: string[]; scanned_at: string | null } | null;
+  source?: { kind: "scan"; repo: string; score: number | null; risk: string | null; triggers: string[]; scanned_at: string | null; /** The scanner's full report, for the Report tab. */ report?: unknown } | null;
   changelog?: ChangeEntry[];
 }
 

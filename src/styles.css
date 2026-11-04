@@ -387,3 +387,20 @@ table.tbl code, code.x { font-family: var(--mono); font-size: 12px; background: 
 .lawline { margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--rule); font-size: 12.5px; line-height: 1.45; display: flex; flex-direction: column; gap: 6px; }
 .lawline .why { color: var(--muted); }
 .topbar .linkish { font-family: var(--sans); font-size: 13px; font-weight: 500; white-space: nowrap; }
+
+/* Scan report */
+.report .threecol { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin: 8px 0 10px; }
+.report .twocol { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 10px 0; }
+@media (max-width: 900px) { .report .threecol, .report .twocol { grid-template-columns: 1fr; } }
+.report .dot { margin-right: 4px; vertical-align: middle; }
+.report .dot:not(.ok):not(.rq) { background: var(--data); }
+.tagline { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .04em; border: 1.5px solid currentColor; padding: 1px 6px; margin-right: 8px; white-space: nowrap; }
+.cards { display: flex; flex-direction: column; gap: 10px; }
+.card { border: 2px solid var(--ink); background: var(--paper); }
+.card summary { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; list-style: none; flex-wrap: wrap; }
+.card summary::-webkit-details-marker { display: none; }
+.card summary strong { flex: 1; }
+.card[open] summary { border-bottom: 1px solid var(--rule); background: var(--paper-2); }
+.cardbody { padding: 12px 14px 14px; font-size: 14px; line-height: 1.5; }
+.cardbody p { margin: 0 0 8px; }
+.code { font-family: var(--mono); font-size: 12px; background: var(--paper-2); border: 1px solid var(--rule); padding: 8px 10px; white-space: pre-wrap; word-break: break-all; margin: 6px 0 10px; }

@@ -222,6 +222,10 @@
             "string",
             "null"
           ]
+        },
+        "report": {
+          "type": "object",
+          "description": "The scanner's full report (its RepoIndex), kept so the Report tab can show the evidence."
         }
       }
     },

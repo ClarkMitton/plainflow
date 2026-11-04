@@ -1,8 +1,8 @@
 {
-  "note": "Sibling tools. The GDPR Repo Scanner's engine now runs inside Plainflow (src/scanner), so a public repository can be scanned here with no server. 'url' is the scanner's own site, kept for the full report with evidence; swap the GitHub link for the live address once it's deployed.",
+  "note": "The GDPR Repo Scanner's engine runs inside Plainflow (src/scanner) and its report is rebuilt as the Report tab, so nothing links out. 'origin' records where the engine came from.",
   "scanner": {
     "name": "GDPR Repo Scanner",
-    "url": "https://github.com/ClarkMitton/Node-TypeScript-API",
+    "origin": "https://github.com/ClarkMitton/Node-TypeScript-API",
     "blurb": "Paste a public GitHub link and Plainflow reads the code here in your browser: where personal data goes, which outside services and AI it calls, and whether a DPIA looks likely.",
     "then": "Then open it as a picture to get the same answer as any other idea."
   }

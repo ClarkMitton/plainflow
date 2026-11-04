@@ -96,6 +96,13 @@
         "title": "Save, and the record",
         "body": "Save keeps the picture as a file you can open again. Record is the form your DPO signs, filled in from the picture."
       }
+    ],
+    "report": [
+      {
+        "title": "What the code shows",
+        "body": "This is everything the scan found in the code, with the exact lines as evidence, and what each finding does not prove. It's the raw material. The answer that counts is on the Canvas, where your answers fill in what code can't tell.",
+        "aside": "Each card opens to show the code and the reasoning."
+      }
     ]
   }
 }

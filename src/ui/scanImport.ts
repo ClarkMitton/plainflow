@@ -70,6 +70,7 @@ export function flowFromScan(scan: ScanReport, set: RuleSet): Flow {
     risk: scan.riskLevel ?? scan.summary?.riskLevel ?? null,
     triggers: scan.auditSummary?.dpiaScreening?.detectedTriggers ?? [],
     scanned_at: scan.scannedAt ?? scan.createdAt ?? null,
+    report: scan,
   };
 
   // Who it's about. Code can't tell ages; the Q&A asks. Children's data in the scan is the one strong hint.
