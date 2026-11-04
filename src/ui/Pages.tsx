@@ -1,5 +1,6 @@
 import type { Derivation, Flow, RuleSet } from "../engine/types";
 import { stepsFor } from "./questions";
+import { LawLine } from "./Rail";
 
 /** The rules table rendered as a page, so a DPO can read and challenge it without reading code. */
 export function RulesPage({ set }: { set: RuleSet }) {
@@ -9,7 +10,8 @@ export function RulesPage({ set }: { set: RuleSet }) {
     <div className="page">
       <div className="inner">
         <p className="lab">Rules table · version {r.version} · owner {r.owner} · review {r.review_date}</p>
-        <h1>The rules</h1>
+        <h1>How the answers are worked out</h1>
+        <p className="lede" style={{ color: "var(--ink)" }}>Every answer Plainflow gives comes from this table. It's here so a DPO can check a rule and change it. You don't need to read it unless you want to see why something was said.</p>
         <p className="lede">
           Everything the canvas decides comes from this table. It lives in <code className="x">data/rules.json</code> and{" "}
           <code className="x">data/requirements.json</code>. If a result looks wrong, change the rule here, not the flow. {r.expression_help}
@@ -72,6 +74,14 @@ export function RulesPage({ set }: { set: RuleSet }) {
             {r.bright_lines.rules.map((x) => (
               <tr key={x.id}><td><strong>{x.title.replace("{title}", "The company")}</strong><div className="mu">{x.say.replace(/\{title\}/g, "it")}</div></td><td>{x.type}</td><td><code>{x.when}</code></td><td>{x.kind === "stop" ? "Stop" : "Consult the ICO"}</td><td>{src(x.source)}</td></tr>
             ))}
+          </tbody>
+        </table>
+
+        <h2>The law behind the rules</h2>
+        <table className="tbl">
+          <thead><tr><th>Law</th><th>What it says</th><th>Why it matters</th></tr></thead>
+          <tbody>
+            {Object.values(set.laws).map((l) => <tr key={l.id}><td><a href={l.url} target="_blank" rel="noreferrer">{l.ref}</a><div className="mu">{l.name}</div></td><td>{l.says}</td><td>{l.why}</td></tr>)}
           </tbody>
         </table>
 
@@ -169,7 +179,7 @@ export function ScreeningPage({ flow, d, set }: { flow: Flow; d: Derivation; set
   return (
     <div className="page">
       <div className="inner">
-        <p className="lab">Screening record · draft {flow.version}</p>
+        <p className="lab">Screening record · draft {flow.version} · the form your DPO signs</p>
         <h1>{flow.title}</h1>
         {flow.story && <p className="lede" style={{ fontSize: 17, color: "var(--ink)" }}>{flow.story}</p>}
         {flow.source?.kind === "scan" && (
@@ -206,7 +216,7 @@ export function ScreeningPage({ flow, d, set }: { flow: Flow; d: Derivation; set
 
         <h2>Part A: screening</h2>
         <table className="tbl">
-          <thead><tr><th>Q</th><th>Question</th><th>Answer</th><th>Because</th><th>Source</th></tr></thead>
+          <thead><tr><th>Q</th><th>Question</th><th>Answer</th><th>Because</th><th>Law</th><th>Guidance</th></tr></thead>
           <tbody>
             {Object.values(d.screening).map((a) => (
               <tr key={a.id}>
@@ -214,6 +224,7 @@ export function ScreeningPage({ flow, d, set }: { flow: Flow; d: Derivation; set
                 <td>{a.text}</td>
                 <td className={`mono ${a.yes ? "rq" : ""}`} style={{ fontWeight: 600 }}>{a.yes ? "Yes" : "No"}</td>
                 <td>{a.because.join("; ") || <span className="mu">nothing on the canvas</span>}</td>
+                <td>{a.law ? <a href={a.law.url} target="_blank" rel="noreferrer">{a.law.ref}</a> : null}</td>
                 <td>{a.source ? <a href={a.source.url} target="_blank" rel="noreferrer">{a.source.label}</a> : null}</td>
               </tr>
             ))}
@@ -248,6 +259,10 @@ export function ScreeningPage({ flow, d, set }: { flow: Flow; d: Derivation; set
             ))}
           </tbody>
         </table>
+
+        <h2>Where this comes from</h2>
+        <p className="lede">The law behind every answer on this record, and why it matters. Links go to the legislation; the ICO and DfE links above are the guidance on top.</p>
+        <LawLine laws={[...new Set([...Object.values(d.screening).filter((a) => a.yes).map((a) => a.law), ...d.requirements.map((r) => r.law), ...d.bright_lines.map((b) => b.law)].filter(Boolean).map((l) => l!.id))].map((id) => set.laws[id])} />
 
         <h2>Still needs a person</h2>
         <ul className="plain">{d.needs_person.map((x) => <li key={x}>{x}</li>)}</ul>

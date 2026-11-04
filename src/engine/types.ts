@@ -49,12 +49,16 @@ export interface Flow {
   risk_owner?: string | null;
   /** What was asked in the Q&A and how it was answered, keyed by question and node. Anything not here was assumed. */
   answers?: Record<string, string>;
+  /** False until the person has looked at the picture and asked for the answer. The rail stays quiet until then. */
+  checked?: boolean;
   /** Where the flow came from when it wasn't drawn by hand: a code scan. */
   source?: { kind: "scan"; repo: string; score: number | null; risk: string | null; triggers: string[]; scanned_at: string | null } | null;
   changelog?: ChangeEntry[];
 }
 
 export interface Source { label: string; url: string }
+
+export interface Law { id: string; ref: string; name: string; says: string; why: string; url: string }
 
 export interface LeverDef {
   id: string;
@@ -78,18 +82,18 @@ export interface Rules {
   large_scale_threshold: number;
   tier_rules: { note: string; rules: { tier: number; when: string; because: string }[] };
   pseudonymisation_credit: { enabled: boolean; applies_when: string; effect: string; why: string };
-  tiers: Record<string, { label: string; rule: string; plain: string; examples: string; can: string }>;
+  tiers: Record<string, { label: string; rule: string; plain: string; examples: string; can: string; law?: string[] }>;
   policy: { note: string; allowed: string; allowed_inside: string; no: string; yes_title: string; no_title: string };
   sanctioned: { note: string; unlisted_max_tier: number; list: Record<string, { max_tier: number; ai: boolean }> };
   blocked: { note: string; rules: { id: string; when: string; message: string; ways_out: string[] }[] };
   locks: { type: NodeType; lever: string; when: string; value: unknown; reason: string }[];
-  screening: { id: string; group: "mandatory" | "criteria"; text: string; type: NodeType; when: string; because: string; source: string }[];
+  screening: { id: string; group: "mandatory" | "criteria"; text: string; type: NodeType; when: string; because: string; source: string; law?: string }[];
   outcome: { order: string[]; labels: Record<string, string>; plain: Record<string, string>; required_if: string; recommended_if: string };
   use_case_floor: { note: string; levels: { id: string; label: string; min_outcome: string }[]; by_use_case: Record<string, string> };
   risk: { level: string; when: string }[];
   effort: { rules: { when: string; signoff: string; time: string }[]; signoff_labels: Record<string, string>; time_labels: Record<string, string> };
   verdict: { id: string; label: string; when: string; say: string }[];
-  bright_lines: { note: string; power_imbalance_groups: string[]; rules: { id: string; kind: "stop" | "consult"; type: NodeType | "flow"; when: string; title: string; say: string; ways_out: string[]; source: string }[] };
+  bright_lines: { note: string; power_imbalance_groups: string[]; rules: { id: string; kind: "stop" | "consult"; type: NodeType | "flow"; when: string; title: string; say: string; ways_out: string[]; source: string; law?: string }[] };
   notes: { when: string; say: string }[];
   always_human: { note: string; always: string[]; when_full_dpia: string[] };
   cheapest_change: { note: string; candidates: { type: NodeType; lever: string; to: unknown; when: string; cost: string; how: string }[] };
@@ -114,6 +118,7 @@ export interface RequirementDef {
   owner: string;
   effort: string;
   source: string;
+  law?: string;
   build_order: number;
 }
 
@@ -134,6 +139,7 @@ export interface Products {
 
 export interface RuleSet {
   rules: Rules;
+  laws: Record<string, Law>;
   requirements: RequirementsCatalogue;
   products: Products;
 }
@@ -151,6 +157,7 @@ export interface Requirement {
   owner: string;
   effort: string;
   source: Source | null;
+  law: Law | null;
   left_for_person: string;
   build_order: number;
 }
@@ -170,6 +177,7 @@ export interface ScreeningAnswer {
   because: string[];
   nodes: string[];
   source: Source | null;
+  law: Law | null;
 }
 
 export interface CheapestChange {
@@ -207,7 +215,7 @@ export interface Derivation {
   risk: string;
   effort: { signoff: string; time: string };
   verdict: { id: string; label: string; say: string };
-  bright_lines: { id: string; kind: "stop" | "consult"; node: string | null; title: string; say: string; ways_out: string[]; source: Source | null }[];
+  bright_lines: { id: string; kind: "stop" | "consult"; node: string | null; title: string; say: string; ways_out: string[]; source: Source | null; law: Law | null }[];
   notes: string[];
   needs_person: string[];
   role_hints: Record<string, string[]>;

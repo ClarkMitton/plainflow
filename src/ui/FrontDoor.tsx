@@ -1,12 +1,12 @@
 import { useRef, useState } from "react";
 import example from "../../data/example-copilot-marking.json";
-import tools from "../../data/tools.json";
 import type { Flow, RuleSet } from "../engine/types";
 import { APP_NAME } from "./brand";
 import { emptySentence, exampleSentence, flowFromSentence, sentenceChoices, sentenceComplete, type Sentence } from "./flowOps";
 import { nameWarning } from "./names";
 import { Glossed } from "./plain";
 import { flowFromScan, isScanReport } from "./scanImport";
+import { ScanPage } from "./ScanPage";
 
 type Route = null | "new" | "existing" | "tier" | "scan";
 
@@ -65,29 +65,15 @@ export function FrontDoor({ set, onOpen }: Props) {
           </button>
           <button type="button" className={route === "scan" ? "on" : ""} onClick={() => pick("scan")}>
             <strong>An app we've built</strong>
-            <span>Scan its code, then open the report here.</span>
+            <span>Scan its code right here, then see it as a picture.</span>
           </button>
         </div>
 
-        {route === "scan" && (
-          <div className="panel sentence-panel scanpanel">
-            <p className="lab">Two steps</p>
-            <ol className="steps">
-              <li>
-                <strong>Scan the code.</strong> <Glossed text={tools.scanner.blurb} />{" "}
-                <a href={tools.scanner.url} target="_blank" rel="noreferrer">Open the {tools.scanner.name} ↗</a>
-              </li>
-              <li>
-                <strong>Open the report here.</strong> {tools.scanner.then}{" "}
-                <button type="button" className="btn sm" onClick={() => file.current?.click()}>Open a scanner report</button>
-              </li>
-            </ol>
-            <p className="mu" style={{ fontSize: 13, margin: "10px 0 0" }}>The scan sees where data goes in the code. It can't see ages, legal reasons or who signs, so a few questions follow, then the picture.</p>
-          </div>
-        )}
         {error && <div className="box alert">{error}</div>}
 
         {route === "tier" && <TierPicker set={set} tier={tier} setTier={setTier} />}
+
+        {route === "scan" && <ScanPage set={set} onOpen={onOpen} onOpenFile={() => file.current?.click()} />}
 
         {showSentence && (
           <SentenceBuilder key={`${route}${tier}`} set={set} retrospective={route === "existing"} tier={route === "tier" ? tier : null} onBuild={(f) => onOpen(f, "questions")} />

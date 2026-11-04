@@ -26,7 +26,7 @@ interface Props {
 }
 
 export function Canvas({ onChange, reveal = false, pin, pinned, toggleTier }: Props) {
-  const { flow, d, select, trace, setTrace } = useFlow();
+  const { flow, d, select, trace, setTrace, checked } = useFlow();
   const { fitView } = useReactFlow();
   const [rfNodes, setRfNodes] = useState<Node<CardData>[]>([]);
 
@@ -56,12 +56,12 @@ export function Canvas({ onChange, reveal = false, pin, pinned, toggleTier }: Pr
         type: "wire",
         data: {
           kind: e.kind,
-          info: d.edges[e.id],
+          info: checked ? d.edges[e.id] : d.edges[e.id] && { ...d.edges[e.id], blocked: null },
           dim: !!trace && !trace.edges.has(e.id),
           lit: !!trace && trace.edges.has(e.id),
         },
       })),
-    [flow.edges, d.edges, trace],
+    [flow.edges, d.edges, trace, checked],
   );
 
   const onNodesChange = (changes: NodeChange<Node<CardData>>[]) => {

@@ -96,7 +96,7 @@ export function Drawer({ node, onProduct, onLoadCard, onDelete }: Props) {
         {node.type === "company" && d.role_hints[node.id]?.map((h) => <div key={h} className="box alert"><Glossed text={h} /></div>)}
 
         <div>
-          <p className="lab" style={{ marginBottom: 10 }}>Levers</p>
+          <p className="lab" style={{ marginBottom: 10 }}>Switches</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             {set.rules.levers[node.type].map((def) => (
               <Lever key={def.id} nodeId={node.id} def={def} value={facts[def.id] ?? node.levers[def.id]} lockReason={locks[def.id]} variant="drawer" />

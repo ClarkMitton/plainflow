@@ -1,0 +1,101 @@
+{
+  "note": "First-time guide. One entry per screen; each shows once, then can be replayed from the Tips button. A step with no 'anchor' is a modal in the middle of the screen. A step with an 'anchor' (a CSS selector) points at that part of the page and outlines it. Plain words only: say what Plainflow is making and doing, not what the buttons are called. 'canvas' shows after the picture draws; 'answer' shows after Check it.",
+  "screens": {
+    "door": [
+      {
+        "title": "What this does",
+        "body": "You'll describe an idea that uses people's data, in one sentence, then answer a few plain questions. Plainflow turns that into a picture of where the data goes, and reads the answer off the picture: can you do it, does your organisation's policy allow it, do you need a DPIA (a written check of what could go wrong for people), and what to do next.",
+        "aside": "Nothing you type is sent anywhere; it stays in this browser until you save it. Use roles and groups, never people's names."
+      },
+      {
+        "anchor": ".door",
+        "title": "Start here",
+        "body": "Say what you're checking: a new idea, something already running, a sensitivity level you already know, or an app you've built. Pick one and a sentence to fill in appears below."
+      }
+    ],
+    "questions": [
+      {
+        "title": "A few questions, then the picture",
+        "body": "Plainflow is building a picture of your idea. Each answer flips a switch on it. Some answers are already guessed from your sentence; change anything that's wrong.",
+        "aside": "There are no wrong answers. An honest yes means a closer look, not a no."
+      },
+      {
+        "anchor": ".qcard",
+        "title": "Tick what's true",
+        "body": "A list like this stands in for a run of yes or no questions. The small print under each item says what it means. Not sure? Skip it and we keep our guess."
+      },
+      {
+        "anchor": ".live",
+        "title": "The answer, forming",
+        "body": "This updates as you answer. Watch it change; that's the point. Nothing here is final until a person signs it."
+      }
+    ],
+    "canvas": [
+      {
+        "title": "Your idea, as a picture",
+        "body": "Each box is one part of your idea: the people it's about, the data, the tool, what it's for, and the companies that handle the data. Wires show where data goes; the thick amber ones carry personal data. The dashed line is the edge of your organisation: anything to the right of it is outside.",
+        "aside": "You can drag boxes about, and nothing you do here is final."
+      },
+      {
+        "anchor": ".story-strip",
+        "title": "The sentence is the picture",
+        "body": "Hover a word to light up where that data goes. Click one to open its box."
+      },
+      {
+        "anchor": ".checkit",
+        "title": "When it looks right",
+        "body": "Have a look round first. Then press this and Plainflow reads the answer off the picture: can you do it, does policy allow it, and what to do next."
+      }
+    ],
+    "screening": [
+      {
+        "title": "The form your DPO signs",
+        "body": "Everything here came from your picture: the screening questions with the reason for each answer, the data's level, and what still needs a person. You don't need to read it; it's here so your DPO can."
+      }
+    ],
+    "rules": [
+      {
+        "title": "How the answers are worked out",
+        "body": "Every answer Plainflow gives comes from this table, not from hidden code. It's here so a DPO can check a rule and change it. You don't need to read it unless you want to see why something was said."
+      }
+    ],
+    "compare": [
+      {
+        "title": "Two versions side by side",
+        "body": "A is the copy you pinned; B is the picture as it is now. What changed is listed, and the to-do list shows what each version needs. Keep A, or go with B."
+      }
+    ],
+    "answer": [
+      {
+        "title": "The answer, read off the picture",
+        "body": "Everything on the right comes from the picture: whether you can do it, the facts behind that, and a list of things to do. From now on it's live: change the picture and the answer changes with it.",
+        "aside": "Nothing here is final until a person signs it."
+      },
+      {
+        "anchor": ".n-data .tg",
+        "title": "Flip any switch",
+        "body": "Switches are the choices you made in the questions. Flip one and the answer updates straight away, and a box on the right says what changed. Hover a switch to see what it means."
+      },
+      {
+        "anchor": ".rail .qa",
+        "title": "Your answer",
+        "body": "Can you do it, in plain words, then the facts behind it: the data, policy, and whether a DPIA is needed. Click a fact to see why."
+      },
+      {
+        "anchor": ".panel.s-paperwork",
+        "title": "What to do",
+        "body": "Each line is one thing that needs doing before this goes ahead, with who does it and roughly how long. Click a line to see what it is and why it's there."
+      },
+      {
+        "anchor": ".palette",
+        "title": "Tools",
+        "body": "Add a box, tidy the layout, fold boxes down to their titles, or pin a copy so you can change things and compare."
+      },
+      {
+        "anchor": ".topbar .seg",
+        "title": "Save, and the record",
+        "body": "Save keeps the picture as a file you can open again. Record is the form your DPO signs, filled in from the picture."
+      }
+    ]
+  }
+}

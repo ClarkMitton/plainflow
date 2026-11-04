@@ -47,6 +47,8 @@ data/
   glossary.json               plain meanings for jargon, shown on hover wherever the word appears
   cards.json                  shared company cards (filled once, reused by every flow)
   tools.json                  sibling tools linked from the front door (the GDPR Repo Scanner)
+  tips.json                   the first-time guide: what each screen is making and doing, shown once per screen
+  law.json                    where each answer comes from in law and why it matters; rules and requirements point at these ids
   examples/                   a real scanner report, used as a test fixture
 mockups/
   Master.html                 A5, flow first, the main canvas
@@ -61,9 +63,9 @@ mockups/
 
 The mockups are static HTML. Open them in a browser. They were drawn on a design canvas and converted, so expect minor overlaps; they are references for layout and style, not pixel specs.
 
-## Opening a code scan
+## Scanning an app's code
 
-The GDPR Repo Scanner (github.com/ClarkMitton/Node-TypeScript-API) reads an app's code and reports where personal data goes. Save its JSON report and open it on the front door: `src/ui/scanImport.ts` turns the report into a flow (the app as the system, each service as a company, each kind of data it saw as a data node), the Q&A asks what code can't tell, and the canvas gives the same answer it gives a sentence. Set the scanner's live address in `data/tools.json`.
+The GDPR Repo Scanner's engine (from github.com/ClarkMitton/Node-TypeScript-API, `lib/gdpr-scanner`) is ported into `src/scanner/` with the file system swapped for files in memory. `fetch-github.ts` downloads a public repository from GitHub in the browser (api.github.com for the file list, raw.githubusercontent.com for contents; both allow browser requests, no token needed for public repos), `worker.ts` runs the scan off the main thread, and `src/ui/scanImport.ts` turns the report into a flow: the app as the system, each service as a company, each kind of data it saw as a data node. The Q&A then asks what code can't tell, and the canvas gives the same answer it gives a sentence. `scanner.test.ts` checks the port against the original scanner's report on a real repository. The code fetched for a scan is held in memory and dropped afterwards; only the report is kept, and only if the person opens it.
 
 ## Running it
 

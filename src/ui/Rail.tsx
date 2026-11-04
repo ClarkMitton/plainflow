@@ -1,8 +1,23 @@
 import { useState, type ReactNode } from "react";
-import type { Requirement } from "../engine/types";
+import type { Law, Requirement } from "../engine/types";
 import { leverDef, useFlow } from "./context";
 import { nameWarning } from "./names";
 import { Glossed, policyAnswer, Term, type Change } from "./plain";
+
+/** Where this comes from in law, and why it matters. */
+export function LawLine({ law, laws }: { law?: Law | null; laws?: (Law | null | undefined)[] }) {
+  const list = (laws ?? [law]).filter((l): l is Law => !!l);
+  if (!list.length) return null;
+  return (
+    <div className="lawline">
+      {list.map((l) => (
+        <div key={l.id}>
+          <a href={l.url} target="_blank" rel="noreferrer"><strong>{l.ref}</strong>, {l.name.toLowerCase()}</a>: {l.says} <span className="why">Why it matters: {l.why}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export interface LastChange {
   what: string;
@@ -16,14 +31,15 @@ interface Props {
   applyCheapest(): void;
   lastChange: LastChange | null;
   setRiskOwner(role: string): void;
+  checkIt(): void;
 }
 
 /**
  * The answer, in order of what matters: can I do it; what just changed; three facts behind the answer
  * (each one line, open for more); what to do; the one change that helps. Everything else is folded away.
  */
-export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner }: Props) {
-  const { d, set, flow } = useFlow();
+export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner, checkIt }: Props) {
+  const { d, set, flow, checked } = useFlow();
   const [open, setOpen] = useState<string | null>(null);
   const [fact, setFact] = useState<string | null>(null);
   const [showCovered, setShowCovered] = useState(false);
@@ -61,8 +77,9 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
             <dt>who</dt><dd>{cat.owner_labels[r.owner] ?? r.owner}</dd>
             <dt>how long</dt><dd>{cat.effort_labels[r.effort] ?? r.effort}</dd>
             <dt>a person</dt><dd>{r.left_for_person}</dd>
-            <dt>source</dt><dd>{r.source ? <a href={r.source.url} target="_blank" rel="noreferrer">{r.source.label}</a> : "none"}</dd>
+            <dt>guidance</dt><dd>{r.source ? <a href={r.source.url} target="_blank" rel="noreferrer">{r.source.label}</a> : "none"}</dd>
           </dl>
+          <LawLine law={r.law} />
         </div>
       )}
     </div>
@@ -79,8 +96,29 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
     </div>
   );
 
+  if (!checked) {
+    const parts = flow.nodes.length;
+    const outside = flow.nodes.filter((n) => !n.inside).length;
+    return (
+      <aside className="rail" aria-label="Your picture">
+        <div className="qa">
+          <p className="lab">Your idea, as a picture</p>
+          <div className="verdict">Have a look first</div>
+          <div className="say">
+            {parts} parts, {outside} of them outside your organisation. Drag boxes about, open one to change details, hover a word in the sentence to see where that data goes.
+          </div>
+        </div>
+        <div className="box" style={{ boxShadow: "5px 5px 0 var(--data)" }}>
+          <div style={{ fontSize: 15, lineHeight: 1.45 }}>When it looks right, Plainflow reads the answer off the picture: can you do it, does policy allow it, what to do next.</div>
+          <button type="button" className="btn dk checkit" onClick={checkIt}>Check it</button>
+        </div>
+        <div className="mu" style={{ fontSize: 12 }}>Nothing is decided yet. You can come back and change the picture at any time.</div>
+      </aside>
+    );
+  }
+
   return (
-    <aside className="rail" aria-label="Your answer">
+    <aside className="rail reveal-rail" aria-label="Your answer">
       <div className="qa">
         <p className="lab">Can I do it?</p>
         <div className="verdict" style={{ color: bad ? "var(--rq)" : undefined }}>{d.verdict.label}</div>
@@ -103,6 +141,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
             <div style={{ marginTop: 6, fontWeight: 600 }}>Ways past it:</div>
             <ul className="plain">{b.ways_out.map((w) => <li key={w}>{w}</li>)}</ul>
             {b.source && <a href={b.source.url} target="_blank" rel="noreferrer" style={{ fontSize: 12 }}>{b.source.label}</a>}
+            <LawLine law={b.law} />
           </div>
         ))}
       </div>
@@ -127,14 +166,14 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
       </div>
 
       <div className="facts">
-        {factRow("data", "The data", <>Level {d.highest_tier}: {tier.label.toLowerCase()}</>, d.highest_tier >= 3 ? "rq" : "", <><Glossed text={tier.plain} /> {tier.can} <span className="mu">(<Term t="tier">Level</Term> {d.highest_tier} of 3.)</span></>)}
+        {factRow("data", "The data", <>Level {d.highest_tier}: {tier.label.toLowerCase()}</>, d.highest_tier >= 3 ? "rq" : "", <><Glossed text={tier.plain} /> {tier.can} <span className="mu">(<Term t="tier">Level</Term> {d.highest_tier} of 3.)</span><LawLine laws={(tier.law ?? []).map((id) => set.laws[id] ?? null)} /></>)}
         {factRow("policy", "Policy", policy.ok ? "allows it" : "doesn't allow it", policy.ok ? "ok" : "rq",
           policy.lines.map((l) => (
             <div key={l.text}>
               <Glossed text={l.text} />
               {l.ways.length > 0 && <ul className="plain">{l.ways.map((w) => <li key={w}>{w}</li>)}</ul>}
             </div>
-          )))}
+          )).concat(<LawLine key="law" laws={[set.laws.art28, set.laws.art44]} />))}
         {factRow("dpia", <Term t="DPIA" />, { not_required: "not needed", recommended: "recommended", required: "a full one is needed" }[d.outcome] ?? d.outcome, d.outcome === "required" ? "rq" : d.outcome === "not_required" ? "ok" : "",
           <>
             <div>{rules.outcome.plain[d.outcome]}{d.floor_raised && " Your use of AI sets this minimum."}{d.credit_applied && d.outcome !== d.outcome_from_screening && " One step lower because no names are used."}</div>
@@ -151,6 +190,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
               </>
             )}
             <div className="mu" style={{ marginTop: 6 }}>Risk to people: {d.risk}.</div>
+            <LawLine laws={[set.laws.art35, ...yes.map((a) => a.law).filter((l) => l && l.id !== "art35")]} />
           </>)}
         {needsOwner && factRow("owner", "Who decides", flow.risk_owner?.trim() ? flow.risk_owner : <span className="rq">not named yet</span>, "",
           <>

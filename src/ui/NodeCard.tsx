@@ -8,7 +8,7 @@ export type CardData = { node: FlowNode; reveal: number | null };
 
 export function NodeCard({ data }: NodeProps & { data: CardData }) {
   const { node, reveal } = data;
-  const { d, set, flow, selected, highlight, select, trace, setTrace, setCollapse } = useFlow();
+  const { d, set, flow, selected, highlight, select, trace, setTrace, setCollapse, checked } = useFlow();
   const facts = d.facts[node.id] ?? {};
   const locks = d.locks[node.id] ?? {};
   // Staff are adults; their age chips are noise.
@@ -17,7 +17,7 @@ export function NodeCard({ data }: NodeProps & { data: CardData }) {
 
   const personalIn = flow.edges.some((e) => e.to === node.id && (d.edges[e.id]?.tier ?? -1) >= 1);
   const personalOut = flow.edges.some((e) => e.from === node.id && (d.edges[e.id]?.tier ?? -1) >= 1);
-  const blockedIn = flow.edges.some((e) => e.to === node.id && d.edges[e.id]?.blocked);
+  const blockedIn = checked && flow.edges.some((e) => e.to === node.id && d.edges[e.id]?.blocked);
 
   let kind: string = TYPE_LABEL[node.type];
   if (node.type === "system" && facts.is_ai) kind = "System · AI";
@@ -28,13 +28,13 @@ export function NodeCard({ data }: NodeProps & { data: CardData }) {
   if (selected === node.id) cls.push("sel");
   if (highlight.includes(node.id)) cls.push("hl");
   if (reveal != null) cls.push("appear");
-  const hardLine = d.bright_lines.some((b) => b.node === node.id && b.kind === "stop");
+  const hardLine = checked && d.bright_lines.some((b) => b.node === node.id && b.kind === "stop");
   if (hardLine) cls.push("stop");
   if (trace && !trace.nodes.has(node.id)) cls.push("dim");
   if (trace?.nodes.has(node.id)) cls.push("lit");
   const pill = node.collapse === "pill";
   if (pill) cls.push("pill");
-  const toDo = d.requirements.filter((r) => r.rail && r.status === "to_do" && r.cause.nodes.includes(node.id)).length;
+  const toDo = checked ? d.requirements.filter((r) => r.rail && r.status === "to_do" && r.cause.nodes.includes(node.id)).length : 0;
   const handleTop = pill ? 29 : 82;
 
   const dpa = d.requirements.find((r) => r.key === `dpa_card:${node.id}`);

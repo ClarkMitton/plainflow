@@ -5,6 +5,8 @@ import { ruleSet } from "../engine/ruleset";
 import type { Flow } from "../engine/types";
 import { APP_NAME } from "./brand";
 import { Canvas } from "./Canvas";
+import { Coach } from "./Coach";
+import { PrivacyNote } from "./Privacy";
 import { Compare } from "./Compare";
 import { FlowCtx, traceOf, type Ctx, type Trace } from "./context";
 import { Drawer } from "./Drawer";
@@ -37,6 +39,7 @@ export function App() {
   const [preview, setPreview] = useState(false);
   const [lastChange, setLastChange] = useState<LastChange | null>(null);
   const [reveal, setReveal] = useState(false);
+  const [replay, setReplay] = useState(0);
   const flowRef = useRef(flow);
   flowRef.current = flow;
 
@@ -69,10 +72,17 @@ export function App() {
   }, []);
 
   const open = (f: Flow, to: "questions" | "canvas") => {
-    setFlow(f);
+    // From the questions, the picture comes first and the answer waits for Check it. Anything else opens already checked.
+    setFlow({ ...f, checked: to === "canvas" ? f.checked !== false : f.checked === true });
     setView(to);
     setSelected(null);
     setLastChange(null);
+    setReplay(0);
+  };
+
+  const checkIt = () => {
+    update({ ...flow!, checked: true }, "asked for the answer");
+    setReplay(0);
   };
 
   const finishQuestions = () => {
@@ -96,6 +106,7 @@ export function App() {
       setTrace: (from) => setTraceState(from ? traceOf(flow, d, from) : null),
       previewing: preview && d.cheapest_change ? { node: d.cheapest_change.node, lever: d.cheapest_change.lever } : null,
       setCollapse: (id, collapse) => update(patchNode(id, (n) => ({ ...n, collapse })), null),
+      checked: flow.checked !== false,
       setLever: (id, lever, value) => {
         const n = flow.nodes.find((x) => x.id === id);
         const def = n ? ruleSet.rules.levers[n.type].find((l) => l.id === lever) : undefined;
@@ -117,8 +128,14 @@ export function App() {
   if (!flow || !d || !ctx) {
     return (
       <div className="app">
-        <div className="topbar"><span className="title" style={{ padding: 0 }}>{APP_NAME}</span></div>
+        <div className="topbar">
+          <span className="title" style={{ padding: 0 }}>{APP_NAME}</span>
+          <span className="spacer" />
+          <PrivacyNote onCleared={() => { setFlow(null); setReplay(0); }} />
+          <button type="button" className="btn sm" onClick={() => setReplay((n) => n + 1)}>How does this work?</button>
+        </div>
         <FrontDoor set={ruleSet} onOpen={open} />
+        <Coach screen="door" replay={replay} />
       </div>
     );
   }
@@ -136,10 +153,12 @@ export function App() {
           <span className="spacer" />
           <div className="seg" role="tablist" aria-label="View">
             {([["questions", "Questions"], ["canvas", "Canvas"], ["screening", "Record"], ["rules", "Rules"]] as [View, string][]).map(([v, label]) => (
-              <button key={v} type="button" className={view === v ? "on" : ""} onClick={() => setView(v)}>{label}</button>
+              <button key={v} type="button" className={view === v ? "on" : ""} onClick={() => { setView(v); setReplay(0); }}>{label}</button>
             ))}
             {flow.pinned && <button type="button" className={view === "compare" ? "on" : ""} onClick={() => setView("compare")}>Compare</button>}
           </div>
+          <PrivacyNote onCleared={() => { setFlow(null); setSelected(null); }} />
+          <button type="button" className="btn" onClick={() => setReplay((n) => n + 1)} title="Show the first-time guide for this screen again">Tips</button>
           <button type="button" className="btn dk" style={{ boxShadow: "4px 4px 0 var(--paperwork)" }} onClick={() => downloadJson(`${flow.title.replace(/[^\w-]+/g, "-").toLowerCase()}.plainflow.json`, flow)}>
             Save
           </button>
@@ -193,6 +212,7 @@ export function App() {
                 )}
               </div>
               <Rail
+                checkIt={checkIt}
                 setRiskOwner={(role) => update({ ...flow, risk_owner: role || null }, null)}
                 lastChange={lastChange}
                 preview={preview}
@@ -207,6 +227,12 @@ export function App() {
           )}
           {view === "questions" && <Interview flow={flow} d={d} set={ruleSet} onChange={update} onDone={finishQuestions} />}
           {view === "screening" && <ScreeningPage flow={flow} d={d} set={ruleSet} />}
+          <Coach
+            key={view === "canvas" ? (flow.checked === false ? "canvas" : "answer") : view}
+            screen={view === "canvas" ? (flow.checked === false ? "canvas" : "answer") : view}
+            replay={replay}
+            delayMs={view === "canvas" && reveal ? (flow.nodes.length * 0.18 + 1.6) * 1000 : 400}
+          />
           {view === "rules" && <RulesPage set={ruleSet} />}
           {view === "compare" && flow.pinned && (
             <Compare

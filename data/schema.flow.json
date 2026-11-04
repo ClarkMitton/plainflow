@@ -224,6 +224,10 @@
           ]
         }
       }
+    },
+    "checked": {
+      "type": "boolean",
+      "description": "False until the person has looked at the picture and clicked Check it. The answer is only shown after that."
     }
   },
   "$defs": {

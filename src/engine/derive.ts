@@ -36,6 +36,7 @@ function makeEnvs(flow: Flow, nodeVars: Record<string, Record<string, unknown>>,
 
 export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = {}): Derivation {
   const { rules, requirements: catalogue } = set;
+  const lawOf = (id?: string) => (id && set.laws?.[id]) || null;
   const nodes = flow.nodes;
   const byId = new Map(nodes.map((n) => [n.id, n]));
   const edges = flow.edges.filter((e) => byId.has(e.from) && byId.has(e.to));
@@ -197,6 +198,7 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
       because: hits.map((n) => fill(q.because, envs[n.id])),
       nodes: hits.map((n) => n.id),
       source: rules.sources[q.source] ?? null,
+      law: lawOf(q.law),
     };
     scope.vars[q.id] = hits.length > 0;
   }
@@ -254,6 +256,7 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
           owner: def.owner,
           effort: def.effort,
           source: source(def.source),
+          law: lawOf(def.law),
           left_for_person: def.left_for_person,
           build_order: def.build_order,
         });
@@ -302,6 +305,7 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
         say: fill(bl.say, t.env),
         ways_out: bl.ways_out.map((w) => fill(w, t.env)),
         source: rules.sources[bl.source] ?? null,
+        law: lawOf(bl.law),
       });
     }
   }

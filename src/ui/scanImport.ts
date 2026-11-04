@@ -48,7 +48,7 @@ function regionOf(hint: string | undefined, known: boolean | undefined): string 
 }
 
 export function flowFromScan(scan: ScanReport, set: RuleSet): Flow {
-  const repo = (scan.repoName ?? scan.repo ?? "the app").replace(/^[^_]+__/, "").replace(/-/g, " ");
+  const repo = (scan.repoName ?? scan.repo ?? "the app").replace(/^[^_/]+(__|\/)/, "").replace(/-/g, " ");
   const appName = repo[0].toUpperCase() + repo.slice(1);
   const flows = scan.verifiedFlows ?? [];
   const tags = new Set<string>([

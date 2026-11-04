@@ -19,6 +19,8 @@ export interface Ctx {
   /** The lever the cheapest change would flip, while it's being previewed. */
   previewing: { node: string; lever: string } | null;
   setCollapse(nodeId: string, collapse: "pill" | "standard"): void;
+  /** Has the person asked for the answer yet? Before that, the picture is shown without verdicts or to-dos. */
+  checked: boolean;
 }
 
 export interface Trace {
