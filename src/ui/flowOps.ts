@@ -1,0 +1,232 @@
+// Flow editing helpers. Pure functions over the flow JSON; the engine never sees React.
+import cardsJson from "../../data/cards.json";
+import { tierOfData } from "../engine/derive";
+import type { EdgeKind, Flow, FlowEdge, FlowNode, NodeType, RuleSet } from "../engine/types";
+
+export const BOUNDARY_X = 700;
+export const ZONE_WIDTH = 420;
+
+type Card = { company_id: string; title: string; contract?: string; fields: Record<string, unknown> };
+export const cards = cardsJson.cards as Record<string, Card>;
+export const art28Clauses = cardsJson.art28_clauses as [string, string][];
+
+let seq = 0;
+export const uid = (p: string) => `${p}_${Date.now().toString(36)}${(seq++).toString(36)}`;
+
+const DEFAULTS: Record<NodeType, { title: string; levers: Record<string, unknown>; fields: Record<string, unknown> }> = {
+  people: { title: "People", levers: { age_mix: "all_adults", vulnerable: false }, fields: { group: "other", description: "", size: null } },
+  data: {
+    title: "Data",
+    levers: { identifiability: "named", about_performance: false, special_category: false, free_text_or_audio: false, new_purpose: false, new_collection: false, student_facing: false },
+    fields: { categories: ["name"], source_system: "", lawful_basis: null, about: [] },
+  },
+  purpose: {
+    title: "Purpose",
+    levers: { scores: false, decides_alone: false, staff_can_override: true, ongoing: false, whole_cohort: false, tracks_behaviour: false, can_block: false, privacy_notice_linked: false },
+    fields: { value: "", alternatives: "", should_it_be_done: "", scale: null, privacy_notice_url: null, challenge_route: "" },
+  },
+  system: {
+    title: "System",
+    levers: { is_ai: false, output_type: "suggestion", validated_by_person: true, staff_can_override: true },
+    fields: { product_id: null, use_case: null, testing: { date: "", sample: "", result: "" }, fairness_check: { date: "", groups: [], result: "" } },
+  },
+  company: {
+    title: "Company",
+    levers: { role: "processor", decides_purpose: false, decides_means: false, own_purposes: false, trains_on_inputs: false, keeps_data: false },
+    fields: { company_id: null, card_ref: null, region: "unknown", transfer_mechanism: "unknown", retention: "", deletion_route: "", security_assessment: { status: "none", date: null }, art28: {}, dpa_document: null, prior_dpia: null, owner: "", review_date: null },
+  },
+};
+
+export function newNode(type: NodeType, position: { x: number; y: number }, flow?: Flow): FlowNode {
+  const d = DEFAULTS[type];
+  const fields = structuredClone(d.fields);
+  if (type === "data" && flow?.organisation.default_lawful_basis) fields.lawful_basis = flow.organisation.default_lawful_basis;
+  return { id: uid("n"), type, title: d.title, position, inside: position.x < BOUNDARY_X, levers: { ...d.levers }, fields };
+}
+
+export function emptyFlow(retrospective: boolean): Flow {
+  return {
+    id: uid("flow"),
+    title: "Untitled flow",
+    story: "",
+    mode: "flow_first",
+    tier_pinned: null,
+    status: "draft",
+    retrospective,
+    owner: "governance lead",
+    organisation: { name: "[organisation]", type: "college", default_lawful_basis: "public_task" },
+    dates: { created: new Date().toISOString().slice(0, 10), launch: null, running_since: null, review: null },
+    version: 1,
+    nodes: [],
+    edges: [],
+    pinned: null,
+    changelog: [{ at: new Date().toISOString(), who: "governance lead", what: "created", reopened: [] }],
+  };
+}
+
+export function inferKind(from: FlowNode, to: FlowNode): EdgeKind {
+  if (from.type === "company" && to.type === "company") return "sub_processor";
+  if (from.type === "people") return from.fields.group === "staff" || to.type === "system" ? "by" : "about";
+  if (from.type === "system" && to.type === "purpose") return "feeds";
+  if (from.type === "purpose" && to.type !== "company") return "feeds";
+  return "carries";
+}
+
+export function connect(flow: Flow, fromId: string, toId: string): Flow {
+  const from = flow.nodes.find((n) => n.id === fromId);
+  const to = flow.nodes.find((n) => n.id === toId);
+  if (!from || !to || fromId === toId) return flow;
+  if (flow.edges.some((e) => e.from === fromId && e.to === toId)) return flow;
+  const edge: FlowEdge = { id: uid("e"), from: fromId, to: toId, kind: inferKind(from, to), data_id: null };
+  return { ...flow, edges: [...flow.edges, edge] };
+}
+
+export function companyFromCard(companyId: string, set: RuleSet, position: { x: number; y: number }, role = "processor"): FlowNode {
+  const n = newNode("company", position);
+  const company = set.products.companies[companyId];
+  const cardEntry = Object.entries(cards).find(([, c]) => c.company_id === companyId);
+  n.title = company?.name ?? companyId;
+  n.levers.role = role;
+  n.fields.company_id = companyId;
+  n.fields.region = company?.region_default ?? "unknown";
+  if (cardEntry) {
+    const [cardId, card] = cardEntry;
+    Object.assign(n.fields, structuredClone(card.fields), { card_ref: cardId });
+  }
+  return n;
+}
+
+/** Picking a product sets the system's AI lever and brings its company and sub-processors onto the canvas. */
+export function applyProduct(flow: Flow, systemId: string, productId: string | null, set: RuleSet): Flow {
+  const sys = flow.nodes.find((n) => n.id === systemId);
+  if (!sys) return flow;
+  const product = productId ? set.products.products[productId] : null;
+  let nodes = flow.nodes.map((n) =>
+    n.id === systemId
+      ? { ...n, title: product ? product.name.replace(/^Microsoft 365 /, "") : n.title, levers: { ...n.levers, is_ai: product ? product.is_ai : n.levers.is_ai }, fields: { ...n.fields, product_id: productId } }
+      : n,
+  );
+  let edges = flow.edges;
+  if (product?.company) {
+    let company = nodes.find((n) => n.type === "company" && n.fields.company_id === product.company);
+    if (!company) {
+      company = companyFromCard(product.company, set, { x: BOUNDARY_X + 60, y: Math.max(40, sys.position.y - 40) });
+      company.levers.keeps_data = typeof product.keeps_data_default === "string" && !/^none/.test(product.keeps_data_default);
+      company.levers.trains_on_inputs = product.trains_on_inputs_default === true;
+      nodes = [...nodes, company];
+    }
+    if (!edges.some((e) => e.from === systemId && e.to === company!.id)) {
+      edges = [...edges, { id: uid("e"), from: systemId, to: company.id, kind: "carries", data_id: null }];
+    }
+    product.sub_processors.forEach((sp, i) => {
+      if (nodes.some((n) => n.type === "company" && n.fields.company_id === sp)) return;
+      const child = companyFromCard(sp, set, { x: BOUNDARY_X + 60, y: company!.position.y + 320 + i * 180 }, "sub_processor");
+      if (sp === "openai_azure") Object.assign(child.fields, { dpa_document: "covered by Microsoft DPA", deletion_route: "via Microsoft", retention: "none" });
+      nodes = [...nodes, child];
+      edges = [...edges, { id: uid("e"), from: company!.id, to: child.id, kind: "sub_processor", data_id: null }];
+    });
+  }
+  return { ...flow, nodes, edges };
+}
+
+export interface Sentence {
+  role: string;
+  data: string[];
+  about: string;
+  aboutGroup: string;
+  under18: "all_adults" | "some_under_18" | "all_under_18";
+  product: string;
+  purpose: string;
+}
+
+/** The story builder: each slot becomes a node, laid out like the worked example. */
+export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boolean, tierPinned: number | null = null): Flow {
+  let flow = emptyFlow(retrospective);
+  const product = set.products.products[s.product];
+  const dataTitles = s.data.map((d) => d.trim()).filter(Boolean);
+  flow.title = `${product?.name.replace(/^Microsoft 365 /, "") ?? "Tool"} ${s.purpose ? "for " + s.purpose.toLowerCase() : ""}`.trim();
+  flow.story = `A ${s.role.toLowerCase()} puts ${dataTitles.join(" and ").toLowerCase()} into ${product?.name ?? "a tool"}${product?.company ? `, run by ${set.products.companies[product.company]?.name}` : ""}, to ${s.purpose.toLowerCase()}.`;
+
+  const subjects = newNode("people", { x: 40, y: 30 });
+  Object.assign(subjects, { title: s.about || "People" });
+  subjects.levers.age_mix = s.under18;
+  subjects.fields.group = s.aboutGroup;
+
+  const actor = newNode("people", { x: 40, y: 250 + dataTitles.length * 300 });
+  actor.title = s.role || "Staff";
+  actor.fields.group = "staff";
+
+  const purpose = newNode("purpose", { x: 360, y: 460 });
+  purpose.title = s.purpose ? s.purpose[0].toUpperCase() + s.purpose.slice(1) : "Purpose";
+  purpose.levers.scores = /mark|grade|score|rank|predict|assess/i.test(s.purpose);
+
+  const system = newNode("system", { x: 360, y: 160 });
+  system.title = product?.name.replace(/^Microsoft 365 /, "") ?? "Tool";
+
+  const dataNodes = dataTitles.map((t, i) => {
+    const d = newNode("data", { x: 40, y: 220 + i * 300 }, flow);
+    d.title = t[0].toUpperCase() + t.slice(1);
+    d.levers.about_performance = /work|mark|grade|attend|progress|behaviour|support|note|assess/i.test(t);
+    d.levers.free_text_or_audio = /work|essay|note|comment|record|audio|recording/i.test(t);
+    d.fields.about = [subjects.id];
+    // Starting from a tier: begin inside it, so the Q&A only offers what that tier allows.
+    if (tierPinned != null) {
+      const steps: [string, unknown][] = [["special_category", false], ["about_performance", false], ["identifiability", "anonymised"]];
+      for (const [lever, value] of steps) if (tierOfData(d, set) > tierPinned) d.levers[lever] = value;
+    }
+    return d;
+  });
+
+  flow.nodes = [subjects, ...dataNodes, actor, system, purpose];
+  flow = connect(flow, subjects.id, purpose.id);
+  flow = connect(flow, actor.id, purpose.id);
+  for (const d of dataNodes) flow = connect(flow, d.id, system.id);
+  flow = connect(flow, system.id, purpose.id);
+  if (s.product) flow = applyProduct(flow, system.id, s.product, set);
+  if (tierPinned != null) Object.assign(flow, { mode: "tier_first", tier_pinned: tierPinned });
+  flow.changelog = [{ at: new Date().toISOString(), who: flow.owner ?? "", what: "created from sentence builder", reopened: [] }];
+  return flow;
+}
+
+export function downloadJson(name: string, value: unknown) {
+  const blob = new Blob([JSON.stringify(value, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+const EST_HEIGHT: Record<NodeType, number> = { people: 170, data: 290, system: 250, purpose: 300, company: 230 };
+
+/**
+ * Lay the flow out left to right in the order data travels: who it's about and the data itself,
+ * then the systems and what they're for, then the companies outside, each followed by the companies behind it.
+ * Heights come from what's on screen when known.
+ */
+export function tidy(flow: Flow, heightOf: (id: string) => number | undefined): Flow {
+  const gap = 48;
+  // A folded node is just its header, whatever was last measured.
+  const h = (n: FlowNode) => (n.collapse === "pill" ? 62 : heightOf(n.id) ?? EST_HEIGHT[n.type]);
+  const pos = new Map<string, { x: number; y: number }>();
+  const stack = (ns: FlowNode[], x: number) => {
+    let y = 40;
+    for (const n of ns) { pos.set(n.id, { x, y }); y += h(n) + gap; }
+  };
+  const of = (pred: (n: FlowNode) => boolean) => flow.nodes.filter(pred);
+  stack([...of((n) => n.type === "people" && n.fields.group !== "staff"), ...of((n) => n.type === "data"), ...of((n) => n.type === "people" && n.fields.group === "staff")], 40);
+  stack([...of((n) => n.type === "system"), ...of((n) => n.type === "purpose")], 360);
+  const subOf = (id: string) => flow.edges.filter((e) => e.kind === "sub_processor" && e.from === id).map((e) => flow.nodes.find((n) => n.id === e.to)!).filter(Boolean);
+  const hasParent = new Set(flow.edges.filter((e) => e.kind === "sub_processor").map((e) => e.to));
+  const outside: FlowNode[] = [];
+  for (const c of of((n) => n.type === "company" && !hasParent.has(n.id))) outside.push(c, ...subOf(c.id).filter((x) => !outside.includes(x)));
+  outside.push(...of((n) => n.type === "company" && !outside.includes(n)));
+  stack(outside, BOUNDARY_X + 60);
+  return {
+    ...flow,
+    nodes: flow.nodes.map((n) => {
+      const p = pos.get(n.id) ?? n.position;
+      return { ...n, position: p, inside: p.x + 130 < BOUNDARY_X };
+    }),
+  };
+}

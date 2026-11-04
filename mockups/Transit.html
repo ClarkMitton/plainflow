@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>3. Transit map</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&family=Overpass+Mono:wght@400;600&display=swap">
+<style>
+body{margin:0}
+a{color:#0A6FC2}a:hover{color:#1B1B1B}
+.st{display:grid;grid-template-columns:132px 1fr;align-items:stretch;border-bottom:1px solid #E2DED4}
+.tag{color:#fff;font-weight:800;font-size:13px;padding:9px 10px;display:flex;align-items:center}
+.ss{padding:9px 12px;font-size:14px;display:flex;align-items:center;gap:8px}
+.jr{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;font-size:14px;min-height:34px}
+.dot{width:12px;height:12px;border-radius:50%;border:3px solid #1B1B1B;background:#fff;justify-self:center}
+.need{font-family:'Overpass Mono',monospace;font-size:12px;padding:2px 7px;border-radius:3px}
+</style>
+</head>
+<body style="margin:0;background:#E9E7E1;padding:24px">
+<div style="width:1400px;height:820px;box-sizing:border-box;background:#F7F5F0;font-family:Overpass,sans-serif;color:#1B1B1B;display:flex;flex-direction:column">
+
+<div style="height:48px;box-sizing:border-box;display:flex;align-items:center;gap:16px;padding:0 20px;border-bottom:3px solid #1B1B1B;background:#FFFFFF">
+<svg width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><circle cx="15" cy="10" r="8" fill="none" stroke="#D6337F" stroke-width="4"></circle><rect x="0" y="7" width="30" height="6" fill="#0A6FC2"></rect></svg>
+<span style="font-weight:800;font-size:17px">Copilot marking</span>
+<span style="font-size:13px;color:#5A5650">network map · 3 lines · 7 stations</span>
+<span style="flex:1"></span>
+<div style="display:flex;border:2px solid #1B1B1B;border-radius:999px;overflow:hidden;font-size:13px;font-weight:600">
+<button style="border:0;background:#1B1B1B;color:#fff;padding:6px 14px;font:inherit;cursor:pointer">Flow first</button>
+<button style="border:0;background:transparent;color:#1B1B1B;padding:6px 14px;font:inherit;cursor:pointer">Tier first</button>
+</div>
+<button style="border:0;border-radius:999px;background:#D6337F;color:#fff;padding:8px 16px;font:inherit;font-size:13px;font-weight:800;cursor:pointer">Print the pack</button>
+</div>
+
+<div style="flex:1;display:grid;grid-template-columns:960px 1fr;min-height:0">
+<svg width="960" height="772" viewBox="0 0 960 772" role="img" aria-label="Network map. Student work line runs from Students through Copilot across the boundary to Microsoft and OpenAI. Suggestion line returns to Suggest a mark. Teacher line stays inside. Canva extension is closed.">
+<path d="M560 0 C590 120 540 240 570 360 C600 480 550 600 580 772 L640 772 C610 600 660 480 630 360 C600 240 650 120 620 0 Z" fill="#CFE3F2"></path>
+<text transform="translate(604 470) rotate(-84)" font-family="Overpass" font-size="13" font-weight="800" letter-spacing="4" fill="#4C7EA6">THE BOUNDARY</text>
+<text x="30" y="36" font-family="Overpass" font-size="12" font-weight="800" letter-spacing="2" fill="#5A5650">INSIDE · YOUR ORGANISATION</text>
+<text x="670" y="36" font-family="Overpass" font-size="12" font-weight="800" letter-spacing="2" fill="#5A5650">OUTSIDE · PROCESSORS</text>
+
+<path d="M250 180 V120 L280 90 H708" fill="none" stroke="#A8A49B" stroke-width="8" stroke-dasharray="14 8"></path>
+<path d="M100 640 H310 L450 500" fill="none" stroke="#0A6FC2" stroke-width="10" stroke-linejoin="round"></path>
+<path d="M720 296 H516 L460 352 V500 H300" fill="none" stroke="#D6337F" stroke-width="10" stroke-linejoin="round"></path>
+<path d="M100 180 H400 L500 280 H720 L800 360 H860" fill="none" stroke="#F2A900" stroke-width="10" stroke-linejoin="round"></path>
+
+<g fill="#FFFFFF" stroke="#1B1B1B" stroke-width="4">
+<circle cx="100" cy="180" r="10"></circle>
+<circle cx="250" cy="180" r="10"></circle>
+<rect x="386" y="166" width="28" height="28" rx="14"></rect>
+<rect x="706" y="268" width="28" height="40" rx="14"></rect>
+<circle cx="860" cy="360" r="10"></circle>
+<rect x="446" y="486" width="28" height="28" rx="14"></rect>
+<circle cx="300" cy="500" r="10"></circle>
+<circle cx="100" cy="640" r="10"></circle>
+<circle cx="250" cy="640" r="10"></circle>
+</g>
+<circle cx="720" cy="90" r="10" fill="#FFFFFF" stroke="#A8A49B" stroke-width="4"></circle>
+<rect x="690" y="100" width="60" height="6" fill="#C8102E"></rect>
+
+<g font-family="Overpass" font-weight="800" font-size="16" fill="#1B1B1B">
+<text x="100" y="156" text-anchor="middle">Students</text>
+<text x="250" y="216" text-anchor="middle">Student work</text>
+<text x="400" y="150" text-anchor="middle">Copilot</text>
+<text x="720" y="252" text-anchor="middle">Microsoft</text>
+<text x="878" y="366">OpenAI</text>
+<text x="486" y="520">Suggest a mark</text>
+<text x="300" y="534" text-anchor="middle">Teacher reviews</text>
+<text x="100" y="676" text-anchor="middle">Teacher</text>
+<text x="250" y="676" text-anchor="middle">Sign in</text>
+<text x="720" y="66" text-anchor="middle" fill="#7A766D">Canva</text>
+</g>
+<g font-family="Overpass Mono" font-size="12" fill="#5A5650">
+<text x="250" y="234" text-anchor="middle">named · tier 2</text>
+<text x="878" y="384">sub-processor, EU</text>
+<text x="720" y="330" text-anchor="middle">UK / EU</text>
+<text x="486" y="538">scores · override on</text>
+<text x="250" y="694" text-anchor="middle">tier 1 · stays inside</text>
+<text x="720" y="128" text-anchor="middle" fill="#C8102E">closed at tier 2</text>
+</g>
+
+<g>
+<rect x="566" y="226" width="70" height="26" rx="4" fill="#1B1B1B"></rect>
+<text x="601" y="244" text-anchor="middle" font-family="Overpass Mono" font-size="12" font-weight="600" fill="#FFFFFF">DPA on file</text>
+<line x1="590" y1="256" x2="590" y2="312" stroke="#1B1B1B" stroke-width="3"></line>
+<line x1="612" y1="256" x2="612" y2="312" stroke="#1B1B1B" stroke-width="3"></line>
+<rect x="560" y="60" width="82" height="22" rx="4" fill="#C8102E"></rect>
+<text x="601" y="76" text-anchor="middle" font-family="Overpass Mono" font-size="11" font-weight="600" fill="#FFFFFF">no route at T2</text>
+</g>
+</svg>
+
+<div style="border-left:3px solid #1B1B1B;background:#FFFFFF;display:flex;flex-direction:column;min-height:0">
+<div style="padding:16px 20px 10px"><p style="margin:0;font-size:12px;font-weight:800;letter-spacing:.12em;color:#5A5650">LINE STATUS</p></div>
+<div style="border-top:1px solid #E2DED4">
+<div class="st"><span class="tag" style="background:#B07A00">Student work</span><span class="ss">Runs with conditions: full DPIA</span></div>
+<div class="st"><span class="tag" style="background:#D6337F">Suggestion</span><span class="ss">Human review route needed</span></div>
+<div class="st"><span class="tag" style="background:#0A6FC2">Teacher</span><span class="ss">Good service</span></div>
+<div class="st"><span class="tag" style="background:#7A766D">Canva ext.</span><span class="ss">Closed. Pseudonymise to reopen</span></div>
+</div>
+
+<div style="padding:18px 20px 0;flex:1">
+<p style="margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:.12em;color:#5A5650">JOURNEY · STUDENT WORK</p>
+<div style="position:relative">
+<div style="position:absolute;left:9px;top:12px;bottom:12px;width:4px;background:#F2A900"></div>
+<div class="jr"><span class="dot"></span><span>Students</span><span class="need" style="background:#F1EEE6">under 18</span></div>
+<div class="jr"><span class="dot"></span><span>Student work</span><span class="need" style="background:#FCEFC8">tier 2</span></div>
+<div class="jr"><span class="dot"></span><span>Copilot</span><span class="need" style="background:#F1EEE6">AI</span></div>
+<div class="jr"><span class="dot" style="border-radius:3px;background:#1B1B1B"></span><span><strong>Barrier</strong></span><span class="need" style="background:#1B1B1B;color:#fff">Art 28 DPA</span></div>
+<div class="jr"><span class="dot"></span><span>Microsoft</span><span class="need" style="background:#F1EEE6">retention note</span></div>
+<div class="jr"><span class="dot"></span><span>OpenAI</span><span class="need" style="background:#F1EEE6">sub-proc. check</span></div>
+</div>
+</div>
+
+<div style="margin:16px 20px 20px;border:3px solid #1B1B1B;border-radius:10px;padding:14px 16px">
+<p style="margin:0;font-size:12px;font-weight:800;letter-spacing:.12em;color:#5A5650">YOUR TICKETS FOR THIS NETWORK</p>
+<p style="margin:6px 0 0;font-size:15px;line-height:1.55"><strong>Full DPIA</strong>, Art 28 DPA (on file), human review route, privacy notice line, retention note.</p>
+<p style="margin:8px 0 0;font-size:13px;color:#5A5650">Cheaper route: pseudonymise at Student work. Saves the full DPIA, reopens Canva.</p>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

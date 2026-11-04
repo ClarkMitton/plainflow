@@ -1,0 +1,817 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "plainflow/flow",
+  "title": "Flow",
+  "type": "object",
+  "required": [
+    "id",
+    "title",
+    "mode",
+    "status",
+    "organisation",
+    "nodes",
+    "edges",
+    "version"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "description": "No real names. Validated."
+    },
+    "story": {
+      "type": "string",
+      "description": "The sentence: A [role] puts [data] into [system] run by [company] to [purpose]."
+    },
+    "mode": {
+      "enum": [
+        "flow_first",
+        "tier_first"
+      ]
+    },
+    "tier_pinned": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 3,
+      "description": "Set in tier-first mode; null in flow-first."
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "with_dpo",
+        "approved",
+        "live",
+        "review_due",
+        "retired"
+      ]
+    },
+    "retrospective": {
+      "type": "boolean",
+      "description": "True when checking something already in use."
+    },
+    "owner": {
+      "type": "string",
+      "description": "Role or initials, not a full name."
+    },
+    "organisation": {
+      "type": "object",
+      "required": [
+        "name",
+        "type"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "college",
+            "school",
+            "university",
+            "charity",
+            "small_business",
+            "public_body",
+            "other"
+          ]
+        },
+        "default_lawful_basis": {
+          "enum": [
+            "public_task",
+            "legal_obligation",
+            "contract",
+            "consent",
+            "legitimate_interests",
+            "vital_interests"
+          ]
+        }
+      }
+    },
+    "dates": {
+      "type": "object",
+      "properties": {
+        "created": {
+          "type": "string",
+          "format": "date"
+        },
+        "launch": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "running_since": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "review": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        }
+      }
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/edge"
+      }
+    },
+    "pinned": {
+      "description": "A snapshot of nodes and edges for compare, or null.",
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "changelog": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "at",
+          "who",
+          "what"
+        ],
+        "properties": {
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "who": {
+            "type": "string"
+          },
+          "what": {
+            "type": "string"
+          },
+          "reopened": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "version": {
+      "type": "integer"
+    },
+    "risk_owner": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "A role, not a name. The person with authority to change the project, who accepts the residual risk in writing. The DPO advises; they don't approve."
+    },
+    "answers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Q&A answers keyed by question id and node id. Questions not listed were assumed, because no answer would have changed the result."
+    }
+  },
+  "$defs": {
+    "position": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "title",
+        "position",
+        "inside"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "people",
+            "data",
+            "purpose",
+            "system",
+            "company"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "position": {
+          "$ref": "#/$defs/position"
+        },
+        "inside": {
+          "type": "boolean",
+          "description": "Inside the organisation boundary."
+        },
+        "collapse": {
+          "enum": [
+            "pill",
+            "standard",
+            "detail"
+          ],
+          "default": "standard"
+        },
+        "levers": {
+          "type": "object"
+        },
+        "fields": {
+          "type": "object"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "type": {
+              "const": "people"
+            },
+            "levers": {
+              "$ref": "#/$defs/peopleLevers"
+            },
+            "fields": {
+              "$ref": "#/$defs/peopleFields"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "data"
+            },
+            "levers": {
+              "$ref": "#/$defs/dataLevers"
+            },
+            "fields": {
+              "$ref": "#/$defs/dataFields"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "purpose"
+            },
+            "levers": {
+              "$ref": "#/$defs/purposeLevers"
+            },
+            "fields": {
+              "$ref": "#/$defs/purposeFields"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "system"
+            },
+            "levers": {
+              "$ref": "#/$defs/systemLevers"
+            },
+            "fields": {
+              "$ref": "#/$defs/systemFields"
+            }
+          }
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "company"
+            },
+            "levers": {
+              "$ref": "#/$defs/companyLevers"
+            },
+            "fields": {
+              "$ref": "#/$defs/companyFields"
+            }
+          }
+        }
+      ]
+    },
+    "peopleLevers": {
+      "type": "object",
+      "properties": {
+        "age_mix": {
+          "enum": [
+            "all_adults",
+            "some_under_18",
+            "all_under_18"
+          ]
+        },
+        "vulnerable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "peopleFields": {
+      "type": "object",
+      "properties": {
+        "group": {
+          "enum": [
+            "learners",
+            "staff",
+            "parents",
+            "patients",
+            "customers",
+            "care",
+            "public",
+            "other"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "size": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        }
+      }
+    },
+    "dataLevers": {
+      "type": "object",
+      "properties": {
+        "identifiability": {
+          "enum": [
+            "named",
+            "pseudonymised",
+            "anonymised",
+            "aggregated"
+          ]
+        },
+        "about_performance": {
+          "type": "boolean",
+          "description": "About how a named person is doing."
+        },
+        "special_category": {
+          "type": "boolean"
+        },
+        "free_text_or_audio": {
+          "type": "boolean"
+        },
+        "new_purpose": {
+          "type": "boolean"
+        },
+        "new_collection": {
+          "type": "boolean"
+        },
+        "student_facing": {
+          "type": "boolean"
+        }
+      }
+    },
+    "dataFields": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "name",
+              "email",
+              "job_title",
+              "department",
+              "login",
+              "usage_counts",
+              "dob",
+              "address",
+              "phone",
+              "grades",
+              "attendance",
+              "send",
+              "health",
+              "images",
+              "location",
+              "free_text",
+              "audio",
+              "video",
+              "biometrics",
+              "financial",
+              "safeguarding",
+              "ethnicity",
+              "religion",
+              "sexual_orientation",
+              "union",
+              "criminal",
+              "genetic",
+              "other"
+            ]
+          }
+        },
+        "source_system": {
+          "type": "string"
+        },
+        "lawful_basis": {
+          "enum": [
+            "public_task",
+            "legal_obligation",
+            "contract",
+            "consent",
+            "legitimate_interests",
+            "vital_interests",
+            "none",
+            null
+          ]
+        },
+        "about": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "People node ids this data is about."
+        }
+      }
+    },
+    "purposeLevers": {
+      "type": "object",
+      "properties": {
+        "scores": {
+          "type": "boolean"
+        },
+        "decides_alone": {
+          "type": "boolean"
+        },
+        "staff_can_override": {
+          "type": "boolean"
+        },
+        "ongoing": {
+          "type": "boolean"
+        },
+        "whole_cohort": {
+          "type": "boolean"
+        },
+        "tracks_behaviour": {
+          "type": "boolean"
+        },
+        "can_block": {
+          "type": "boolean"
+        },
+        "privacy_notice_linked": {
+          "type": "boolean"
+        }
+      }
+    },
+    "purposeFields": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "alternatives": {
+          "type": "string"
+        },
+        "should_it_be_done": {
+          "type": "string"
+        },
+        "scale": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "privacy_notice_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "challenge_route": {
+          "type": "string"
+        },
+        "less_intrusive": {
+          "enum": [
+            "yes",
+            "no",
+            "unsure"
+          ],
+          "description": "Could the same result come from less data? 'yes' is a bright line."
+        },
+        "rights_possible": {
+          "enum": [
+            "yes",
+            "no",
+            "unsure"
+          ],
+          "description": "Can access, deletion and explanation requests be honoured? 'no' is a bright line."
+        }
+      }
+    },
+    "systemLevers": {
+      "type": "object",
+      "properties": {
+        "is_ai": {
+          "type": "boolean"
+        },
+        "output_type": {
+          "enum": [
+            "draft",
+            "suggestion",
+            "score",
+            "decision"
+          ]
+        },
+        "validated_by_person": {
+          "type": "boolean"
+        },
+        "staff_can_override": {
+          "type": "boolean"
+        }
+      }
+    },
+    "systemFields": {
+      "type": "object",
+      "properties": {
+        "product_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "From products.json. Sets the company node and sub-processors."
+        },
+        "use_case": {
+          "enum": [
+            "generic_templates",
+            "anonymised_work",
+            "identifiable_work",
+            "formative_mark",
+            "final_grade",
+            "progression_decision",
+            null
+          ]
+        },
+        "testing": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string"
+            },
+            "sample": {
+              "type": "string"
+            },
+            "result": {
+              "type": "string"
+            }
+          }
+        },
+        "fairness_check": {
+          "type": "object",
+          "properties": {
+            "date": {
+              "type": "string"
+            },
+            "groups": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "result": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "companyLevers": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "enum": [
+            "processor",
+            "joint_controller",
+            "independent_controller",
+            "sub_processor"
+          ]
+        },
+        "decides_purpose": {
+          "type": "boolean"
+        },
+        "decides_means": {
+          "type": "boolean"
+        },
+        "own_purposes": {
+          "type": "boolean"
+        },
+        "trains_on_inputs": {
+          "type": "boolean"
+        },
+        "keeps_data": {
+          "type": "boolean"
+        }
+      }
+    },
+    "companyFields": {
+      "type": "object",
+      "properties": {
+        "company_id": {
+          "type": "string",
+          "description": "From products.json companies; shared card."
+        },
+        "card_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Id of the shared DPA card, if one exists."
+        },
+        "region": {
+          "enum": [
+            "UK",
+            "EU",
+            "US",
+            "other",
+            "unknown"
+          ]
+        },
+        "transfer_mechanism": {
+          "enum": [
+            "none_needed",
+            "adequacy",
+            "idta",
+            "addendum",
+            "unknown",
+            "none"
+          ]
+        },
+        "retention": {
+          "type": "string"
+        },
+        "deletion_route": {
+          "type": "string"
+        },
+        "security_assessment": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "enum": [
+                "accepted",
+                "pending",
+                "none"
+              ]
+            },
+            "date": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "art28": {
+          "type": "object",
+          "description": "Evidence per clause. Value is a clause reference or link, or null.",
+          "properties": {
+            "instructions_only": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "confidentiality": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "security": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "sub_processor_authorisation": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "rights_assistance": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "breach_assistance": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "dpia_assistance": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "deletion_or_return": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "audit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "dpa_document": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Link or attachment id."
+        },
+        "prior_dpia": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "owner": {
+          "type": "string"
+        },
+        "review_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "vendor_position": {
+          "enum": [
+            "agreed",
+            "unknown",
+            "refused"
+          ],
+          "description": "Will the company sign up to our terms? 'refused' is a bright line."
+        }
+      }
+    },
+    "edge": {
+      "type": "object",
+      "required": [
+        "id",
+        "from",
+        "to",
+        "kind"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "carries",
+            "about",
+            "by",
+            "runs",
+            "sub_processor",
+            "feeds"
+          ]
+        },
+        "data_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "For kind=carries: which data node travels."
+        }
+      }
+    }
+  }
+}

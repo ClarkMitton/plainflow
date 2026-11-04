@@ -1,0 +1,32 @@
+{
+  "note": "Shared company cards. Filled once, reused by every flow that touches the company. The role is not on the card: it belongs to the flow. Every card needs an owner and a review date, or it goes stale.",
+  "cards": {
+    "card_microsoft_m365": {
+      "company_id": "microsoft",
+      "title": "Microsoft",
+      "contract": "Microsoft Products and Services DPA",
+      "fields": {
+        "region": "EU",
+        "transfer_mechanism": "adequacy",
+        "retention": "30 days",
+        "deletion_route": "Admin centre",
+        "security_assessment": { "status": "accepted", "date": "[date]" },
+        "art28": { "instructions_only": "cl. 2.1", "confidentiality": "cl. 2.4", "security": "cl. 3", "sub_processor_authorisation": "cl. 6", "rights_assistance": "cl. 7", "breach_assistance": "cl. 8", "dpia_assistance": "cl. 9", "deletion_or_return": "cl. 10", "audit": null },
+        "dpa_document": "[link to Microsoft Products and Services DPA]",
+        "owner": "governance lead",
+        "review_date": "[date]"
+      }
+    }
+  },
+  "art28_clauses": [
+    ["instructions_only", "Acts only on your written instructions"],
+    ["confidentiality", "Staff bound by confidentiality"],
+    ["security", "Appropriate security measures"],
+    ["sub_processor_authorisation", "Sub-processors only with your authorisation"],
+    ["rights_assistance", "Helps you answer people's rights requests"],
+    ["breach_assistance", "Helps with breaches and security"],
+    ["dpia_assistance", "Helps with DPIAs and consultation"],
+    ["deletion_or_return", "Deletes or returns data at the end"],
+    ["audit", "Gives you information and allows audits"]
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "note": "Plain meanings for the words people trip over. Shown when you hover a dotted word. One or two sentences each, no jargon in the explanation.",
+  "terms": {
+    "DPIA": "A data protection impact assessment. A written check of what could go wrong for people, and what you'll do about it, before you start.",
+    "screening": "A short set of questions that says whether you need a full DPIA. The canvas answers them from your picture.",
+    "DPA": "A data protection agreement. The contract that says a company will only use your data the way you tell it to, and keep it safe.",
+    "Article 28": "The part of the law that lists what a DPA must contain. Nine terms, like 'only acts on your instructions' and 'deletes the data at the end'.",
+    "controller": "The organisation that decides why and how data is used. Usually you.",
+    "processor": "A company that handles data for you, only on your instructions. Microsoft running Copilot for your college is one.",
+    "sub-processor": "A company your supplier uses behind the scenes. Your supplier needs your permission to use it.",
+    "joint controller": "Another organisation that decides with you why and how the data is used. You need a sharing agreement, not a DPA.",
+    "special category": "The most sensitive data: health, ethnicity, religion, sexuality, union membership, biometrics, genetics. Crime data is treated the same way.",
+    "pseudonymised": "Names swapped for a code, with the list that links codes to names kept somewhere else. Still personal data, but much safer.",
+    "anonymised": "Nobody can work out who it's about, even with other information. It stops being personal data.",
+    "lawful basis": "The legal reason you're allowed to use the data. For schools and colleges it's usually 'public task': it's part of your job.",
+    "privacy notice": "The document that tells people what you do with their data. It needs a line for anything new, like using AI.",
+    "RoPA": "Record of processing activities. The organisation's list of everything it does with personal data.",
+    "tier": "How sensitive the data is, from 0 (nothing personal) to 3 (the most sensitive). The tier decides which tools you may use.",
+    "sanctioned route": "A tool or company your organisation has already approved for a given tier.",
+    "DPO": "The data protection officer. The person who signs off anything risky and can answer questions."
+  }
+}

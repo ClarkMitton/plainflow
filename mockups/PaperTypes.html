@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Paper A: colour by type</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+body{margin:0}
+a{color:#C4321D}a:hover{color:#17171A}
+.n{position:absolute;background:#FFFFFF;border:1px solid #DCDAD3;border-radius:6px;box-shadow:none}
+.h{height:52px;box-sizing:border-box;background:#FFFFFF;border-radius:6px 6px 0 0;padding:7px 14px 0 30px;position:relative;border-bottom:1px solid #ECEAE4}
+.h::before{content:"";position:absolute;left:12px;top:16px;width:7px;height:7px;border-radius:50%;background:#17171A}
+.t{margin:0;font-family:'Inter Tight',sans-serif;font-size:18px;font-weight:600;line-height:22px;color:#17171A;text-transform:none;letter-spacing:0}
+.k{margin:0;font-size:12px;color:#8A8882;line-height:16px}
+.b{padding:8px 0 10px}
+.r{height:36px;display:flex;align-items:center;gap:8px;padding:0 16px;font-size:14px;position:relative;color:#17171A}
+.v{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600}
+.pi::before,.po::after{content:"";position:absolute;top:12px;width:11px;height:11px;border-radius:50%;background:#FFFFFF;border:2px solid #17171A}
+.pi::before{left:-8px}.po::after{right:-8px}
+.amb::before,.amb::after{background:#17171A}
+.tg{width:28px;height:15px;border-radius:8px;background:#E4E2DC;position:relative;flex:none}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:#FFFFFF}
+.on{background:#17171A}.on::after{left:15px;background:#FFFFFF}
+.req{color:#C4321D}.ok{color:#2F7D4A}
+.zl{position:absolute;top:10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6B6A66}
+.ch{padding:3px 7px;border-radius:4px;background:#F1F0EC;color:#17171A}
+.ch.on2{background:#17171A;color:#FFFFFF;font-weight:600}
+.hc::before{background:currentColor}
+</style>
+</head>
+<body style="margin:0;background:#E9E7E1;padding:24px">
+<div style="width:1400px;height:820px;box-sizing:border-box;background:#FBFBF9;font-family:'Inter Tight',sans-serif;color:#17171A;display:flex;flex-direction:column">
+
+<div style="height:52px;box-sizing:border-box;background:#FFFFFF;display:flex;align-items:center;gap:18px;padding:0 20px;border-bottom:1px solid #E4E2DC">
+<svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="5" cy="11" r="3.5" fill="none" stroke="#17171A" stroke-width="2"></circle><circle cx="17" cy="5" r="3.5" fill="none" stroke="#E0402A" stroke-width="2"></circle><circle cx="17" cy="17" r="3.5" fill="none" stroke="#17171A" stroke-width="2"></circle><path d="M8.5 11 C12 11 11 5 13.5 5 M8.5 11 C12 11 11 17 13.5 17" fill="none" stroke="#B9B6AD" stroke-width="1.5"></path></svg>
+<span style="font-family:'Inter Tight',sans-serif;font-size:16px;font-weight:600;color:#17171A;text-transform:none;letter-spacing:0">Copilot marking</span>
+<span style="font-size:12px;color:#6B6A66;font-family:'IBM Plex Mono',monospace">draft 2 · 7 nodes · 10 wires</span>
+<span style="flex:1"></span>
+<div style="display:flex;background:#F1F0EC;border-radius:5px;padding:3px;font-size:13px;border:0">
+<button style="border:0;border-radius:5px;background:#FFFFFF;color:#17171A;padding:5px 12px;font:inherit;font-weight:600;cursor:pointer">Flow first</button>
+<button style="border:0;border-radius:5px;background:transparent;color:#6B6A66;padding:5px 12px;font:inherit;cursor:pointer">Tier first</button>
+</div>
+<button style="border:1px solid #DCDAD3;border-radius:6px;background:transparent;color:#17171A;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer">Pin as A</button>
+<button style="border:0;border-radius:6px;background:#17171A;color:#FFFFFF;padding:7px 14px;font:inherit;font-size:13px;font-weight:700;cursor:pointer">Export pack</button>
+</div>
+
+<div style="position:relative;flex:1;background-color:#FBFBF9;background-image:radial-gradient(#DAD8D1 1.2px,transparent 1.6px);background-size:24px 24px">
+<div style="position:absolute;left:760px;top:0;width:330px;height:100%;background:rgba(23,23,26,.025)"></div>
+<div style="position:absolute;left:760px;top:0;height:100%;border-left:2px dashed #17171A"></div>
+<div style="position:absolute;left:1090px;top:0;height:100%;border-left:1px solid #ECEAE4"></div>
+<p class="zl" style="left:20px;margin:0">Inside your organisation · controller</p>
+<p class="zl" style="left:776px;margin:0">Outside · processors</p>
+<p class="zl" style="left:1110px;margin:0">Outputs</p>
+
+<svg width="1400" height="768" style="position:absolute;left:0;top:0" aria-hidden="true">
+<g fill="none" stroke="#B9B6AD" stroke-width="2">
+<path d="M240 108 C300 108 240 548 300 548"></path>
+<path d="M240 528 C270 528 270 584 300 584"></path>
+<path d="M1050 234 L1110 234"></path>
+<path d="M1050 508 C1080 508 1080 378 1110 378"></path>
+<path d="M925 370 L925 430" stroke-dasharray="4 4"></path>
+</g>
+<g fill="none" stroke="#E0402A" stroke-width="2" stroke-opacity="0.85">
+<path d="M550 728 C830 728 830 198 1110 198"></path>
+<path d="M550 728 C830 728 830 270 1110 270"></path>
+<path d="M550 728 C830 728 830 306 1110 306"></path>
+<path d="M1050 342 L1110 342"></path>
+</g>
+<g fill="none" stroke="#17171A" stroke-width="3">
+<path d="M260 314 C365 314 365 248 470 248"></path>
+<path d="M710 356 C755 356 755 198 800 198"></path>
+</g>
+</svg>
+<div style="position:absolute;left:706px;top:280px;background:#17171A;color:#FFFFFF;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px">T2 crosses</div>
+
+<div class="n" style="left:40px;top:30px;width:200px;border-color:#2D5FD3">
+<div class="h hc" style="background:#2D5FD3;color:#FFFFFF;border-bottom:0"><p class="t" style="color:#FFFFFF">Students</p><p class="k" style="color:#FFFFFF;opacity:.82">People</p></div>
+<div class="b"><div class="r po">subjects<span class="v">group</span></div><div class="r">under 18<span class="v">true</span><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><rect x="2" y="5" width="8" height="6" rx="1" fill="#6B6A66"></rect><path d="M4 5V3.5a2 2 0 0 1 4 0V5" fill="none" stroke="#6B6A66" stroke-width="1.4"></path></svg></div></div>
+</div>
+
+<div class="n" style="left:40px;top:200px;width:220px;border-color:#F0A818">
+<div class="h hc" style="background:#F0A818;color:#17171A;border-bottom:0"><p class="t" style="color:#17171A">Student work</p><p class="k" style="color:#17171A;opacity:.82">Data</p></div>
+<div class="b">
+<div class="r" style="gap:3px;font-size:11px"><span class="ch on2">Named</span><span class="ch">Pseud</span><span class="ch">Anon</span><span class="ch">Agg</span></div>
+<div class="r po amb">record<span class="v" style="color:#17171A">Tier 2</span></div>
+<div class="r"><span class="tg on"></span>how they're doing</div>
+<div class="r"><span class="tg"></span>special category</div>
+</div>
+</div>
+
+<div class="n" style="left:40px;top:450px;width:200px;border-color:#2D5FD3">
+<div class="h hc" style="background:#2D5FD3;color:#FFFFFF;border-bottom:0"><p class="t" style="color:#FFFFFF">Teacher</p><p class="k" style="color:#FFFFFF;opacity:.82">People</p></div>
+<div class="b"><div class="r po">staff<span class="v">signed in</span></div></div>
+</div>
+
+<div class="n" style="left:300px;top:470px;width:250px;border-color:#2E8556">
+<div class="h hc" style="background:#2E8556;color:#FFFFFF;border-bottom:0"><p class="t" style="color:#FFFFFF">Suggest a mark</p><p class="k" style="color:#FFFFFF;opacity:.82">Purpose</p></div>
+<div class="b">
+<div class="r pi">about</div>
+<div class="r pi">by</div>
+<div class="r"><span class="tg on"></span>scores people</div>
+<div class="r"><span class="tg"></span>decides alone</div>
+<div class="r"><span class="tg on"></span>staff can override</div>
+<div class="r po" style="color:#C4321D">triggers<span class="v">3 of 9</span></div>
+</div>
+</div>
+
+<div class="n" style="left:470px;top:170px;width:240px;border-color:#6B47D1">
+<div class="h hc" style="background:#6B47D1;color:#FFFFFF;border-bottom:0"><p class="t" style="color:#FFFFFF">Copilot</p><p class="k" style="color:#FFFFFF;opacity:.82">System · AI</p></div>
+<div class="b">
+<div class="r pi amb">prompt</div>
+<div class="r">output<span class="v">suggestion</span></div>
+<div class="r"><span class="tg on"></span>checked by a person</div>
+<div class="r po amb">result<span class="v" style="color:#17171A">T2</span></div>
+</div>
+</div>
+
+<div class="n" style="left:800px;top:120px;width:250px;border-color:#3E4756">
+<div class="h hc" style="background:#3E4756;color:#FFFFFF;border-bottom:0"><p class="t" style="color:#FFFFFF">Microsoft</p><p class="k" style="color:#FFFFFF;opacity:.82">Company · processor</p></div>
+<div class="b">
+<div class="r pi amb">runs</div>
+<div class="r po">DPA<span class="v ok">on file</span></div>
+<div class="r">region<span class="v">UK / EU</span></div>
+<div class="r"><span class="tg"></span>trains on inputs</div>
+<div class="r po"><span class="tg"></span>keeps data<span class="v">30 days</span></div>
+</div>
+</div>
+
+<div class="n" style="left:800px;top:430px;width:250px;border-color:#3E4756">
+<div class="h hc" style="background:#3E4756;color:#FFFFFF;border-bottom:0"><p class="t" style="color:#FFFFFF">OpenAI via Azure</p><p class="k" style="color:#FFFFFF;opacity:.82">Sub-processor</p></div>
+<div class="b">
+<div class="r po">authorised<span class="v ok">in DPA</span></div>
+<div class="r">region<span class="v">EU</span></div>
+</div>
+</div>
+
+<div class="n" style="left:1110px;top:120px;width:260px;outline:0;border-color:#D63B22">
+<div class="h hc" style="background:#D63B22;color:#FFFFFF;border-bottom:0"><p class="t" style="color:#FFFFFF">Paperwork</p><p class="k" style="color:#FFFFFF;opacity:.82">Output</p></div>
+<div class="b">
+<div class="r pi">Full DPIA<span class="v req">needed</span></div>
+<div class="r pi">Art 28 · Microsoft<span class="v ok">on file</span></div>
+<div class="r pi">Human review<span class="v req">needed</span></div>
+<div class="r pi">Privacy notice<span class="v req">needed</span></div>
+<div class="r pi">Retention note<span class="v req">needed</span></div>
+<div class="r pi">Sub-processor<span class="v ok">covered</span></div>
+</div>
+</div>
+
+<div class="n" style="left:1110px;top:440px;width:260px">
+<div class="h"><p class="t">Readout</p><p class="k">Meters</p></div>
+<div class="b">
+<div class="r">risk to people<span class="v" style="color:#C4321D">high</span></div>
+<div class="r">effort<span class="v">weeks</span></div>
+<div class="r">DPO sign-off<span class="v">yes</span></div>
+<div style="margin:6px 12px 0;padding:10px 12px;border-radius:4px;background:#F6F5F1;font-size:13px;line-height:1.45;color:#17171A">Cheapest change: set Student work to <strong>Pseud</strong>. Full DPIA drops to screening.</div>
+<div style="margin:8px 12px 0"><button style="border:1.5px solid #C4321D;color:#C4321D;background:transparent;border-radius:6px;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer">Preview it</button></div>
+</div>
+</div>
+
+<div style="position:absolute;left:20px;bottom:12px;display:flex;gap:18px;font-size:12px;color:#6B6A66;font-family:'IBM Plex Mono',monospace"><span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;border-radius:3px;background:#2D5FD3"></span>People</span><span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;border-radius:3px;background:#F0A818"></span>Data</span><span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;border-radius:3px;background:#2E8556"></span>Purpose</span><span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;border-radius:3px;background:#6B47D1"></span>System</span><span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;border-radius:3px;background:#3E4756"></span>Company</span><span style="display:flex;align-items:center;gap:6px"><span style="width:14px;height:14px;border-radius:3px;background:#D63B22"></span>Paperwork</span></div>
+</div>
+</div>
+</body>
+</html>

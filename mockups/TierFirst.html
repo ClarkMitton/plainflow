@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Tier first</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+body{margin:0}
+a{color:#17171A}a:hover{color:#C4321D}
+.mono{font-family:'IBM Plex Mono',monospace}
+.n{position:absolute;background:#FFFFFF;border:2px solid #17171A;box-sizing:border-box}
+.h{height:58px;box-sizing:border-box;padding:8px 14px 0 30px;position:relative}
+.h::before{content:"";position:absolute;left:12px;top:17px;width:8px;height:8px;border-radius:50%;background:currentColor}
+.t{margin:0;font-size:21px;font-weight:700;letter-spacing:-.01em;line-height:24px}
+.k{margin:0;font-size:12px;line-height:16px;opacity:.85}
+.b{padding:8px 0 10px}
+.r{height:36px;display:flex;align-items:center;gap:8px;padding:0 16px;font-size:14px;position:relative}
+.v{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600}
+.pi::before,.po::after{content:"";position:absolute;top:12px;width:12px;height:12px;border-radius:50%;background:#FFFFFF;border:2px solid #17171A;box-sizing:border-box}
+.pi::before{left:-8px}.po::after{right:-8px}
+.amb::before,.amb::after{background:#F0A818}
+.tg{width:30px;height:16px;border:2px solid #17171A;box-sizing:border-box;background:#FFFFFF;position:relative;flex:none}
+.tg::after{content:"";position:absolute;top:2px;left:2px;width:8px;height:8px;background:#17171A}
+.tg.on{background:#17171A}.tg.on::after{left:16px;background:#FFFFFF}
+.ch{padding:3px 8px;border:1.5px solid #17171A;font-family:'IBM Plex Mono',monospace;font-size:11px}
+.ch.on2{background:#17171A;color:#FFFFFF;font-weight:600}
+.fpe{background:#2D5FD3;color:#FFFFFF}.spe{box-shadow:6px 6px 0 #2D5FD3}
+.fda{background:#F0A818;color:#17171A}.sda{box-shadow:6px 6px 0 #F0A818}
+.fpu{background:#2E8556;color:#FFFFFF}.spu{box-shadow:6px 6px 0 #2E8556}
+.fsy{background:#6B47D1;color:#FFFFFF}.ssy{box-shadow:6px 6px 0 #6B47D1}
+.fco{background:#3E4756;color:#FFFFFF}.sco{box-shadow:6px 6px 0 #3E4756}
+.fpa{background:#D63B22;color:#FFFFFF}.spa{box-shadow:6px 6px 0 #D63B22}
+.fin{background:#17171A;color:#FFFFFF}.sin{box-shadow:6px 6px 0 #B9B6AD}
+.ok{color:#2F7D4A}.rq{color:#C4321D}.mu{color:#8A8882}
+.btn{border:2px solid #17171A;background:#FFFFFF;color:#17171A;padding:6px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.btn.dk{background:#17171A;color:#FFFFFF}
+.sp{position:absolute;font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:15px;letter-spacing:.08em;padding:6px 12px;border:2.5px solid currentColor;outline:1px solid currentColor;outline-offset:2px;border-radius:4px;mix-blend-mode:multiply;opacity:.9;background:rgba(255,255,255,.4);white-space:nowrap;line-height:1.15;text-align:center}
+.sp small{display:block;font-size:10px;letter-spacing:.12em;font-weight:400}
+.srd{color:#D63B22}.sgr{color:#2F7D4A}.sgh{color:#9A9890;border-style:dashed;outline-style:dashed}
+.zl{position:absolute;top:10px;margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6A66}
+.lab{margin:0;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#6B6A66}
+
+</style>
+</head>
+<body style="margin:0;background:#E9E7E1;padding:24px">
+<div style="width:1400px;height:820px;box-sizing:border-box;background:#FFFFFF;font-family:'Inter Tight',sans-serif;color:#17171A;display:flex;flex-direction:column">
+<div style="height:52px;box-sizing:border-box;display:flex;align-items:center;gap:16px;padding:0 20px;border-bottom:2px solid #17171A;flex:none">
+<span style="font-size:18px;font-weight:700;letter-spacing:-.01em">Copilot marking</span>
+<span class="mono" style="font-size:12px;color:#6B6A66">draft 2 · tier set to 2</span>
+<span style="flex:1"></span>
+<div style="display:flex;border:2px solid #17171A;font-size:13px;font-weight:600">
+<button style="border:0;background:transparent;color:#17171A;padding:6px 12px;font:inherit;cursor:pointer">Flow first</button>
+<button style="border:0;background:#17171A;color:#FFFFFF;padding:6px 12px;font:inherit;cursor:pointer">Tier first</button>
+</div>
+<button class="btn">Pin as A</button>
+<button class="btn dk" style="box-shadow:4px 4px 0 #D63B22">Export pack</button>
+</div>
+<div style="height:76px;box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:2px solid #17171A;flex:none">
+<span class="lab" style="color:#17171A">Start from the data</span>
+<button class="btn" style="padding:10px 14px;text-align:left;line-height:1.2"><span class="mono" style="font-size:11px">T0</span><br>Nothing personal</button>
+<button class="btn" style="padding:10px 14px;text-align:left;line-height:1.2"><span class="mono" style="font-size:11px">T1</span><br>Account basics</button>
+<button class="btn" style="padding:10px 14px;text-align:left;line-height:1.2;background:#F0A818;box-shadow:4px 4px 0 #17171A"><span class="mono" style="font-size:11px">T2</span><br>About a named person</button>
+<button class="btn" style="padding:10px 14px;text-align:left;line-height:1.2"><span class="mono" style="font-size:11px">T3</span><br>Special category</button>
+<span style="flex:1"></span>
+<span style="font-size:15px;font-weight:600;max-width:360px;text-align:right;line-height:1.35">Tier 2 rule: AI and storage through Microsoft only. DPIA screening every time.</span>
+</div>
+
+<div style="flex:1;display:grid;grid-template-columns:260px 840px 300px;min-height:0">
+
+<div style="border-right:2px solid #17171A;padding:16px 18px;display:flex;flex-direction:column;gap:8px;overflow:hidden">
+<p class="lab">Add a node</p>
+<div style="border:2px solid #17171A;box-shadow:4px 4px 0 #2D5FD3;padding:7px 10px;font-weight:600;font-size:14px">People</div>
+<div style="border:2px solid #17171A;box-shadow:4px 4px 0 #F0A818;padding:7px 10px;font-weight:600;font-size:14px">Data</div>
+<div style="border:2px solid #17171A;box-shadow:4px 4px 0 #2E8556;padding:7px 10px;font-weight:600;font-size:14px">Purpose</div>
+<div style="border:2px solid #17171A;box-shadow:4px 4px 0 #6B47D1;padding:7px 10px;font-weight:600;font-size:14px">Copilot <span class="mono ok" style="float:right;font-size:11px">ok</span></div>
+<p class="lab" style="margin-top:10px">Companies at Tier 2</p>
+<div style="border:2px solid #17171A;box-shadow:4px 4px 0 #3E4756;padding:7px 10px;font-weight:600;font-size:14px">Microsoft 365 <span class="mono ok" style="float:right;font-size:11px">ok</span></div>
+<div style="border:2px solid #17171A;box-shadow:4px 4px 0 #3E4756;padding:7px 10px;font-weight:600;font-size:14px">Power BI <span class="mono ok" style="float:right;font-size:11px">ok</span></div>
+<div style="border:2px solid #CFCCC3;color:#9A9890;padding:7px 10px;font-weight:600;font-size:14px">Canva <span class="mono" style="float:right;font-size:11px">T1 max</span></div>
+<div style="border:2px solid #CFCCC3;color:#9A9890;padding:7px 10px;font-weight:600;font-size:14px">Lovable + Supabase <span class="mono" style="float:right;font-size:11px">T1 max</span></div>
+<div style="border:2px solid #CFCCC3;color:#9A9890;padding:7px 10px;font-weight:600;font-size:14px;text-decoration:line-through">ChatGPT</div>
+<p style="margin:auto 0 0;font-size:13px;line-height:1.45;color:#4A4844">Grey means not at this tier. Pick a lower tier and they open up.</p>
+</div>
+
+<div style="position:relative;background:#FFFFFF;overflow:hidden">
+<div style="position:absolute;left:520px;top:0;width:320px;height:100%;background:#F6F5F1"></div>
+<div style="position:absolute;left:520px;top:0;height:100%;border-left:2px dashed #17171A"></div>
+<p class="zl" style="left:16px">Inside</p>
+<p class="zl" style="left:536px">Outside</p>
+
+<svg width="840" height="692" style="position:absolute;left:0;top:0" aria-hidden="true">
+<g fill="none" stroke="#F0A818" stroke-width="5" stroke-linejoin="round">
+<path d="M246 162 H272 V126 H298"></path>
+<path d="M502 162 H540 V126 H558"></path>
+<path d="M502 162 H512 V236 H284 V346 H298"></path>
+</g>
+<path d="M134 226 V470 H514" fill="none" stroke="#D63B22" stroke-width="2.5" stroke-dasharray="8 6"></path>
+<g stroke="#D63B22" stroke-width="4"><line x1="508" y1="458" x2="532" y2="482"></line><line x1="532" y1="458" x2="508" y2="482"></line></g>
+</svg>
+
+<div class="n sda" style="left:24px;top:40px;width:220px">
+<div class="h fda"><p class="t">Student work</p><p class="k">Data · tier set first</p></div>
+<div class="b">
+<div class="r" style="gap:4px"><span class="ch on2">Named</span><span class="ch">Pseud</span><span class="ch" style="border-color:#CFCCC3;color:#9A9890">Anon</span></div>
+<div class="r po amb">record<span class="v">Tier 2</span></div>
+<div class="r"><span class="tg on"></span>how they're doing</div>
+</div>
+</div>
+
+<div class="n ssy" style="left:300px;top:40px;width:200px">
+<div class="h fsy"><p class="t">Copilot</p><p class="k">System · AI</p></div>
+<div class="b"><div class="r pi amb">prompt</div><div class="r po amb">result</div></div>
+</div>
+
+<div class="n spu" style="left:300px;top:260px;width:200px">
+<div class="h fpu"><p class="t">Suggest a mark</p><p class="k">Purpose</p></div>
+<div class="b"><div class="r pi amb">suggestion</div><div class="r"><span class="tg on"></span>scores people</div></div>
+</div>
+
+<div class="n sco" style="left:560px;top:40px;width:240px">
+<div class="h fco"><p class="t">Microsoft</p><p class="k">Company · processor</p></div>
+<div class="b"><div class="r pi amb">runs Copilot</div><div class="r">DPA<span class="v ok">on file</span></div><div class="r">allowed at<span class="v ok">T2</span></div></div>
+</div>
+
+<div class="n" style="left:560px;top:420px;width:240px;border-color:#CFCCC3;color:#9A9890;background:#FBFBF9">
+<div class="h" style="background:#ECEAE3;color:#9A9890"><p class="t">Canva</p><p class="k">Company · not at T2</p></div>
+<div class="b"><div class="r">allowed up to<span class="v">T1</span></div></div>
+</div>
+
+<div style="position:absolute;left:150px;top:500px;width:340px;background:#FFFFFF;border:2px solid #D63B22;box-shadow:5px 5px 0 #D63B22;padding:12px 14px">
+<p style="margin:0;font-size:15px;font-weight:700">Can't connect Student work to Canva</p>
+<p style="margin:4px 0 10px;font-size:13px;line-height:1.45;color:#4A4844">Canva is allowed up to Tier 1. Pseudonymise the work first, or keep it in Microsoft.</p>
+<div style="display:flex;gap:8px"><button class="btn" style="box-shadow:3px 3px 0 #F0A818">Pseudonymise</button><button class="btn">Use Microsoft</button></div>
+</div>
+</div>
+
+<div style="border-left:2px solid #17171A;padding:16px 18px;display:flex;flex-direction:column;gap:10px;background:#FFFFFF">
+<p class="lab">Tier 2 · about a named person</p>
+<div style="border:2px solid #17171A;box-shadow:5px 5px 0 #D63B22;padding:12px 14px">
+<p style="margin:0 0 6px;font-weight:700;font-size:15px">Always at this tier</p>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:14px">
+<span>DPIA screening</span><span>Privacy notice covers it</span><span>AI only through Microsoft</span><span>Art 28 DPA for every company</span>
+</div>
+</div>
+<div style="border:2px solid #17171A;padding:12px 14px">
+<p style="margin:0 0 6px;font-weight:700;font-size:15px">Adds more if you</p>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:14px">
+<span>score or rank people <span class="mono rq" style="font-size:12px">full DPIA</span></span>
+<span>let AI decide alone <span class="mono rq" style="font-size:12px">blocked</span></span>
+<span>keep it over a year <span class="mono rq" style="font-size:12px">retention review</span></span>
+</div>
+</div>
+<p style="margin:auto 0 0;font-size:13px;line-height:1.45;color:#4A4844">Switch to Flow first to build freely and let the canvas work out the tier for you.</p>
+</div>
+</div>
+
+</div>
+</body>
+</html>

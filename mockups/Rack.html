@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>4. Modular rack</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+body{margin:0}
+a{color:#FFD23F}a:hover{color:#FFFFFF}
+</style>
+</head>
+<body style="margin:0;background:#E9E7E1;padding:24px">
+<div style="width:1400px;height:820px;box-sizing:border-box;background:#141416;font-family:'Archivo Narrow',sans-serif;color:#EDEDED;display:flex;flex-direction:column">
+
+<div style="height:48px;box-sizing:border-box;display:flex;align-items:center;gap:16px;padding:0 20px;border-bottom:1px solid #2A2A2E">
+<span style="font-weight:700;font-size:18px;letter-spacing:.06em">COPILOT MARKING</span>
+<span style="font-family:'Space Mono',monospace;font-size:12px;color:#A0A0A6">6 modules · 6 cables</span>
+<span style="display:flex;gap:14px;margin-left:24px;font-family:'Space Mono',monospace;font-size:12px;color:#C9C9CF">
+<span><span style="display:inline-block;width:16px;height:5px;border-radius:3px;background:#FFD23F;vertical-align:middle;margin-right:5px"></span>tier 2 data</span>
+<span><span style="display:inline-block;width:16px;height:5px;border-radius:3px;background:#3FD0E0;vertical-align:middle;margin-right:5px"></span>people</span>
+<span><span style="display:inline-block;width:16px;height:5px;border-radius:3px;background:#FF4FB8;vertical-align:middle;margin-right:5px"></span>triggers</span>
+<span><span style="display:inline-block;width:16px;height:5px;border-radius:3px;background:#EDEDED;vertical-align:middle;margin-right:5px"></span>contracts</span>
+</span>
+<span style="flex:1"></span>
+<div style="display:flex;border:1px solid #4A4A50;border-radius:4px;overflow:hidden;font-size:14px;font-weight:700;letter-spacing:.06em">
+<button style="border:0;background:#EDEDED;color:#141416;padding:6px 12px;font:inherit;cursor:pointer">FLOW FIRST</button>
+<button style="border:0;background:transparent;color:#C9C9CF;padding:6px 12px;font:inherit;cursor:pointer">TIER FIRST</button>
+</div>
+<button style="border:0;border-radius:4px;background:#FF4FB8;color:#141416;padding:7px 14px;font:inherit;font-size:14px;font-weight:700;letter-spacing:.06em;cursor:pointer">RECORD PACK</button>
+</div>
+
+<svg width="1400" height="772" viewBox="0 0 1400 772" role="img" aria-label="A modular synth rack of six modules: Students, Student work, Copilot, Microsoft, Screening and Paperwork, connected by patch cables. Three of nine screening lights are lit and Full DPIA is lit.">
+<defs>
+<pattern id="rail" width="40" height="18" patternUnits="userSpaceOnUse"><rect width="40" height="18" fill="#2A2A2E"></rect><circle cx="20" cy="9" r="3" fill="#0E0E10"></circle></pattern>
+</defs>
+<rect x="0" y="4" width="1400" height="18" fill="url(#rail)"></rect>
+<rect x="0" y="730" width="1400" height="18" fill="url(#rail)"></rect>
+
+<g font-family="Archivo Narrow" font-weight="700">
+<rect x="55" y="22" width="140" height="708" fill="#D8D6D0"></rect>
+<rect x="201" y="22" width="220" height="708" fill="#EEE6D2"></rect>
+<rect x="427" y="22" width="190" height="708" fill="#1E1E20"></rect>
+<rect x="623" y="22" width="210" height="708" fill="#C9CBCF"></rect>
+<rect x="839" y="22" width="250" height="708" fill="#1E1E20"></rect>
+<rect x="1095" y="22" width="250" height="708" fill="#EEE6D2"></rect>
+
+<text x="125" y="54" text-anchor="middle" font-size="17" fill="#1E1E20" letter-spacing="1">STUDENTS</text>
+<text x="125" y="72" text-anchor="middle" font-size="12" font-family="Space Mono" font-weight="400" fill="#55555A">people</text>
+<text x="311" y="54" text-anchor="middle" font-size="17" fill="#1E1E20" letter-spacing="1">STUDENT WORK</text>
+<text x="311" y="72" text-anchor="middle" font-size="12" font-family="Space Mono" font-weight="400" fill="#55555A">data</text>
+<text x="522" y="54" text-anchor="middle" font-size="17" fill="#EDEDED" letter-spacing="1">COPILOT</text>
+<text x="522" y="72" text-anchor="middle" font-size="12" font-family="Space Mono" font-weight="400" fill="#A0A0A6">system · AI</text>
+<text x="728" y="54" text-anchor="middle" font-size="17" fill="#1E1E20" letter-spacing="1">MICROSOFT</text>
+<text x="728" y="72" text-anchor="middle" font-size="12" font-family="Space Mono" font-weight="400" fill="#55555A">processor</text>
+<text x="964" y="54" text-anchor="middle" font-size="17" fill="#EDEDED" letter-spacing="1">SCREENING</text>
+<text x="964" y="72" text-anchor="middle" font-size="12" font-family="Space Mono" font-weight="400" fill="#A0A0A6">9 criteria</text>
+<text x="1220" y="54" text-anchor="middle" font-size="17" fill="#1E1E20" letter-spacing="1">PAPERWORK</text>
+<text x="1220" y="72" text-anchor="middle" font-size="12" font-family="Space Mono" font-weight="400" fill="#55555A">output</text>
+</g>
+
+<g>
+<rect x="118" y="130" width="14" height="40" rx="7" fill="#1E1E20"></rect><circle cx="125" cy="140" r="10" fill="#F4F4F2" stroke="#55555A" stroke-width="2"></circle>
+<rect x="118" y="260" width="14" height="40" rx="7" fill="#1E1E20"></rect><circle cx="125" cy="270" r="10" fill="#F4F4F2" stroke="#55555A" stroke-width="2"></circle>
+</g>
+<g font-family="Archivo Narrow" font-weight="700" font-size="13" fill="#1E1E20" text-anchor="middle">
+<text x="125" y="194">UNDER 18</text><text x="125" y="210" font-family="Space Mono" font-weight="400" font-size="11" fill="#55555A">locked on</text>
+<text x="125" y="324">VULNERABLE</text><text x="125" y="340" font-family="Space Mono" font-weight="400" font-size="11" fill="#55555A">locked on</text>
+</g>
+
+<g font-family="Space Mono" font-size="11" fill="#1E1E20" text-anchor="middle" font-weight="700">
+<text x="252" y="120">NAMED</text><text x="370" y="120" fill="#55555A" font-weight="400">PSEUD</text><text x="376" y="232" fill="#55555A" font-weight="400">ANON</text><text x="246" y="232" fill="#55555A" font-weight="400">AGG</text>
+</g>
+<circle cx="311" cy="172" r="42" fill="#2B2B2E" stroke="#121214" stroke-width="3"></circle>
+<circle cx="311" cy="172" r="31" fill="#3C3C40"></circle>
+<line x1="311" y1="172" x2="285" y2="146" stroke="#FFD23F" stroke-width="5" stroke-linecap="round"></line>
+<text x="311" y="256" text-anchor="middle" font-family="Archivo Narrow" font-weight="700" font-size="13" fill="#1E1E20">IDENTIFIABILITY</text>
+<rect x="251" y="276" width="120" height="58" rx="4" fill="#0B0B0C"></rect>
+<text x="311" y="318" text-anchor="middle" font-family="Space Mono" font-weight="700" font-size="34" fill="#FFD23F">T2</text>
+<text x="311" y="352" text-anchor="middle" font-family="Archivo Narrow" font-weight="700" font-size="13" fill="#1E1E20">TIER</text>
+<rect x="254" y="396" width="14" height="40" rx="7" fill="#1E1E20"></rect><circle cx="261" cy="406" r="10" fill="#F4F4F2" stroke="#55555A" stroke-width="2"></circle>
+<rect x="354" y="396" width="14" height="40" rx="7" fill="#1E1E20"></rect><circle cx="361" cy="426" r="10" fill="#F4F4F2" stroke="#55555A" stroke-width="2"></circle>
+<g font-family="Archivo Narrow" font-weight="700" font-size="13" fill="#1E1E20" text-anchor="middle">
+<text x="261" y="460">HOW THEY'RE</text><text x="261" y="475">DOING · ON</text>
+<text x="361" y="460">SPECIAL</text><text x="361" y="475">CAT. · OFF</text>
+</g>
+
+<text x="522" y="138" text-anchor="middle" font-family="Archivo Narrow" font-weight="700" font-size="13" fill="#EDEDED">OUTPUT</text>
+<rect x="457" y="152" width="130" height="16" rx="8" fill="#0B0B0C"></rect>
+<rect x="459" y="150" width="22" height="20" rx="4" fill="#EDEDED"></rect>
+<g font-family="Space Mono" font-size="11" text-anchor="middle">
+<text x="470" y="190" fill="#EDEDED" font-weight="700">SUGG</text><text x="522" y="190" fill="#8A8A90">SCORE</text><text x="577" y="190" fill="#8A8A90">DECIDE</text>
+</g>
+<rect x="515" y="244" width="14" height="40" rx="7" fill="#0B0B0C"></rect><circle cx="522" cy="254" r="10" fill="#EDEDED" stroke="#8A8A90" stroke-width="2"></circle>
+<text x="522" y="308" text-anchor="middle" font-family="Archivo Narrow" font-weight="700" font-size="13" fill="#EDEDED">CHECKED BY A PERSON</text>
+<circle cx="470" cy="370" r="12" fill="#FFD23F" opacity=".25"></circle><circle cx="470" cy="370" r="7" fill="#FFD23F"></circle>
+<text x="488" y="375" font-family="Archivo Narrow" font-weight="700" font-size="13" fill="#EDEDED">AI IN USE</text>
+
+<g font-family="Archivo Narrow" font-weight="700" font-size="13" fill="#1E1E20">
+<circle cx="648" cy="116" r="12" fill="#3FE07A" opacity=".3"></circle><circle cx="648" cy="116" r="7" fill="#1FB85A"></circle><text x="664" y="121">DPA ON FILE</text>
+<circle cx="648" cy="146" r="12" fill="#3FE07A" opacity=".3"></circle><circle cx="648" cy="146" r="7" fill="#1FB85A"></circle><text x="664" y="151">SANCTIONED ROUTE</text>
+<circle cx="648" cy="176" r="7" fill="#8C8E93"></circle><text x="664" y="181" fill="#55555A">TRAINS ON INPUTS</text>
+<circle cx="648" cy="206" r="7" fill="#8C8E93"></circle><text x="664" y="211" fill="#55555A">OWN PURPOSES</text>
+</g>
+<g font-family="Space Mono" font-size="11" fill="#55555A" text-anchor="middle">
+<text x="682" y="344">0d</text><text x="678" y="276">7d</text><text x="728" y="252" fill="#1E1E20" font-weight="700">30d</text><text x="778" y="276">90d</text><text x="774" y="344">1y</text>
+</g>
+<circle cx="728" cy="302" r="32" fill="#2B2B2E" stroke="#121214" stroke-width="3"></circle>
+<circle cx="728" cy="302" r="23" fill="#3C3C40"></circle>
+<line x1="728" y1="302" x2="728" y2="276" stroke="#EDEDED" stroke-width="5" stroke-linecap="round"></line>
+<text x="728" y="370" text-anchor="middle" font-family="Archivo Narrow" font-weight="700" font-size="13" fill="#1E1E20">RETENTION</text>
+<text x="728" y="420" text-anchor="middle" font-family="Archivo Narrow" font-weight="700" font-size="13" fill="#1E1E20">REGION</text>
+<rect x="663" y="434" width="130" height="16" rx="8" fill="#1E1E20"></rect>
+<rect x="665" y="432" width="22" height="20" rx="4" fill="#F4F4F2" stroke="#55555A"></rect>
+<g font-family="Space Mono" font-size="11" text-anchor="middle">
+<text x="676" y="472" fill="#1E1E20" font-weight="700">UK/EU</text><text x="728" y="472" fill="#55555A">US</text><text x="782" y="472" fill="#55555A">OTHER</text>
+</g>
+
+<g font-family="Space Mono" font-size="11" text-anchor="middle">
+<circle cx="880" cy="118" r="15" fill="#FF4FB8" opacity=".3"></circle><circle cx="880" cy="118" r="8" fill="#FF4FB8"></circle><text x="880" y="148" fill="#FFFFFF" font-weight="700">SCORING</text>
+<circle cx="964" cy="118" r="8" fill="#3A3A3E"></circle><text x="964" y="148" fill="#8A8A90">AUTO</text>
+<circle cx="1048" cy="118" r="8" fill="#3A3A3E"></circle><text x="1048" y="148" fill="#8A8A90">MONITOR</text>
+<circle cx="880" cy="178" r="8" fill="#3A3A3E"></circle><text x="880" y="208" fill="#8A8A90">SPECIAL</text>
+<circle cx="964" cy="178" r="15" fill="#FF4FB8" opacity=".3"></circle><circle cx="964" cy="178" r="8" fill="#FF4FB8"></circle><text x="964" y="208" fill="#FFFFFF" font-weight="700">UNDER 18</text>
+<circle cx="1048" cy="178" r="8" fill="#3A3A3E"></circle><text x="1048" y="208" fill="#8A8A90">SCALE</text>
+<circle cx="880" cy="238" r="8" fill="#3A3A3E"></circle><text x="880" y="268" fill="#8A8A90">MATCHING</text>
+<circle cx="964" cy="238" r="15" fill="#FF4FB8" opacity=".3"></circle><circle cx="964" cy="238" r="8" fill="#FF4FB8"></circle><text x="964" y="268" fill="#FFFFFF" font-weight="700">NEW TECH</text>
+<circle cx="1048" cy="238" r="8" fill="#3A3A3E"></circle><text x="1048" y="268" fill="#8A8A90">RIGHTS</text>
+</g>
+<rect x="869" y="292" width="190" height="72" rx="4" fill="#0B0B0C"></rect>
+<text x="964" y="342" text-anchor="middle" font-family="Space Mono" font-weight="700" font-size="40" fill="#FF4FB8">3 / 9</text>
+<text x="964" y="404" text-anchor="middle" font-family="Archivo Narrow" font-weight="700" font-size="13" fill="#EDEDED">PURPOSE · SUGGEST A MARK</text>
+<rect x="873" y="420" width="14" height="40" rx="7" fill="#0B0B0C"></rect><circle cx="880" cy="430" r="10" fill="#EDEDED" stroke="#8A8A90" stroke-width="2"></circle>
+<rect x="957" y="420" width="14" height="40" rx="7" fill="#0B0B0C"></rect><circle cx="964" cy="450" r="10" fill="#EDEDED" stroke="#8A8A90" stroke-width="2"></circle>
+<rect x="1041" y="420" width="14" height="40" rx="7" fill="#0B0B0C"></rect><circle cx="1048" cy="430" r="10" fill="#EDEDED" stroke="#8A8A90" stroke-width="2"></circle>
+<g font-family="Archivo Narrow" font-weight="700" font-size="13" text-anchor="middle" fill="#EDEDED">
+<text x="880" y="482">SCORES</text><text x="964" y="482">DECIDES</text><text x="1048" y="482">OVERRIDE</text>
+</g>
+<circle cx="900" cy="540" r="17" fill="#FF5A3C" opacity=".3"></circle><circle cx="900" cy="540" r="10" fill="#FF5A3C"></circle>
+<text x="924" y="546" font-family="Archivo Narrow" font-weight="700" font-size="18" fill="#FFFFFF">FULL DPIA</text>
+
+<g font-family="Archivo Narrow" font-weight="700" font-size="14" fill="#1E1E20">
+<circle cx="1118" cy="110" r="7" fill="#E5402A"></circle><text x="1134" y="115">FULL DPIA</text><text x="1325" y="115" text-anchor="end" font-family="Space Mono" font-size="11" fill="#B02A18">NEEDED</text>
+<circle cx="1118" cy="148" r="7" fill="#1FB85A"></circle><text x="1134" y="153">ART 28 · MICROSOFT</text><text x="1325" y="153" text-anchor="end" font-family="Space Mono" font-size="11" fill="#13753A">ON FILE</text>
+<circle cx="1118" cy="186" r="7" fill="#E5402A"></circle><text x="1134" y="191">HUMAN REVIEW</text><text x="1325" y="191" text-anchor="end" font-family="Space Mono" font-size="11" fill="#B02A18">NEEDED</text>
+<circle cx="1118" cy="224" r="7" fill="#E5402A"></circle><text x="1134" y="229">PRIVACY NOTICE</text><text x="1325" y="229" text-anchor="end" font-family="Space Mono" font-size="11" fill="#B02A18">NEEDED</text>
+<circle cx="1118" cy="262" r="7" fill="#E5402A"></circle><text x="1134" y="267">RETENTION NOTE</text><text x="1325" y="267" text-anchor="end" font-family="Space Mono" font-size="11" fill="#B02A18">NEEDED</text>
+<circle cx="1118" cy="300" r="7" fill="#1FB85A"></circle><text x="1134" y="305">SUB-PROCESSOR</text><text x="1325" y="305" text-anchor="end" font-family="Space Mono" font-size="11" fill="#13753A">COVERED</text>
+</g>
+<circle cx="1220" cy="424" r="36" fill="#B02A18"></circle><circle cx="1220" cy="420" r="32" fill="#E5402A"></circle>
+<text x="1220" y="484" text-anchor="middle" font-family="Archivo Narrow" font-weight="700" font-size="15" fill="#1E1E20">CHEAPEST CHANGE</text>
+<text x="1220" y="504" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#55555A">turn IDENTIFIABILITY to PSEUD</text>
+<text x="1220" y="520" text-anchor="middle" font-family="Space Mono" font-size="11" fill="#55555A">full DPIA drops to screening</text>
+
+<g font-family="Space Mono" font-size="11" text-anchor="middle">
+<text x="125" y="620" fill="#1E1E20" font-weight="700">OUT</text>
+<text x="311" y="620" fill="#1E1E20" font-weight="700">OUT record</text>
+<text x="470" y="620" fill="#EDEDED" font-weight="700">IN</text><text x="575" y="620" fill="#EDEDED" font-weight="700">OUT</text>
+<text x="668" y="620" fill="#1E1E20" font-weight="700">IN</text><text x="788" y="620" fill="#1E1E20" font-weight="700">OUT dpa</text>
+<text x="880" y="620" fill="#EDEDED" font-weight="700">IN who</text><text x="964" y="620" fill="#EDEDED" font-weight="700">IN what</text><text x="1048" y="620" fill="#EDEDED" font-weight="700">OUT</text>
+<text x="1140" y="620" fill="#1E1E20" font-weight="700">IN triggers</text><text x="1300" y="620" fill="#1E1E20" font-weight="700">IN contracts</text>
+</g>
+<g fill="#2A2A2E" stroke="#8A8A90" stroke-width="3">
+<circle cx="125" cy="650" r="12"></circle><circle cx="311" cy="650" r="12"></circle><circle cx="470" cy="650" r="12"></circle><circle cx="575" cy="650" r="12"></circle><circle cx="668" cy="650" r="12"></circle><circle cx="788" cy="650" r="12"></circle><circle cx="880" cy="650" r="12"></circle><circle cx="964" cy="650" r="12"></circle><circle cx="1048" cy="650" r="12"></circle><circle cx="1140" cy="650" r="12"></circle><circle cx="1300" cy="650" r="12"></circle>
+</g>
+
+<g fill="none" stroke-linecap="round">
+<path d="M125 650 Q500 800 880 650" stroke="#0E0E10" stroke-width="10"></path><path d="M125 650 Q500 800 880 650" stroke="#3FD0E0" stroke-width="6"></path>
+<path d="M311 650 Q640 795 964 650" stroke="#0E0E10" stroke-width="10"></path><path d="M311 650 Q640 795 964 650" stroke="#FFD23F" stroke-width="6"></path>
+<path d="M311 650 Q390 740 470 650" stroke="#0E0E10" stroke-width="10"></path><path d="M311 650 Q390 740 470 650" stroke="#FFD23F" stroke-width="6"></path>
+<path d="M575 650 Q621 722 668 650" stroke="#0E0E10" stroke-width="10"></path><path d="M575 650 Q621 722 668 650" stroke="#FFD23F" stroke-width="6"></path>
+<path d="M788 650 Q1044 792 1300 650" stroke="#0E0E10" stroke-width="10"></path><path d="M788 650 Q1044 792 1300 650" stroke="#EDEDED" stroke-width="6"></path>
+<path d="M1048 650 Q1094 718 1140 650" stroke="#0E0E10" stroke-width="10"></path><path d="M1048 650 Q1094 718 1140 650" stroke="#FF4FB8" stroke-width="6"></path>
+</g>
+<g stroke="#0E0E10" stroke-width="2">
+<circle cx="125" cy="650" r="8" fill="#3FD0E0"></circle><circle cx="880" cy="650" r="8" fill="#3FD0E0"></circle>
+<circle cx="311" cy="650" r="8" fill="#FFD23F"></circle><circle cx="964" cy="650" r="8" fill="#FFD23F"></circle><circle cx="470" cy="650" r="8" fill="#FFD23F"></circle><circle cx="575" cy="650" r="8" fill="#FFD23F"></circle><circle cx="668" cy="650" r="8" fill="#FFD23F"></circle>
+<circle cx="788" cy="650" r="8" fill="#EDEDED"></circle><circle cx="1300" cy="650" r="8" fill="#EDEDED"></circle>
+<circle cx="1048" cy="650" r="8" fill="#FF4FB8"></circle><circle cx="1140" cy="650" r="8" fill="#FF4FB8"></circle>
+</g>
+</svg>
+</div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+{
+  "note": "The plain-English Q&A. Each question sets levers or fields on the nodes the sentence created. 'target' is a node type, 'subjects' (people who aren't staff), or 'flow' (asked once; answers set fields on the flow itself with 'flow'). A question with several matching nodes is asked once per node; {title} is the node's name. 'type' is 'single' (pick one answer) or 'checklist' (tick any that are true; each item has 'on' and 'off' settings). 'show_when' hides a question or item unless it's true. 'skip_when' skips a question we already know the answer to (from the product directory or a company card). The interview also skips any question where no answer would change the result, and records it as assumed, not asked.",
+  "questions": [
+    {
+      "id": "data_facts",
+      "type": "checklist",
+      "target": "data",
+      "ask": "Which of these are true about {title}?",
+      "why": "Each one changes how sensitive the data is, or what people need to be told. Tick any that apply; leave the rest.",
+      "items": [
+        { "label": "It says how someone is doing", "hint": "Marks, attendance, behaviour, feedback, support notes", "on": { "set": { "about_performance": true } }, "off": { "set": { "about_performance": false } } },
+        { "label": "It could mention health, SEND, religion, ethnicity, sexuality or crime", "hint": "The most sensitive kind of data. It has to stay inside the organisation.", "on": { "set": { "special_category": true } }, "off": { "set": { "special_category": false } } },
+        { "label": "It's in people's own words, written or spoken", "hint": "Essays, comments boxes, recordings. Anything could be in there.", "on": { "set": { "free_text_or_audio": true } }, "off": { "set": { "free_text_or_audio": false } } },
+        { "label": "We already have it, but got it for a different reason", "hint": "Attendance you keep anyway, now used to predict who might drop out", "on": { "set": { "new_purpose": true } }, "off": { "set": { "new_purpose": false } } },
+        { "label": "We'd be collecting it new", "hint": "A new form, a new login, a new survey", "on": { "set": { "new_collection": true } }, "off": { "set": { "new_collection": false } } },
+        { "label": "Under 18s will use the tool themselves", "hint": "A revision app students log into. The ICO's Children's code then applies.", "show_when": "any(people, age_mix != 'all_adults')", "on": { "set": { "student_facing": true } }, "off": { "set": { "student_facing": false } } }
+      ]
+    },
+    {
+      "id": "names",
+      "target": "data",
+      "ask": "When {title} goes into the tool, will people's names be on it?",
+      "why": "Swapping names for a code is often the single easiest way to make an idea simpler to approve.",
+      "example": "A candidate number instead of a name, with the list kept inside the organisation.",
+      "answers": [
+        { "label": "Yes, names", "set": { "identifiability": "named" } },
+        { "label": "A code we can look up", "set": { "identifiability": "pseudonymised" } },
+        { "label": "No way to tell who", "set": { "identifiability": "anonymised" } },
+        { "label": "Only totals", "set": { "identifiability": "aggregated" } }
+      ]
+    },
+    {
+      "id": "lawful_basis",
+      "target": "data",
+      "show_when": "tier >= 1",
+      "ask": "What's the legal reason you're allowed to use {title}?",
+      "why": "Every use of personal data needs a lawful basis. Consent sounds safest but often isn't valid for students or staff, because they can't freely say no to the organisation.",
+      "example": "Marking work is part of a college's job, so 'public task' usually fits.",
+      "answers": [
+        { "label": "It's part of our job (public task)", "fields": { "lawful_basis": "public_task" } },
+        { "label": "The law says we must", "fields": { "lawful_basis": "legal_obligation" } },
+        { "label": "It's needed for a contract with them", "fields": { "lawful_basis": "contract" } },
+        { "label": "They agree to it (consent)", "fields": { "lawful_basis": "consent" } },
+        { "label": "It's in our legitimate interests", "fields": { "lawful_basis": "legitimate_interests" } },
+        { "label": "Not sure, ask the DPO", "fields": { "lawful_basis": null } },
+        { "label": "We can't name one", "fields": { "lawful_basis": "none" } }
+      ]
+    },
+    {
+      "id": "purpose_facts",
+      "type": "checklist",
+      "target": "purpose",
+      "ask": "Which of these are true about {title}?",
+      "why": "These are the warning signs the ICO looks for. Ticking one doesn't mean no; it means it needs a closer look.",
+      "items": [
+        { "label": "It gives someone a mark, grade, score or prediction", "hint": "A suggested grade, a risk score, a 'likely to pass' flag", "on": { "set": { "scores": true } }, "off": { "set": { "scores": false } } },
+        { "label": "Things can happen to a person without a human checking first", "hint": "An automatic fail, an automatic referral", "on": { "set": { "decides_alone": true, "staff_can_override": false } }, "off": { "set": { "decides_alone": false, "staff_can_override": true } } },
+        { "label": "It could stop someone getting something", "hint": "Blocking enrolment, refusing an extension, removing access", "on": { "set": { "can_block": true } }, "off": { "set": { "can_block": false } } },
+        { "label": "It covers everyone, or over a thousand people", "hint": "Every student in the college, not one class", "on": { "set": { "whole_cohort": true }, "fields": { "scale": 1000 } }, "off": { "set": { "whole_cohort": false } } },
+        { "label": "It keeps running, not a one-off", "hint": "Weekly checks rather than one survey", "on": { "set": { "ongoing": true } }, "off": { "set": { "ongoing": false } } },
+        { "label": "It tracks what individuals do, when or where", "hint": "Login times per student, what they click, where they are", "on": { "set": { "tracks_behaviour": true } }, "off": { "set": { "tracks_behaviour": false } } }
+      ]
+    },
+    {
+      "id": "told",
+      "target": "purpose",
+      "ask": "Have the people it's about been told their data is used like this?",
+      "why": "People have a right to know. Usually that's a line in the privacy notice.",
+      "example": "A sentence in the student privacy notice about using AI to help with marking.",
+      "answers": [
+        { "label": "Yes, it's in our privacy notice", "set": { "privacy_notice_linked": true } },
+        { "label": "No, or not sure", "set": { "privacy_notice_linked": false } }
+      ]
+    },
+    {
+      "id": "hard_checks",
+      "type": "checklist",
+      "target": "purpose",
+      "ask": "Two honest checks. Are either of these true?",
+      "why": "These are the ones people skip. If either is true, the idea needs changing before anything else, so it's better to know now.",
+      "items": [
+        { "label": "We could get the same result with less data, or without names", "hint": "If a gentler design does the job, the law expects you to use it.", "on": { "fields": { "less_intrusive": "yes" } }, "off": { "fields": { "less_intrusive": "no" } } },
+        { "label": "We couldn't show, delete or explain someone's data if they asked", "hint": "People have these rights whatever the tool.", "on": { "fields": { "rights_possible": "no" } }, "off": { "fields": { "rights_possible": "yes" } } }
+      ]
+    },
+    {
+      "id": "use_case",
+      "target": "system",
+      "show_when": "is_ai",
+      "ask": "What will the AI in {title} actually do?",
+      "why": "Your organisation sets a minimum level of checking for each kind of AI use. The closer it gets to a final decision, the more checking.",
+      "example": "Drafting a lesson plan is very different from suggesting a grade.",
+      "answers": [
+        { "label": "Help with general work, nothing about people", "fields": { "use_case": "generic_templates" } },
+        { "label": "Work with anonymous examples", "fields": { "use_case": "anonymised_work" } },
+        { "label": "Work with things people can be identified from", "fields": { "use_case": "identifiable_work" } },
+        { "label": "Suggest a mark or feedback", "fields": { "use_case": "formative_mark" } },
+        { "label": "Help set a final grade", "fields": { "use_case": "final_grade" } },
+        { "label": "Help decide who progresses", "fields": { "use_case": "progression_decision" } }
+      ]
+    },
+    {
+      "id": "vendor_terms",
+      "target": "company",
+      "show_when": "receives_tier >= 1 && role != 'sub_processor'",
+      "skip_when": "has_card",
+      "ask": "Will {title} sign up to our terms: a data protection agreement, using data only as we say?",
+      "why": "A company that handles your data has to be bound by contract. If they won't sign, that's a firm no, whatever else is true.",
+      "example": "Microsoft's Data Protection Addendum covers Microsoft 365 and Copilot.",
+      "answers": [
+        { "label": "Yes, it's signed or on offer", "fields": { "vendor_position": "agreed" } },
+        { "label": "Don't know yet", "fields": { "vendor_position": "unknown" } },
+        { "label": "No, they won't", "fields": { "vendor_position": "refused" } }
+      ]
+    },
+    {
+      "id": "trains",
+      "target": "company",
+      "show_when": "receives_tier >= 1 && role != 'sub_processor'",
+      "skip_when": "has_card",
+      "ask": "Could {title} use what you put in to train its AI?",
+      "why": "If they train on it, people's data leaves your control for good. Free and consumer versions often do.",
+      "example": "Consumer chatbots often train on chats unless you opt out; business versions usually don't.",
+      "answers": [
+        { "label": "No, the contract rules it out", "set": { "trains_on_inputs": false } },
+        { "label": "Yes, they could", "set": { "trains_on_inputs": true } },
+        { "label": "Don't know yet", "fields": { "vendor_position": "unknown" } }
+      ]
+    },
+    {
+      "id": "risk_owner",
+      "target": "flow",
+      "show_when": "outcome != 'not_required'",
+      "ask": "Who will own this and decide whether the risk is worth it?",
+      "why": "Someone with the authority to change the project has to accept any risk that's left, in writing. The DPO gives advice; they don't approve. A risk nobody owns is the one that goes wrong quietly.",
+      "example": "A deputy principal, or the head of the department running it. A role, not a name.",
+      "answers": [
+        { "label": "A senior leader", "flow": { "risk_owner": "A senior leader" } },
+        { "label": "The head of the department running it", "flow": { "risk_owner": "The head of department" } },
+        { "label": "Nobody yet", "flow": { "risk_owner": null } }
+      ]
+    }
+  ]
+}

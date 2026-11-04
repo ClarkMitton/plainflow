@@ -1,0 +1,44 @@
+{
+  "note": "Seed product directory. Pick a product and its company and sub-processors come with it. Everything here must be verified against the supplier's current terms before a card is marked 'on file'; treat these as starting points, not facts. Fields marked [verify] are placeholders.",
+  "companies": {
+    "microsoft": { "name": "Microsoft", "region_default": "EU", "dpa_url": "https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA", "notes": "Products and Services DPA covers M365, Copilot (enterprise), Power Platform, Azure. Consumer Copilot is a different product." },
+    "openai_azure": { "name": "OpenAI via Azure", "region_default": "EU", "dpa_url": null, "notes": "Sub-processor to Microsoft for Copilot and Azure OpenAI. Covered by the Microsoft DPA." },
+    "google": { "name": "Google", "region_default": "EU", "dpa_url": "[verify]", "notes": "Workspace for Education has its own terms; consumer Gemini is different." },
+    "canva": { "name": "Canva", "region_default": "US", "dpa_url": "[verify]", "notes": "Education terms exist. Check training on inputs for AI features." },
+    "lovable": { "name": "Lovable", "region_default": "EU", "dpa_url": "[verify]", "notes": "Hosting and AI gateway. Check which model providers sit behind the gateway." },
+    "supabase": { "name": "Supabase", "region_default": "UK", "dpa_url": "[verify]", "notes": "Runs on AWS; region selectable at project creation (e.g. eu-west-2 London)." },
+    "aws": { "name": "Amazon Web Services", "region_default": "UK", "dpa_url": "[verify]", "notes": "Common sub-processor." },
+    "openai_consumer": { "name": "OpenAI (ChatGPT)", "region_default": "US", "dpa_url": "[verify]", "notes": "Consumer and Team tiers differ on training. Not a sanctioned route for personal data by default." },
+    "anthropic_consumer": { "name": "Anthropic (Claude.ai)", "region_default": "US", "dpa_url": "[verify]", "notes": "Consumer tier. Not a sanctioned route for personal data by default." },
+    "nearpod": { "name": "Nearpod", "region_default": "US", "dpa_url": "[verify]", "notes": "" },
+    "edpuzzle": { "name": "Edpuzzle", "region_default": "US", "dpa_url": "[verify]", "notes": "" }
+  },
+  "products": {
+    "m365_copilot": { "name": "Microsoft 365 Copilot", "company": "microsoft", "sub_processors": ["openai_azure"], "is_ai": true, "keeps_data_default": "30 days [verify]", "trains_on_inputs_default": false, "questions_if_unknown": [] },
+    "m365": { "name": "Microsoft 365 (Teams, SharePoint, Forms)", "company": "microsoft", "sub_processors": [], "is_ai": false, "keeps_data_default": "per tenant retention", "trains_on_inputs_default": false },
+    "power_platform": { "name": "Power Automate / Power Apps / Power BI", "company": "microsoft", "sub_processors": [], "is_ai": false, "keeps_data_default": "per tenant retention", "trains_on_inputs_default": false },
+    "ai_builder": { "name": "AI Builder", "company": "microsoft", "sub_processors": ["openai_azure"], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": false },
+    "azure_openai": { "name": "Azure OpenAI (own tenant)", "company": "microsoft", "sub_processors": ["openai_azure"], "is_ai": true, "keeps_data_default": "abuse monitoring 30 days unless exempted [verify]", "trains_on_inputs_default": false },
+    "canva": { "name": "Canva", "company": "canva", "sub_processors": ["aws"], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": "[verify]" },
+    "lovable_app": { "name": "App built on Lovable", "company": "lovable", "sub_processors": ["supabase", "aws"], "is_ai": false, "keeps_data_default": "until deleted", "trains_on_inputs_default": false },
+    "lovable_ai_gateway": { "name": "Lovable AI gateway", "company": "lovable", "sub_processors": ["google"], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": "[verify]" },
+    "chatgpt": { "name": "ChatGPT (consumer)", "company": "openai_consumer", "sub_processors": [], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": true },
+    "gemini_consumer": { "name": "Gemini (consumer)", "company": "google", "sub_processors": [], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": true },
+    "claude_consumer": { "name": "Claude.ai (consumer)", "company": "anthropic_consumer", "sub_processors": [], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": "[verify]" },
+    "nearpod": { "name": "Nearpod", "company": "nearpod", "sub_processors": [], "is_ai": false, "keeps_data_default": "[verify]", "trains_on_inputs_default": false },
+    "edpuzzle": { "name": "Edpuzzle", "company": "edpuzzle", "sub_processors": [], "is_ai": false, "keeps_data_default": "[verify]", "trains_on_inputs_default": false },
+    "spreadsheet_email": { "name": "A spreadsheet sent by email", "company": null, "sub_processors": [], "is_ai": false, "keeps_data_default": "in mailboxes until deleted", "trains_on_inputs_default": false, "notes": "The no-tool flow. Recipient becomes a company node (independent or joint controller) if outside the organisation." }
+  },
+  "supplier_questions": [
+    "Are we using this under an organisational agreement or personal accounts?",
+    "Is there a data processing agreement, and does it cover this specific service?",
+    "Where is our data stored and processed (country and region)?",
+    "What happens to uploads, prompts, outputs and logs, and for how long are they kept?",
+    "Can you confirm our data is not used to train models?",
+    "Which other companies process our data on your behalf (sub-processors), and how will we be told of changes?",
+    "How do we delete our data, and how do you confirm deletion?",
+    "How do you help us answer a subject access request or a breach?",
+    "Can you provide evidence of your security measures (certification or audit)?",
+    "Have you published a DPIA or a data protection summary for this product?"
+  ]
+}
