@@ -152,7 +152,9 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
     if (data.length && tier >= 0) {
       const s = to.type === "company" ? sanctionFor(to, from) : null;
       const maxTier = to.inside ? 3 : s ? s.max_tier : rules.sanctioned.unlisted_max_tier;
-      const topData = data.filter((d) => tiers[d] === tier).map((d) => byId.get(d)!.title);
+      // "Send less: cut {data} down" has to name everything over the line, not just the highest.
+      const overMax = data.filter((d) => (tiers[d] ?? 0) > maxTier);
+      const topData = (overMax.length ? overMax : data.filter((d) => tiers[d] === tier)).map((d) => byId.get(d)!.title);
       const plan = planOf(from);
       const wireVars: Record<string, unknown> = {
         tier,

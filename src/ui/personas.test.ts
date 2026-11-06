@@ -364,3 +364,53 @@ describe("roleplay D: a dropout dashboard, then shared with the council", () => 
     expect(pack.forDpo.cards.find((c) => c.title === "Microsoft")?.art28.of).toBe(9);
   });
 });
+
+describe("roleplay E: a parent app built on Lovable, already in use, with under-13s", () => {
+  const marcus = () =>
+    answer(
+      build(
+        {
+          role: "Admin staff",
+          data: [{ kind: "contact", label: "names and contact details" }, { kind: "media", label: "photos or video" }],
+          about: { kind: "pupils_primary", label: "primary pupils (under 13)" },
+          under18: "under_13",
+          product: "lovable_app",
+          purpose: choices.purpose("messages", "send messages"),
+        },
+        true,
+      ),
+      { lawful_basis: "They agree to it (consent)", plan: "Free or personal accounts", told: "No, or not sure" },
+    );
+
+  it("says no for three reasons at once, and that the check is late", () => {
+    const flow = marcus();
+    const d = derive(flow, ruleSet);
+    tell("Marcus: the Lovable parent app", flow, d);
+    expect(d.verdict.id).toBe("stop");
+    expect(d.highest_tier).toBe(2);
+    expect(d.outcome).toBe("required");
+    const lines = new Set(d.bright_lines.map((b) => b.id));
+    expect(lines).toEqual(new Set(["consent_imbalance", "consent_under_13", "trains_on_data"]));
+    expect(d.blocked.length).toBeGreaterThan(0);
+    expect(d.notes.join(" ")).toMatch(/already running/);
+  });
+
+  it("doesn't ask whether contact details have names on, and names everything over the line", () => {
+    const flow = marcus();
+    const d = derive(flow, ruleSet);
+    const contact = flow.nodes.find((n) => n.title === "Names and contact details")!;
+    expect(d.locks[contact.id]?.identifiability).toBeTruthy();
+    const names = stepsFor(flow, d).filter((s) => s.q.id === "names" && isDecisive(s, flow, ruleSet, d)).map((s) => s.node?.title);
+    expect(names).not.toContain("Names and contact details");
+    expect(d.blocked[0].ways_out[0]).toBe("Send less: cut Names and contact details and Photos or video down to what Level 0 allows.");
+  });
+
+  it("offers Power Apps in the tenant as the lighter route, honestly still a no until consent is fixed", () => {
+    const flow = marcus();
+    const routes = lighterRoutes(flow, derive(flow, ruleSet), ruleSet);
+    const apps = routes.find((r) => r.feature.id === "power_apps_standard")!;
+    expect(apps).toBeTruthy();
+    expect(apps.ours.blocked).toBe(0);
+    expect(stillNo(apps)).toMatch(/^Still a no on its own/);
+  });
+});

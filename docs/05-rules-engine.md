@@ -142,3 +142,9 @@ Run as the MIS manager with a dropout dashboard shared with the council:
 - `new_purpose_check` is a requirement when A14 is yes: using data you already hold for a new reason needs a written compatibility judgement, and usually a line in the privacy notice. It cites the ICO's purpose limitation guidance.
 - A company with the role joint or independent controller is a partner, not a supplier: the story says "shared with", the pack gives it a sharing agreement instead of Article 28 terms, and the supplier questions are not sent to it. Picking either role turns "decides the purpose" on, since that is what the role means.
 - Requirement causes are phrased so that one or many titles read the same ("there's personal data in X", "a copy stays with X and Y").
+
+Run as the IT director of a trust with a parent app built on Lovable (v0.6, continued):
+
+- Contact details lock `identifiability` to named (`locks` in `rules.json`): an email or phone number identifies someone by itself, so the "names on it?" question is not asked about names and contact details. Student work with names on it is not locked; coding it is the whole point there.
+- A blocked wire's "send less" way out names every data item over the allowed level, not only the highest one.
+- The under-13 consent line no longer tells people to get parental consent as if that settled it; the imbalance of power still has to be answered.
