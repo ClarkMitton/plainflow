@@ -141,6 +141,14 @@ export function Drawer({ node, onProduct, onLoadCard, onDelete, onConnect, onDis
             </div>
             <TextField label="Where it comes from" value={f.source_system} onChange={field("source_system")} placeholder="Teams assignments" />
             <Select label="Lawful basis (the legal reason you can use it)" value={f.lawful_basis} options={LAWFUL} onChange={field("lawful_basis")} />
+            {f.lawful_basis === "consent" && (
+              <Select
+                label="Could they say no, or change their mind later, with nothing lost?"
+                value={f.consent_free === true ? "yes" : f.consent_free === false ? "no" : ""}
+                options={[["", "Not answered yet"], ["yes", "Yes, it's a genuine choice (a photo for the newsletter)"], ["no", "No, saying no isn't really an option"]]}
+                onChange={(v) => setField(node.id, "consent_free", v === "yes" ? true : v === "no" ? false : null)}
+              />
+            )}
           </>
         )}
 

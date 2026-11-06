@@ -155,9 +155,17 @@
           }
         },
         {
-          "label": "They agree to it (consent)",
+          "label": "They agree to it, and could say no with nothing lost (consent)",
           "fields": {
-            "lawful_basis": "consent"
+            "lawful_basis": "consent",
+            "consent_free": true
+          }
+        },
+        {
+          "label": "They agree to it, but saying no isn't really an option (consent)",
+          "fields": {
+            "lawful_basis": "consent",
+            "consent_free": false
           }
         },
         {

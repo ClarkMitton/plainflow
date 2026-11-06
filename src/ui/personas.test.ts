@@ -186,7 +186,7 @@ describe("whose policy, and the youngest pupils", () => {
   });
 
   it("primary pupils can't be asked for consent themselves", () => {
-    const flow = answer(build({ role: "Teacher", data: [choices.data("work")], about: { kind: "pupils_primary", label: "primary pupils" }, under18: "under_13", product: "m365_copilot", purpose: choices.purpose("feedback", "draft feedback") }), { lawful_basis: "They agree to it (consent)" });
+    const flow = answer(build({ role: "Teacher", data: [choices.data("work")], about: { kind: "pupils_primary", label: "primary pupils" }, under18: "under_13", product: "m365_copilot", purpose: choices.purpose("feedback", "draft feedback") }), { lawful_basis: "They agree to it, but saying no isn't really an option (consent)" });
     const d = derive(flow, ruleSet);
     tell("Primary school, consent, Copilot", flow, d);
     expect(d.bright_lines.map((b) => b.id)).toContain("consent_under_13");
@@ -244,7 +244,7 @@ describe("roleplay C: an AI note-taker in wellbeing meetings", () => {
       }),
       {
         data_facts: "It could mention health, SEND, religion, ethnicity, sexuality or crime|It's in people's own words, written or spoken",
-        lawful_basis: "They agree to it (consent)",
+        lawful_basis: "They agree to it, but saying no isn't really an option (consent)",
         told: "No, or not sure",
       },
     );
@@ -379,7 +379,7 @@ describe("roleplay E: a parent app built on Lovable, already in use, with under-
         },
         true,
       ),
-      { lawful_basis: "They agree to it (consent)", plan: "Free or personal accounts", told: "No, or not sure" },
+      { lawful_basis: "They agree to it, but saying no isn't really an option (consent)", plan: "Free or personal accounts", told: "No, or not sure" },
     );
 
   it("says no for three reasons at once, and that the check is late", () => {

@@ -95,6 +95,17 @@
       ]
     },
     {
+      "id": "criminal",
+      "label": "DBS or criminal record information",
+      "levers": {
+        "special_category": true
+      },
+      "categories": [
+        "name",
+        "criminal"
+      ]
+    },
+    {
       "id": "survey",
       "label": "survey answers",
       "levers": {

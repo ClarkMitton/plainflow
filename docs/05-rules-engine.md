@@ -156,3 +156,13 @@ Policy choices, made after the roleplays; both live in `rules.json` and `require
 - **The Microsoft tenant takes Level 3.** `sanctioned.microsoft` and `power_platform` go to `max_tier: 3`, since health, SEND and safeguarding records already live in SharePoint, Teams and Outlook. `tier3_leaves` now blocks only a processor whose limit is below 3; a partner sharing Level 3 needs the sharing agreement to say so, and the policy line says that.
 - **Level 3 into AI is a sign-off, not a block.** `tier3_ai` is gone. In its place `level3_ai_signoff` is a requirement whenever Level 3 data reaches an AI system: the DPO's advice and the risk owner's written sign-off, on an approved route. An AI route that isn't approved for personal data is still blocked by `ai_not_approved`.
 - **An Article 9 condition is always asked for.** `art9_condition` is a requirement whenever A2 is yes: which Article 9(2) condition applies, usually with a DPA 2018 Schedule 1 condition and the appropriate policy document on file. A person picks it; the tool never guesses.
+
+## Five more people (v0.8)
+
+A SENCO in free ChatGPT, HR in Power BI, a sixth form display in Canva, a charity's volunteer list by email, and lesson plans in Gemini. What they changed:
+
+- **Consent can hold when saying no costs nothing.** The legal reason question now splits consent in two: "could say no with nothing lost" sets `consent_free` on the data, and `consent_imbalance` only fires without it. A photo for a display or a newsletter is the everyday case; being marked by AI is not.
+- **Tier 2 has two reasons.** "Says how a named person is doing" and "holds more than account basics about a named person" (photos, essays) are separate rules, so the tier note no longer says a photo is about performance.
+- **Anonymising is not offered for images, video or biometrics.** A face is not anonymous without a name on it.
+- **DBS or criminal record information** is a data choice in the sentence, tier 3 by category.
+- A product name that starts with "A" or "An" reads in lower case mid-sentence.

@@ -278,7 +278,7 @@ export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boole
   const aboutLabel = keepAcronyms(s.about.label.trim());
   const who = subject(s.role);
   const verb = retrospective ? (who.plural ? "have been putting" : "has been putting") : who.plural ? "put" : "puts";
-  flow.story = `${who.text} ${verb} ${keepAcronyms(dataTitles.join(" and "))}${aboutLabel ? ` about ${aboutLabel}` : ""} into ${product?.name ?? toolName}${product?.company ? `, run by ${set.products.companies[product.company]?.name}` : ""}, to ${keepAcronyms(purposeLabel)}.`;
+  flow.story = `${who.text} ${verb} ${keepAcronyms(dataTitles.join(" and "))}${aboutLabel ? ` about ${aboutLabel}` : ""} into ${(product?.name ?? toolName).replace(/^(An?) /, (m) => m.toLowerCase())}${product?.company ? `, run by ${set.products.companies[product.company]?.name}` : ""}, to ${keepAcronyms(purposeLabel)}.`;
 
   const aboutKind = sentenceChoices.about.find((a) => a.id === s.about.kind);
   const subjects = newNode("people", { x: 40, y: 30 });

@@ -493,6 +493,10 @@
             null
           ]
         },
+        "consent_free": {
+          "type": ["boolean", "null"],
+          "description": "When the basis is consent: can the person say no, or change their mind later, with nothing lost? Consent from students or staff only holds when they can."
+        },
         "about": {
           "type": "array",
           "items": {
