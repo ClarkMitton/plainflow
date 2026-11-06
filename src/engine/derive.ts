@@ -200,6 +200,7 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
       const feeder = feederEdge ? byId.get(feederEdge.from) : undefined;
       const s = sanctionFor(n, feeder);
       v.sanctioned_max_tier = s ? s.max_tier : rules.sanctioned.unlisted_max_tier;
+      v.listed = !!(rules.sanctioned.list[String(n.fields.company_id ?? "")] || rules.sanctioned.list[String(feeder?.fields.product_id ?? "")]);
       const plan = planOf(feeder);
       v.plan_label = plan ? set.products.plan_labels[plan.id] ?? plan.id : null;
       if (plan?.info) {

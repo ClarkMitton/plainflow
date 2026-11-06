@@ -162,6 +162,13 @@ export function companyFromCard(companyId: string, set: RuleSet, position: { x: 
     const [cardId, card] = cardEntry;
     Object.assign(n.fields, structuredClone(card.fields), { card_ref: cardId });
   }
+  // A card saved in this browser from an earlier flow wins over the seed card.
+  try {
+    const saved = (JSON.parse(localStorage.getItem("plainflow.cards") ?? "{}") as Record<string, { fields: Record<string, unknown> }>)[companyId];
+    if (saved) Object.assign(n.fields, structuredClone(saved.fields), { card_ref: `library:${companyId}` });
+  } catch {
+    /* no library, or not in a browser */
+  }
   return n;
 }
 
@@ -203,7 +210,7 @@ export interface Sentence {
   /** Each kind of data: a choice from sentence.json, or typed in. */
   data: { kind: string | null; label: string }[];
   about: { kind: string | null; label: string };
-  under18: "all_adults" | "some_under_18" | "all_under_18";
+  under18: "all_adults" | "some_under_18" | "under_16" | "under_13";
   /** A product from the directory, or a tool typed in. */
   product: string | null;
   otherTool: { name: string; ai: boolean } | null;

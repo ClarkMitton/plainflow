@@ -75,32 +75,51 @@ export function describeChange(before: Derivation, after: Derivation, flow: Flow
   return out;
 }
 
-export function policyAnswer(flow: Flow, d: Derivation, set: RuleSet) {
+export interface PolicyLine { ok: boolean; text: string; ways: string[] }
+export interface PolicyAnswer { ok: boolean; title: string; source: string; unowned: boolean; lines: PolicyLine[] }
+
+const placeholder = (v: unknown) => typeof v !== "string" || v.trim() === "" || /^\[.*\]$/.test(v.trim());
+
+/** Whose rule the policy answer rests on, and what would change it. 'Policy' is always this organisation's list. */
+export function policyAnswer(flow: Flow, d: Derivation, set: RuleSet): PolicyAnswer {
   const p = set.rules.policy;
+  const r = set.rules;
   const title = (id: string) => flow.nodes.find((n) => n.id === id)?.title ?? id;
+  const unowned = placeholder(r.owner) || placeholder(r.review_date);
+  const source = p.source.replace("{version}", r.version).replace("{owner}", placeholder(r.owner) ? "not set" : r.owner).replace("{review_date}", placeholder(r.review_date) ? "not set" : r.review_date);
+  const fillFor = (id: string, text: string, tier: number) => {
+    const f = d.facts[id] ?? {};
+    return text
+      .replace(/\{company\}/g, title(id))
+      .replace("{max_tier}", String(f.sanctioned_max_tier ?? ""))
+      .replace(/\{tier\}/g, String(tier))
+      .replace("{plan}", String(f.plan_label ?? ""))
+      .replace("{checked}", set.products.research_checked ?? "unknown date");
+  };
   if (d.blocked.length) {
     return {
       ok: false,
       title: p.no_title,
+      source,
+      unowned,
       lines: d.blocked.map((b) => {
         const f = d.facts[b.to] ?? {};
+        const edge = d.edges[b.edge];
         const needed = String(f.plan_needed ?? "");
-        const plan = needed ? `${needed[0].toUpperCase()}${needed.slice(1)} would take it (${f.plan_needed_cost}).` : "";
-        return { ok: false, text: `${p.no.replace("{message}", b.message)}${plan ? " " + plan : ""}`, ways: b.ways_out };
+        const plan = needed ? ` ${needed[0].toUpperCase()}${needed.slice(1)} would take it (${f.plan_needed_cost}).` : "";
+        const base = !f.listed && !f.plan_label && edge && edge.tier <= 2 ? p.no_unlisted : p.no;
+        return { ok: false, text: fillFor(b.to, base.replace("{message}", b.message), edge?.tier ?? 0) + plan, ways: b.ways_out };
       }),
     };
   }
-  const lines = d.crossings
+  const lines: PolicyLine[] = d.crossings
     .filter((c) => c.tier >= 1)
-    .map((c) => ({
-      ok: true,
-      text: ["joint_controller", "independent_controller"].includes(String(flow.nodes.find((n) => n.id === c.to)?.levers.role))
-        ? p.allowed_partner.replace("{company}", title(c.to))
-        : p.allowed
-        .replace("{company}", `${title(c.to)}${d.facts[c.to]?.plan_label ? ` on ${String(d.facts[c.to].plan_label)}` : ""}`)
-        .replace("{max_tier}", String(d.facts[c.to]?.sanctioned_max_tier ?? ""))
-        .replace("{tier}", String(c.tier)),
-      ways: [] as string[],
-    }));
-  return { ok: true, title: p.yes_title, lines: lines.length ? lines : [{ ok: true, text: p.allowed_inside, ways: [] as string[] }] };
+    .map((c) => {
+      const node = flow.nodes.find((n) => n.id === c.to);
+      const f = d.facts[c.to] ?? {};
+      const role = String(node?.levers.role);
+      const text = ["joint_controller", "independent_controller"].includes(role) ? p.allowed_partner : f.plan_label ? p.allowed_plan : f.listed ? p.allowed : p.unlisted;
+      return { ok: true, text: fillFor(c.to, text, c.tier), ways: [] as string[] };
+    });
+  return { ok: true, title: p.yes_title, source, unowned, lines: lines.length ? lines : [{ ok: true, text: p.allowed_inside, ways: [] as string[] }] };
 }

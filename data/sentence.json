@@ -131,9 +131,21 @@
   "about": [
     {
       "id": "students",
-      "label": "students",
+      "label": "students (16 plus)",
       "group": "learners",
       "age_mix": "some_under_18"
+    },
+    {
+      "id": "pupils_secondary",
+      "label": "pupils (11 to 16)",
+      "group": "learners",
+      "age_mix": "under_16"
+    },
+    {
+      "id": "pupils_primary",
+      "label": "primary pupils (under 13)",
+      "group": "learners",
+      "age_mix": "under_13"
     },
     {
       "id": "staff",

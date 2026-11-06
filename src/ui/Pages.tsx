@@ -1,5 +1,6 @@
 import type { Derivation, Flow, RuleSet } from "../engine/types";
 import { stepsFor } from "./questions";
+import sourcesStatus from "../../data/sources-status.json";
 import { LawLine } from "./Rail";
 
 /** The rules table rendered as a page, so a DPO can read and challenge it without reading code. */
@@ -16,6 +17,9 @@ export function RulesPage({ set }: { set: RuleSet }) {
           Everything the canvas decides comes from this table. It lives in <code className="x">data/rules.json</code> and{" "}
           <code className="x">data/requirements.json</code>. If a result looks wrong, change the rule here, not the flow. {r.expression_help}
         </p>
+
+        <h2 id="sources">Where the rules come from</h2>
+        <SourcesSection set={set} />
 
         <h2 id="rules-tiers">Tiers</h2>
         <table className="tbl">
@@ -269,5 +273,47 @@ export function ScreeningPage({ flow, d, set }: { flow: Flow; d: Derivation; set
         <p className="lede" style={{ marginTop: 14 }}>Screening complete. This record says what the canvas found; it does not say the flow is lawful.</p>
       </div>
     </div>
+  );
+}
+
+
+type SourceStatus = { label?: string; kind?: string; url?: string; last_checked?: string; status?: string; changed_at?: string; reviewed_at?: string; note?: string };
+
+/** Every page the rules rest on, with when it was last checked and whether it has changed since. */
+export function SourcesSection({ set }: { set: RuleSet }) {
+  const r = set.rules;
+  const st = (sourcesStatus as { checked_at: string | null; sources: Record<string, SourceStatus> });
+  const placeholder = (v: string) => /^\[.*\]$/.test(v.trim()) || !v.trim();
+  const rows: { id: string; kind: string; label: string; url: string }[] = [
+    ...Object.values(set.laws).map((l) => ({ id: `law:${l.id}`, kind: "law", label: `${l.ref}: ${l.name}`, url: l.url })),
+    ...Object.entries(r.sources).filter(([, s]) => s.url.startsWith("http")).map(([id, s]) => ({ id: `guidance:${id}`, kind: "guidance", label: s.label, url: s.url })),
+    ...Object.entries(set.products.companies).filter(([, c]) => c.dpa_url?.startsWith("http")).map(([id, c]) => ({ id: `supplier:${id}`, kind: "supplier terms", label: `${c.name}: data protection terms`, url: c.dpa_url! })),
+  ];
+  const tone = (s?: string) => (s === "changed" ? "rq" : s === "unchanged" ? "ok" : "mu");
+  return (
+    <>
+      <p className="lede">
+        Three kinds of source sit behind every answer. <strong>Your organisation's rules</strong> (this table: owner {placeholder(r.owner) ? <span className="rq">not set</span> : r.owner}, review date {placeholder(r.review_date) ? <span className="rq">not set</span> : r.review_date}, version {r.version}). <strong>The law and the regulators' guidance</strong>, linked below. <strong>Suppliers' published terms</strong>, which fill in what each product's plans allow (last researched {set.products.research_checked ?? "unknown"}; secondary sources unless marked, verify before relying on them).
+      </p>
+      <p className="lede">
+        Nothing updates itself. <code className="x">npm run check-sources</code> fetches each page below and flags any whose text has changed since the last check; a person then re-reads it and decides whether a rule changes. Last check: {st.checked_at ?? <span className="mu">never run</span>}.
+      </p>
+      <table className="tbl">
+        <thead><tr><th>Source</th><th>Kind</th><th>Last checked</th><th>Status</th></tr></thead>
+        <tbody>
+          {rows.map((row) => {
+            const s = st.sources?.[row.id];
+            return (
+              <tr key={row.id}>
+                <td><a href={row.url} target="_blank" rel="noreferrer">{row.label}</a></td>
+                <td>{row.kind}</td>
+                <td className="mono">{s?.last_checked ?? <span className="mu">never</span>}</td>
+                <td className={tone(s?.status)}>{s?.status ?? "unchecked"}{s?.status === "changed" && s.changed_at ? ` on ${s.changed_at}` : ""}{s?.reviewed_at ? `, reviewed ${s.reviewed_at}` : ""}{s?.note ? ` (${s.note})` : ""}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 }

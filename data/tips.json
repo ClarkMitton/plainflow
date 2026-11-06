@@ -94,7 +94,7 @@
       {
         "anchor": ".topbar .seg",
         "title": "Save, and the record",
-        "body": "Save keeps the picture as a file you can open again. Record is the form your DPO signs, filled in from the picture."
+        "body": "Finish gives you the pages to take away: one for you, the record for your DPO, a note for next time. Save keeps the picture as a file you can open again."
       }
     ],
     "report": [
@@ -102,6 +102,13 @@
         "title": "What the code shows",
         "body": "This is everything the scan found in the code, with the exact lines as evidence, and what each finding does not prove. It's the raw material. The answer that counts is on the Canvas, where your answers fill in what code can't tell.",
         "aside": "Each card opens to show the code and the reasoning."
+      }
+    ],
+    "pack": [
+      {
+        "title": "What you leave with",
+        "body": "Three pages from the same picture: one for you (can I do it, and the steps), the record your DPO signs, and a note for whoever picks this up next. Print any page to PDF, copy the lot as text for an email, or save the file to reopen the picture.",
+        "aside": "Nothing here is final until a person signs it."
       }
     ]
   }

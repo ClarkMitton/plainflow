@@ -1,0 +1,346 @@
+{
+  "note": "Written by scripts/check-sources.mjs. 'changed' means the page's text differs from the last check: a person re-reads it, decides whether a rule needs changing, and sets reviewed_at. Nothing here changes a rule by itself.",
+  "checked_at": "2026-11-06",
+  "sources": {
+    "law:art5": {
+      "id": "law:art5",
+      "label": "UK GDPR Art. 5: The principles",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/5",
+      "last_checked": "2026-11-06",
+      "hash": "032c6d79db2e32e0",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art6": {
+      "id": "law:art6",
+      "label": "UK GDPR Art. 6: Lawful basis",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/6",
+      "last_checked": "2026-11-06",
+      "hash": "12a93f18891a534f",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art7": {
+      "id": "law:art7",
+      "label": "UK GDPR Art. 7: Conditions for consent",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/7",
+      "last_checked": "2026-11-06",
+      "hash": "fe7528c71962c535",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art9": {
+      "id": "law:art9",
+      "label": "UK GDPR Art. 9: Special category data",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/9",
+      "last_checked": "2026-11-06",
+      "hash": "48df824a31d1e204",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art13": {
+      "id": "law:art13",
+      "label": "UK GDPR Art. 13 and 14: Telling people",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/13",
+      "last_checked": "2026-11-06",
+      "hash": "0f8a3f6a7d4abaea",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art15": {
+      "id": "law:art15",
+      "label": "UK GDPR Art. 15 to 22: People's rights",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/15",
+      "last_checked": "2026-11-06",
+      "hash": "411e3280c3f30a35",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art22": {
+      "id": "law:art22",
+      "label": "UK GDPR Art. 22: Automated decisions",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/22",
+      "last_checked": "2026-11-06",
+      "hash": "0ea079650a057e16",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art28": {
+      "id": "law:art28",
+      "label": "UK GDPR Art. 28: Processors and contracts",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/28",
+      "last_checked": "2026-11-06",
+      "hash": "abab5d67679f57ed",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art26": {
+      "id": "law:art26",
+      "label": "UK GDPR Art. 26: Joint controllers",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/26",
+      "last_checked": "2026-11-06",
+      "hash": "b951dc19bfad764e",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art30": {
+      "id": "law:art30",
+      "label": "UK GDPR Art. 30: Record of processing",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/30",
+      "last_checked": "2026-11-06",
+      "hash": "febad2cb75a27b3b",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art32": {
+      "id": "law:art32",
+      "label": "UK GDPR Art. 32: Security",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/32",
+      "last_checked": "2026-11-06",
+      "hash": "1cfd22cb52d4a3d2",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art35": {
+      "id": "law:art35",
+      "label": "UK GDPR Art. 35: Data protection impact assessment",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/35",
+      "last_checked": "2026-11-06",
+      "hash": "5821226aeacdcc1d",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art36": {
+      "id": "law:art36",
+      "label": "UK GDPR Art. 36: Consulting the ICO",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/36",
+      "last_checked": "2026-11-06",
+      "hash": "77c0c40effc738da",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:art44": {
+      "id": "law:art44",
+      "label": "UK GDPR Art. 44 to 49: Data leaving the UK",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/44",
+      "last_checked": "2026-11-06",
+      "hash": "b90faba01f86a23a",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:children": {
+      "id": "law:children",
+      "label": "DPA 2018 s.123 and the Children's code: Children's data",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/ukpga/2018/12/section/123",
+      "last_checked": "2026-11-06",
+      "hash": "c81e2e74d1829794",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "law:duaa": {
+      "id": "law:duaa",
+      "label": "Data (Use and Access) Act 2025: The 2025 changes",
+      "kind": "law",
+      "url": "https://www.legislation.gov.uk/ukpga/2025/18",
+      "last_checked": "2026-11-06",
+      "hash": "285795f91f92b74d",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_dpia_when": {
+      "id": "guidance:ico_dpia_when",
+      "label": "ICO: when do we need a DPIA",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/accountability-and-governance/data-protection-impact-assessments-dpias/when-do-we-need-to-do-a-dpia",
+      "last_checked": "2026-11-06",
+      "hash": "b7a41c5dc875e716",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_dpia_how": {
+      "id": "guidance:ico_dpia_how",
+      "label": "ICO: how do we do a DPIA",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/accountability-and-governance/data-protection-impact-assessments-dpias/how-do-we-do-a-dpia",
+      "last_checked": "2026-11-06",
+      "hash": "c920b4bde1df5e71",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_controller_processor": {
+      "id": "guidance:ico_controller_processor",
+      "label": "ICO: controller or processor",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/controllers-and-processors/controllers-and-processors/how-do-you-determine-whether-you-are-a-controller-or-processor",
+      "last_checked": "2026-11-06",
+      "hash": "7f9d606b786a1279",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_art28": {
+      "id": "guidance:ico_art28",
+      "label": "ICO: what goes in an Article 28 contract",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/accountability-and-governance/contracts-and-liabilities-between-controllers-and-processors-multi/what-needs-to-be-included-in-the-contract/",
+      "last_checked": "2026-11-06",
+      "hash": "e136615a2f78f244",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_data_sharing": {
+      "id": "guidance:ico_data_sharing",
+      "label": "ICO: data sharing code of practice",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-sharing/data-sharing-a-code-of-practice/",
+      "last_checked": "2026-11-06",
+      "hash": "6a2572d7f79736b7",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_ai": {
+      "id": "guidance:ico_ai",
+      "label": "ICO: AI and data protection",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/",
+      "last_checked": "2026-11-06",
+      "hash": "27c02c4512b75105",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_adm": {
+      "id": "guidance:ico_adm",
+      "label": "ICO: automated decision-making and profiling",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/individual-rights/rights-related-to-automated-decision-making-including-profiling/",
+      "last_checked": "2026-11-06",
+      "hash": "485501114a9d7c58",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_children_code": {
+      "id": "guidance:ico_children_code",
+      "label": "ICO: Children's code DPIA (Annex D)",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/childrens-information/childrens-code-guidance-and-resources/age-appropriate-design-a-code-of-practice-for-online-services/annex-d-dpia-template/",
+      "last_checked": "2026-11-06",
+      "hash": "c270471951e60299",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:dfe_duaa_checklist": {
+      "id": "guidance:dfe_duaa_checklist",
+      "label": "DfE: DUAA checklist for schools",
+      "kind": "guidance",
+      "url": "https://www.gov.uk/guidance/data-protection-in-schools/data-use-and-access-act-2025-duaa-compliance-checklist-for-schools",
+      "last_checked": "2026-11-06",
+      "hash": "7d69f7db5033eb7b",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:dfe_genai_schools": {
+      "id": "guidance:dfe_genai_schools",
+      "label": "DfE: generative AI and data protection in schools",
+      "kind": "guidance",
+      "url": "https://www.gov.uk/guidance/data-protection-in-schools/generative-artificial-intelligence-ai-and-data-protection-in-schools",
+      "last_checked": "2026-11-06",
+      "hash": "cb06d3fecbe19ad3",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:dfe_edtech": {
+      "id": "guidance:dfe_edtech",
+      "label": "DfE: procuring EdTech",
+      "kind": "guidance",
+      "url": "https://www.gov.uk/guidance/data-protection-in-schools/procuring-educational-technology-edtech",
+      "last_checked": "2026-11-06",
+      "hash": "df1dd957dbd61e8c",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:art28": {
+      "id": "guidance:art28",
+      "label": "UK GDPR Article 28",
+      "kind": "guidance",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/28",
+      "last_checked": "2026-11-06",
+      "hash": "abab5d67679f57ed",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_consent": {
+      "id": "guidance:ico_consent",
+      "label": "ICO: what is valid consent",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/lawful-basis/consent/what-is-valid-consent/",
+      "last_checked": "2026-11-06",
+      "hash": "5d7a300296d34a01",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_lawful_basis": {
+      "id": "guidance:ico_lawful_basis",
+      "label": "ICO: lawful basis",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/lawful-basis/",
+      "last_checked": "2026-11-06",
+      "hash": "c061c77799c08b76",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_transfers": {
+      "id": "guidance:ico_transfers",
+      "label": "ICO: international transfers",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/international-transfers/",
+      "last_checked": "2026-11-06",
+      "hash": "90d9edd133683650",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "guidance:ico_consult": {
+      "id": "guidance:ico_consult",
+      "label": "ICO: do we need to consult the ICO?",
+      "kind": "guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/accountability-and-governance/data-protection-impact-assessments-dpias/do-we-need-to-consult-the-ico/",
+      "last_checked": "2026-11-06",
+      "hash": "fd23c0ac153ec134",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "supplier:microsoft": {
+      "id": "supplier:microsoft",
+      "label": "Microsoft: data protection terms",
+      "kind": "supplier",
+      "url": "https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA",
+      "last_checked": "2026-11-06",
+      "hash": "f72f64b3ebbd5ba0",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    },
+    "supplier:lovable": {
+      "id": "supplier:lovable",
+      "label": "Lovable: data protection terms",
+      "kind": "supplier",
+      "url": "https://lovable.dev/security",
+      "last_checked": "2026-11-06",
+      "hash": "c84cd9abbe4fc49e",
+      "status": "new",
+      "first_seen": "2026-11-06"
+    }
+  }
+}

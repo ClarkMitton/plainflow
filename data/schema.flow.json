@@ -368,6 +368,8 @@
           "enum": [
             "all_adults",
             "some_under_18",
+            "under_16",
+            "under_13",
             "all_under_18"
           ]
         },

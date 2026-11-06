@@ -23,7 +23,7 @@ export function PrivacyNote({ onCleared }: { onCleared(): void }) {
             <p className="lab">Practising what we preach</p>
             <h2 id="privacy-title">Your data and this app</h2>
             <p><strong>Where it goes:</strong> nowhere. {APP_NAME} has no server, no accounts and no database. What you type stays in this browser until you save a file.</p>
-            <p style={{ marginTop: 8 }}><strong>What's stored here:</strong> the flow you're working on, the answers you gave, and a note of which first-time guides you've seen. Nothing else.</p>
+            <p style={{ marginTop: 8 }}><strong>What's stored here:</strong> the flow you're working on, the answers you gave, any company cards you chose to save for next time, and a note of which first-time guides you've seen. Nothing else.</p>
             <p style={{ marginTop: 8 }}><strong>What leaves this browser:</strong> only when you scan an app's code, requests go to GitHub for that repository's public files. The code is read in memory and dropped. No other outside service is called.</p>
             <p style={{ marginTop: 8 }}><strong>No real names:</strong> every text box warns if what you type looks like a person's name or contact details, because this app is meant to hold none.</p>
             <div className="coach-nav">

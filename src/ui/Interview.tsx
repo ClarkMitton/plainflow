@@ -209,7 +209,7 @@ function LivePanel({ flow, d, set }: { flow: Flow; d: Derivation; set: RuleSet }
         <strong><Term t="tier">Level {tier}</Term>: {set.rules.tiers[String(tier)].label.toLowerCase()}</strong>
       </div>
       <div className="liverow">
-        <span className="q">Does policy allow it?</span>
+        <span className="q">Does your policy allow it?</span>
         <strong className={policy.ok ? "ok" : "rq"}>{policy.ok ? "Yes" : "No, not like this"}</strong>
       </div>
       <div className="liverow">

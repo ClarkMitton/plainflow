@@ -69,12 +69,17 @@
   },
 
   "policy": {
-    "note": "Plain words for the 'does policy allow it?' answer. {company}, {tier}, {max_tier} and {data} are filled in.",
-    "allowed": "{company} is approved for Tier {max_tier}. This sends Tier {tier}, so that's fine.",
+    "note": "Plain words for the 'does your policy allow it?' answer. 'Policy' means this organisation's approved list below (sanctioned), never the supplier's. When the ceiling comes from a product's plan, the answer says it rests on the supplier's published terms and when they were checked. {company}, {tier}, {max_tier}, {plan}, {checked}, {version}, {owner}, {review_date} are filled in.",
+    "source": "Your organisation's approved list: rules table v{version}, owner {owner}, reviewed {review_date}.",
+    "unowned": "That list hasn't been given an owner or a review date yet, so treat these answers as a starting point, not your policy. The Rules page is where it's set.",
+    "allowed": "Your approved list says {company} may take up to Level {max_tier}. This sends Level {tier}, so that's fine.",
+    "allowed_plan": "{company}'s published terms for {plan} (checked {checked}; verify before relying on them) put it at Level {max_tier} under your rules. This sends Level {tier}, so that's fine.",
+    "unlisted": "{company} isn't on your approved list, so the default for anything unlisted (Level {max_tier}) applies. If your policy approves {company} for Level {tier}, add it to the list on the Rules page and this changes.",
     "allowed_inside": "Nothing personal leaves the organisation, so no outside company needs approving.",
     "allowed_partner": "{company} decides things with you, so it's a joint controller: you need a sharing agreement rather than a supplier contract. Level 3 data still never leaves.",
     "no": "No. {message}",
-    "yes_title": "Yes, policy allows it",
+    "no_unlisted": "No. {message} {company} isn't on your approved list, so the default applies. If your policy approves it for Level {tier}, add it to the list on the Rules page and this changes.",
+    "yes_title": "Yes, your policy allows it",
     "no_title": "Not as it stands"
   },
 
@@ -169,6 +174,7 @@
     "power_imbalance_groups": ["learners", "staff", "patients", "care"],
     "rules": [
       { "id": "consent_imbalance", "kind": "stop", "type": "data", "when": "tier >= 1 && lawful_basis == 'consent' && any(people, group in power_imbalance_groups)", "title": "Consent won't hold here", "say": "{title} relies on consent, but students and staff can't freely say no to the organisation that teaches or employs them. The ICO says consent will not usually be valid where there's an imbalance of power.", "ways_out": ["Use a different lawful basis, usually public task for a school or college.", "If no other basis fits, this can't go ahead as designed."], "source": "ico_consent", "law": "art7" },
+      { "id": "consent_under_13", "kind": "stop", "type": "data", "when": "tier >= 1 && lawful_basis == 'consent' && any(people, age_mix == 'under_13')", "title": "Under-13s can't give this consent", "say": "{title} relies on consent, but a child under 13 can't consent to an online service themselves in UK law (DPA 2018 s.9); a parent or guardian has to.", "ways_out": ["Use a different lawful basis, usually public task for a school.", "If consent really is the only basis, get it from a parent and record how."], "source": "ico_children_code", "law": "children" },
       { "id": "no_basis", "kind": "stop", "type": "data", "when": "tier >= 1 && lawful_basis == 'none'", "title": "No legal reason to use it", "say": "Nobody could name a lawful basis for {title}. Without one, nothing else can make this lawful.", "ways_out": ["Ask the DPO which basis could apply.", "Leave {title} out."], "source": "ico_lawful_basis", "law": "art6" },
       { "id": "less_intrusive", "kind": "stop", "type": "purpose", "when": "less_intrusive == 'yes'", "title": "There's a less intrusive way", "say": "You said {title} could be done with less data. If a gentler design gets the same result, the more intrusive one isn't justified.", "ways_out": ["Build the less intrusive version instead. The 'make it easier' box may show it.", "If the extra data really is needed, change your answer and say why."], "source": "ico_dpia_how", "law": "art5" },
       { "id": "rights_impossible", "kind": "stop", "type": "purpose", "when": "rights_possible == 'no'", "title": "People's rights can't be honoured", "say": "If someone can't see their data, have it deleted or have a decision explained, that's a flaw in the design, not a risk to weigh up.", "ways_out": ["Pick a tool or design where data can be found, exported and deleted.", "Make sure any automated result can be explained by a person."], "source": "ico_adm", "law": "art15" },
@@ -216,7 +222,7 @@
   "levers": {
     "note": "Every lever on the canvas. One plain sentence and one example each. 'face' levers show on the node; the rest open in the drawer. A lever with no rule using it should not be here.",
     "people": [
-      { "id": "age_mix", "label": "ages", "kind": "choice", "face": true, "options": [["all_adults", "Adults"], ["some_under_18", "Some <18"], ["all_under_18", "All <18"]], "sentence": "Are any of the people this is about under 18?", "example": "A Level 3 class with 16 and 19 year olds is 'some under 18'." },
+      { "id": "age_mix", "label": "ages", "kind": "choice", "face": true, "options": [["all_adults", "Adults"], ["some_under_18", "16 to 18"], ["under_16", "Under 16"], ["under_13", "Under 13"]], "sentence": "Are any of the people this is about under 18, and how young? Every under-18 counts as a child in law; under 13 they can't consent to an online service themselves.", "example": "A Level 3 class with 16 and 19 year olds is '16 to 18'; a Year 6 class is 'under 13'." },
       { "id": "vulnerable", "label": "vulnerable", "kind": "toggle", "face": true, "sentence": "Are they in a position where they can't easily say no or understand what's happening?", "example": "Learners, patients, people in care." }
     ],
     "data": [

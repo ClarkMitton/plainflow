@@ -1,6 +1,8 @@
+import { useState } from "react";
 import type { FlowNode } from "../engine/types";
 import { GROUP_LABEL, ROLE_LABEL, TYPE_LABEL, useFlow } from "./context";
 import { art28Clauses, cards } from "./flowOps";
+import { cardFor, saveCard } from "./cardLibrary";
 import { Lever } from "./Lever";
 import { nameWarning } from "./names";
 import { Glossed, Term } from "./plain";
@@ -263,6 +265,8 @@ function CompanyCard({ node, onLoadCard }: { node: FlowNode; onLoadCard(cardId: 
   const sec = (f.security_assessment ?? { status: "none", date: null }) as { status: string; date: string | null };
   const subs = flow.edges.filter((e) => e.kind === "sub_processor" && e.from === node.id).map((e) => flow.nodes.find((n) => n.id === e.to)!).filter(Boolean);
   const available = Object.entries(cards).filter(([, c]) => c.company_id === f.company_id);
+  const libraryCard = cardFor(f.company_id as string | undefined);
+  const [saved, setSaved] = useState(false);
   const company = f.company_id ? set.products.companies[String(f.company_id)] : null;
   const open = d.requirements.filter((r) => r.node === node.id && r.status !== "on_file" && r.status !== "covered");
   const missing = art28Clauses.filter(([k]) => !art28[k]);
@@ -279,6 +283,15 @@ function CompanyCard({ node, onLoadCard }: { node: FlowNode; onLoadCard(cardId: 
         {!f.card_ref && available.length > 0 && (
           <button type="button" className="btn sm" style={{ marginTop: 8 }} onClick={() => onLoadCard(available[0][0])}>Use the saved {available[0][1].title} card</button>
         )}
+        {!f.card_ref && !available.length && libraryCard && libraryCard.saved_at && (
+          <button type="button" className="btn sm" style={{ marginTop: 8 }} onClick={() => onLoadCard(`library:${libraryCard.company_id}`)}>Use the card saved on {libraryCard.saved_at.slice(0, 10)}</button>
+        )}
+        {f.company_id ? (
+          <div style={{ marginTop: 8, display: "flex", gap: 8, alignItems: "center" }}>
+            <button type="button" className="btn sm" onClick={() => { saveCard(node); setSaved(true); window.setTimeout(() => setSaved(false), 1800); }}>{saved ? "Saved for next time" : "Save this card for next time"}</button>
+            <span className="mono mu" style={{ fontSize: 11 }}>Kept in this browser; the role stays with the flow.</span>
+          </div>
+        ) : null}
         {f.card_ref ? <div className="mono mu" style={{ marginTop: 6, fontSize: 11 }}>The card is shared across flows. The role belongs to this flow.</div> : null}
       </div>
 

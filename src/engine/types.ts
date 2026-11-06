@@ -83,7 +83,7 @@ export interface Rules {
   tier_rules: { note: string; rules: { tier: number; when: string; because: string }[] };
   pseudonymisation_credit: { enabled: boolean; applies_when: string; effect: string; why: string };
   tiers: Record<string, { label: string; rule: string; plain: string; examples: string; can: string; law?: string[] }>;
-  policy: { note: string; allowed: string; allowed_inside: string; allowed_partner: string; no: string; yes_title: string; no_title: string };
+  policy: { note: string; source: string; unowned: string; allowed: string; allowed_plan: string; unlisted: string; allowed_inside: string; allowed_partner: string; no: string; no_unlisted: string; yes_title: string; no_title: string };
   sanctioned: { note: string; unlisted_max_tier: number; list: Record<string, { max_tier: number; ai: boolean }> };
   blocked: { note: string; rules: { id: string; when: string; message: string; ways_out: string[] }[] };
   locks: { type: NodeType; lever: string; when: string; value: unknown; reason: string }[];
@@ -148,6 +148,8 @@ export interface Product {
 
 export interface Products {
   note: string;
+  /** When the plan and supplier facts were last researched; shown wherever an answer rests on them. */
+  research_checked?: string;
   plan_labels: Record<string, string>;
   companies: Record<string, { name: string; region_default: string; dpa_url: string | null; notes: string }>;
   products: Record<string, Product>;

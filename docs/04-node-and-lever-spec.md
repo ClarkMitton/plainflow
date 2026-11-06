@@ -6,7 +6,7 @@ Five node types and one edge type cover the whole DPIA template. Levers are the 
 
 | Lever | Plain sentence | Example | Default |
 | --- | --- | --- | --- |
-| age mix: all adults / some under 18 / all under 18 | Are any of the people this is about under 18? | A Level 3 class with 16 and 19 year olds is "some under 18" | some under 18 for students |
+| age mix: adults / 16 to 18 / under 16 / under 13 | Are any of the people this is about under 18, and how young? Every under-18 is a child in law; under 13 they can't consent to an online service themselves (DPA 2018 s.9), which is a hard line when consent is the basis | A Level 3 class with 16 and 19 year olds is "16 to 18"; a Year 6 class is "under 13" | 16 to 18 for students |
 | vulnerable | Are they in a position where they can't easily say no or understand what's happening? | Learners, patients, people in care | on for students, patients |
 
 Fields: group description (no names), rough size.

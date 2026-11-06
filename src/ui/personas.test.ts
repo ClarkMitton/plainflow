@@ -171,3 +171,22 @@ describe("people a contractor meets", () => {
     expect(d.requirements.some((r) => r.id === "dsa_outline" && r.status === "to_do")).toBe(true);
   });
 });
+
+describe("whose policy, and the youngest pupils", () => {
+  it("says when the ceiling is just the default for an unlisted company, and what would change it", () => {
+    const flow = build({ role: "Marketing", product: null, otherTool: { name: "Mailshot Co", ai: false } });
+    const d = derive(flow, ruleSet);
+    const policy = policyAnswer(flow, d, ruleSet);
+    expect(policy.unowned).toBe(true); // the seed rules table has no owner yet
+    expect(policy.source).toMatch(/owner not set/);
+    expect(policy.lines[0].text).toMatch(/isn't on your approved list/);
+    expect(policy.lines[0].text).toMatch(/If your policy approves Mailshot Co for Level 1/);
+  });
+
+  it("primary pupils can't be asked for consent themselves", () => {
+    const flow = answer(build({ role: "Teacher", data: [choices.data("work")], about: { kind: "pupils_primary", label: "primary pupils" }, under18: "under_13", product: "m365_copilot", purpose: choices.purpose("feedback", "draft feedback") }), { lawful_basis: "They agree to it (consent)" });
+    const d = derive(flow, ruleSet);
+    tell("Primary school, consent, Copilot", flow, d);
+    expect(d.bright_lines.map((b) => b.id)).toContain("consent_under_13");
+  });
+});

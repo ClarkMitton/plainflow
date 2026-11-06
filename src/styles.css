@@ -416,3 +416,46 @@ table.tbl code, code.x { font-family: var(--mono); font-size: 12px; background: 
 .tbl.plans { font-size: 12px; margin-top: 4px; }
 .tbl.plans td, .tbl.plans th { padding: 5px 6px; }
 .tbl.plans tr.on td { background: var(--paper-2); font-weight: 600; }
+
+/* The pack: what you leave with */
+.pack-top { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+.pack-actions { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 30px; }
+.sheet { border: 2px solid var(--ink); padding: 28px 32px 32px; background: var(--paper); max-width: 860px; box-shadow: 6px 6px 0 #b9b6ad; }
+.sheet + .sheet { margin-top: 28px; }
+.sheet h3 { font-size: 17px; letter-spacing: -.01em; margin: 26px 0 8px; padding-top: 10px; border-top: 2px solid var(--ink); }
+.sheet p { margin: 0 0 6px; line-height: 1.5; }
+.sheet .small { font-size: 12px; }
+.sheet-head { margin-bottom: 18px; }
+.sheet-title { font-size: 28px; letter-spacing: -.02em; margin: 2px 0 4px; }
+.sheet .story { font-size: 15px; color: var(--muted); margin: 0; }
+.verdict-block .verdict { margin: 0 0 6px; }
+.facts-print { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+.fact-print { border: 1.5px solid var(--ink); padding: 10px 12px; font-size: 13px; }
+.fact-print strong { display: block; font-size: 16px; margin: 2px 0 4px; }
+.actions { padding-left: 22px; margin: 0; }
+.actions li { margin: 0 0 12px; padding-bottom: 10px; border-bottom: 1px solid var(--rule); }
+.action-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.cards-print { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.card-print { border: 2px solid var(--ink); padding: 10px 12px; font-size: 13px; box-shadow: 4px 4px 0 var(--company); }
+.card-print-head { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 6px; font-size: 15px; }
+.card-print dl { display: grid; grid-template-columns: 86px 1fr; gap: 3px 10px; margin: 0; }
+.card-print dt { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 2px; }
+.card-print dd { margin: 0; }
+.card-print ol { margin: 6px 0 0; padding-left: 18px; font-size: 12px; }
+.print-only { display: none; }
+@media (max-width: 800px) { .facts-print, .cards-print { grid-template-columns: 1fr; } }
+@media print {
+  @page { margin: 16mm; }
+  body { background: #fff; font-size: 12px; }
+  .app { display: block; height: auto; }
+  .body { display: block; }
+  .page.pack { padding: 0; overflow: visible; }
+  .pack .inner { max-width: none; }
+  .print-only { display: block; }
+  .sheet { border: 0; box-shadow: none; padding: 0; max-width: none; break-after: page; }
+  .sheet + .sheet { margin-top: 0; }
+  .tipbox, .coach, .coach-backdrop, .coach-ring { display: none !important; }
+  .term { border-bottom: 0; }
+  a { color: inherit; text-decoration: none; }
+  .lawline a::after { content: " (" attr(href) ")"; font-size: 10px; color: #6b6a66; }
+}

@@ -32,13 +32,14 @@ interface Props {
   lastChange: LastChange | null;
   setRiskOwner(role: string): void;
   checkIt(): void;
+  finish(): void;
 }
 
 /**
  * The answer, in order of what matters: can I do it; what just changed; three facts behind the answer
  * (each one line, open for more); what to do; the one change that helps. Everything else is folded away.
  */
-export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner, checkIt }: Props) {
+export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner, checkIt, finish }: Props) {
   const { d, set, flow, checked } = useFlow();
   const [open, setOpen] = useState<string | null>(null);
   const [fact, setFact] = useState<string | null>(null);
@@ -167,13 +168,17 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
 
       <div className="facts">
         {factRow("data", "The data", <>Level {d.highest_tier}: {tier.label.toLowerCase()}</>, d.highest_tier >= 3 ? "rq" : "", <><Glossed text={tier.plain} /> {tier.can} <span className="mu">(<Term t="tier">Level</Term> {d.highest_tier} of 3.)</span><LawLine laws={(tier.law ?? []).map((id) => set.laws[id] ?? null)} /></>)}
-        {factRow("policy", "Policy", policy.ok ? "allows it" : "doesn't allow it", policy.ok ? "ok" : "rq",
+        {factRow("policy", "Your policy", policy.ok ? "allows it" : "doesn't allow it", policy.ok ? "ok" : "rq",
           policy.lines.map((l) => (
             <div key={l.text}>
               <Glossed text={l.text} />
               {l.ways.length > 0 && <ul className="plain">{l.ways.map((w) => <li key={w}>{w}</li>)}</ul>}
             </div>
-          )).concat(<LawLine key="law" laws={[set.laws.art28, set.laws.art44]} />))}
+          )).concat(
+            <div key="source" className="mono mu" style={{ fontSize: 11, marginTop: 6 }}>{policy.source}</div>,
+            policy.unowned ? <div key="unowned" className="warn" style={{ marginTop: 4 }}>{set.rules.policy.unowned}</div> : <span key="owned" />,
+            <LawLine key="law" laws={[set.laws.art28, set.laws.art44]} />,
+          ))}
         {factRow("dpia", <Term t="DPIA" />, { not_required: "not needed", recommended: "recommended", required: "a full one is needed" }[d.outcome] ?? d.outcome, d.outcome === "required" ? "rq" : d.outcome === "not_required" ? "ok" : "",
           <>
             <div>{rules.outcome.plain[d.outcome]}{d.floor_raised && " Your use of AI sets this minimum."}{d.credit_applied && d.outcome !== d.outcome_from_screening && " One step lower because no names are used."}</div>
@@ -242,6 +247,12 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
           </div>
         </div>
       ) : null}
+
+      <div className="box" style={{ boxShadow: "5px 5px 0 var(--data)" }}>
+        <p className="lab">When you're done</p>
+        <div style={{ fontSize: 13, lineHeight: 1.45, margin: "4px 0 10px" }}>A page for you, the record for the DPO, and a note for next time. Print, copy as text, or save the file.</div>
+        <button type="button" className="btn dk checkit" style={{ marginTop: 0 }} onClick={finish}>Finish: what you leave with</button>
+      </div>
 
       <div className="box dashed">
         <button type="button" className="linkish" onClick={() => setShowPerson(!showPerson)} aria-expanded={showPerson}>

@@ -35,3 +35,13 @@ The pack is what the person leaves with. Every document is a template over the s
 - Each document prints the "still needs a person" list from the derivation result.
 - Build in the order of the first table, then the second. The top rows need no judgement.
 - Every requirement in the rail shows three things beside it: what it means in one sentence, who does it, and roughly how long. Otherwise "Full DPIA" reads as "no".
+
+## As built (v0.6)
+
+The Finish tab (`src/ui/Pack.tsx`, data from `src/ui/packBuild.ts`) produces three sheets from the one derivation, so they always agree:
+
+1. **For the person with the idea:** the verdict in plain words, the three facts with the law behind them, hard lines with ways past them, the easier version with its cost, a numbered action plan (what, who, how long, why, law), and what still needs a person.
+2. **For the DPO:** data and levels, the 17 screening answers with reasons and law, where personal data goes, one card per outside company (role, plan, contract position, hosting, retention, Article 28 evidence, open actions, supplier questions if there's no card), what was asked and what was assumed, and the law list.
+3. **For next time:** what was agreed, what to bring (supplier answers, missing Article 28 evidence, retention and hosting unknowns, a risk owner), what was assumed, and the session's changes.
+
+Print to PDF (each sheet on its own page), "Copy as text" for an email or Teams message, and "Save the file" for the picture. Company cards can be saved from the drawer into a library in the browser (`src/ui/cardLibrary.ts`), and a new company node picks the saved card up next time. The one-page summary and action plan are the first sheet; the screening record, DPA cards and supplier question sheet are the second; the RoPA entry, retention note and tier note are still to be drafted as their own documents.

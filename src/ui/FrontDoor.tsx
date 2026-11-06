@@ -14,10 +14,11 @@ interface Props {
   set: RuleSet;
   /** "questions" goes to the Q&A first; "canvas" opens straight onto the canvas. */
   onOpen(flow: Flow, to: "questions" | "canvas"): void;
+  onRules(): void;
 }
 
 /** One question, three answers, then one sentence. Everything else is a small link. */
-export function FrontDoor({ set, onOpen }: Props) {
+export function FrontDoor({ set, onOpen, onRules }: Props) {
   const [route, setRoute] = useState<Route>(null);
   const [tier, setTier] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -83,6 +84,8 @@ export function FrontDoor({ set, onOpen }: Props) {
           <button type="button" className="linkish" onClick={() => onOpen(structuredClone(example) as unknown as Flow, "canvas")}>See a finished example</button>
           <span className="mu"> · </span>
           <button type="button" className="linkish" onClick={() => file.current?.click()}>Open something you saved</button>
+          <span className="mu"> · </span>
+          <button type="button" className="linkish" onClick={onRules}>Where the rules come from</button>
         </p>
         <input ref={file} type="file" accept="application/json,.json" hidden onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
       </div>
@@ -291,7 +294,7 @@ function SentenceBuilder({ set, retrospective, tier, onBuild }: { set: RuleSet; 
           <label className="field">
             <span>Any of them under 18?</span>
             <div className="seg sm">
-              {([["all_adults", "No"], ["some_under_18", "Some"], ["all_under_18", "All"]] as const).map(([v, l]) => (
+              {([["all_adults", "No"], ["some_under_18", "16 to 18"], ["under_16", "Under 16"], ["under_13", "Under 13"]] as const).map(([v, l]) => (
                 <button key={v} type="button" className={s.under18 === v ? "on" : ""} onClick={() => up({ under18: v })}>{l}</button>
               ))}
             </div>

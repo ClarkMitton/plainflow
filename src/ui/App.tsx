@@ -18,8 +18,10 @@ import { RulesPage, ScreeningPage } from "./Pages";
 import { describeChange } from "./plain";
 import { Rail, type LastChange } from "./Rail";
 import { ScanReport } from "./ScanReport";
+import { PackPage } from "./PackPage";
+import { cardFor } from "./cardLibrary";
 
-type View = "questions" | "canvas" | "screening" | "report" | "rules" | "compare";
+type View = "questions" | "canvas" | "screening" | "report" | "rules" | "compare" | "pack";
 const STORE = "plainflow.current";
 
 function loadSaved(): Flow | null {
@@ -41,6 +43,7 @@ export function App() {
   const [lastChange, setLastChange] = useState<LastChange | null>(null);
   const [reveal, setReveal] = useState(false);
   const [replay, setReplay] = useState(0);
+  const [rulesOnly, setRulesOnly] = useState(false);
   const flowRef = useRef(flow);
   flowRef.current = flow;
   /** Undo history: past flows and, after an undo, the ones undone. Typing in a box coalesces into one step. */
@@ -178,6 +181,17 @@ export function App() {
   }, [flow, d, selected, highlight, trace, preview, update]);
 
   if (!flow || !d || !ctx) {
+    if (rulesOnly) {
+      return (
+        <div className="app">
+          <div className="topbar">
+            <button type="button" className="btn" onClick={() => setRulesOnly(false)}>Back</button>
+            <span className="title" style={{ padding: 0 }}>Where the rules come from</span>
+          </div>
+          <RulesPage set={ruleSet} />
+        </div>
+      );
+    }
     return (
       <div className="app">
         <div className="topbar">
@@ -186,7 +200,7 @@ export function App() {
           <PrivacyNote onCleared={() => { setFlow(null); setReplay(0); }} />
           <button type="button" className="btn sm" onClick={() => setReplay((n) => n + 1)}>How does this work?</button>
         </div>
-        <FrontDoor set={ruleSet} onOpen={open} />
+        <FrontDoor set={ruleSet} onOpen={open} onRules={() => setRulesOnly(true)} />
         <Coach screen="door" replay={replay} />
       </div>
     );
@@ -204,7 +218,7 @@ export function App() {
           <span className="meta">{flow.status.replace("_", " ")} · {d.open_count} to do</span>
           <span className="spacer" />
           <div className="seg" role="tablist" aria-label="View">
-            {([["questions", "Questions"], ["canvas", "Canvas"], ["screening", "Record"], ["rules", "Rules"]] as [View, string][]).map(([v, label]) => (
+            {([["questions", "Questions"], ["canvas", "Canvas"], ["pack", "Finish"], ["screening", "Record"], ["rules", "Rules"]] as [View, string][]).map(([v, label]) => (
               <button key={v} type="button" className={view === v ? "on" : ""} onClick={() => { setView(v); setReplay(0); }}>{label}</button>
             ))}
             {flow.source?.kind === "scan" && flow.source.report != null && <button type="button" className={view === "report" ? "on" : ""} onClick={() => { setView("report"); setReplay(0); }}>Report</button>}
@@ -255,12 +269,13 @@ export function App() {
                   <Drawer
                     node={selNode}
                     onProduct={(pid) => update(applyProduct(flow, selNode.id, pid, ruleSet), `${selNode.title}: product set to ${pid ?? "something else"}`)}
-                    onLoadCard={(cardId) =>
+                    onLoadCard={(cardId) => {
+                      const fields = cardId.startsWith("library:") ? cardFor(cardId.slice(8))?.fields ?? {} : cards[cardId].fields;
                       update(
-                        { ...flow, nodes: flow.nodes.map((n) => (n.id === selNode.id ? { ...n, fields: { ...n.fields, ...structuredClone(cards[cardId].fields), card_ref: cardId } } : n)) },
+                        { ...flow, nodes: flow.nodes.map((n) => (n.id === selNode.id ? { ...n, fields: { ...n.fields, ...structuredClone(fields), card_ref: cardId } } : n)) },
                         `${selNode.title}: used saved card`,
-                      )
-                    }
+                      );
+                    }}
                     onConnect={(otherId) => {
                       const other = flow.nodes.find((n) => n.id === otherId);
                       update(smartConnect(flow, selNode.id, otherId), `connected ${selNode.title} to ${other?.title ?? "a box"}`);
@@ -278,6 +293,7 @@ export function App() {
                 )}
               </div>
               <Rail
+                finish={() => { setView("pack"); setReplay(0); }}
                 checkIt={checkIt}
                 setRiskOwner={(role) => update({ ...flow, risk_owner: role || null }, null)}
                 lastChange={lastChange}
@@ -301,6 +317,7 @@ export function App() {
           />
           {view === "rules" && <RulesPage set={ruleSet} />}
           {view === "report" && <ScanReport flow={flow} />}
+          {view === "pack" && <PackPage flow={flow} d={d} set={ruleSet} />}
           {view === "compare" && flow.pinned && (
             <Compare
               flow={flow}
