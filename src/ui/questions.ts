@@ -110,9 +110,10 @@ export function applyChecklist(flow: Flow, step: Step, ticked: boolean[]): Flow 
   return step.items.reduce((f, it, i) => apply(f, step.node?.id ?? null, ticked[i] ? it.on : it.off), flow);
 }
 
-/** What a person would notice: the verdict, tier, outcome, hard lines, policy and to-do list. */
+/** What a person would notice: the verdict, tier, outcome, hard lines, policy, to-do list, and the screening answers that go on the record. */
 function signature(d: Derivation): string {
-  return JSON.stringify([d.verdict.id, d.highest_tier, d.outcome, d.bright_lines.map((b) => b.id + b.node), d.blocked.length, openKeys(d).sort()]);
+  const yes = Object.values(d.screening).filter((s) => s.yes).map((s) => s.id).sort();
+  return JSON.stringify([d.verdict.id, d.highest_tier, d.outcome, d.bright_lines.map((b) => b.id + b.node), d.blocked.length, openKeys(d).sort(), yes]);
 }
 
 /** Could any answer to this question change what the person sees? If not, don't ask it. */

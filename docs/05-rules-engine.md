@@ -79,7 +79,7 @@ Expressions are evaluated against the result object. Keep them boolean and reada
 - `dpa_card`: per company node with role in {processor, sub-processor} and any crossing into it
 - `dsa_outline`: per company node with role == joint_controller
 - `human_review`: `A1 or A4` (scoring or automated decisions)
-- `privacy_notice_line`: `A10 or (A8 and any people node)` (AI use must be told)
+- `privacy_notice_line`: `A10 or (A8 and any people node)` (AI use must be told); status `covered` once the purpose says people have been told about this use
 - `retention_note`: any company node with keeps_data on, or retention unknown
 - `supplier_questions`: any company node with no card
 - `transfer_mechanism`: any company node with region not in {UK, EU}
@@ -94,7 +94,7 @@ Expressions are evaluated against the result object. Keep them boolean and reada
 
 ## Testing
 
-`example-copilot-marking.json` must derive to: tier 2 on Student work; one crossing (Student work → Microsoft, T2); A4, A6, A8 yes; A10 no (notice linked); outcome required (A6 is in A1 to A7, and three criteria overall); requirements: full_dpia, screening_record, dpa_card (Microsoft, on file), sub_processor_check (OpenAI, covered), human_review, privacy_notice_line, retention_note, ropa_entry; risk high; effort weeks, DPO; cheapest change: Student work identifiability → pseudonymised, removing full_dpia (outcome drops to recommended because A6 still applies but pseudonymisation credit lowers severity) and privacy_notice_line.
+`example-copilot-marking.json` must derive to: tier 2 on Student work; one crossing (Student work → Microsoft, T2); A4, A6, A8 yes; A10 no (notice linked); outcome required (A6 is in A1 to A7, and three criteria overall); requirements: full_dpia, screening_record, dpa_card (Microsoft, on file), sub_processor_check (OpenAI, covered), human_review, privacy_notice_line (covered, the notice already says so), retention_note, ropa_entry; risk high; effort weeks, DPO; cheapest change: Student work identifiability → pseudonymised, removing full_dpia (outcome drops to recommended because A6 still applies but pseudonymisation credit lowers severity).
 
 If the DPO disagrees with that expected result, change the rules, then the test.
 

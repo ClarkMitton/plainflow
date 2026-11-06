@@ -6,9 +6,16 @@ import { Glossed, policyAnswer, Term, type Change } from "./plain";
 import { licences, lighterRoutes, m365Checked, type LighterRoute } from "./lighter";
 
 /** Where this comes from in law, and why it matters. */
-export function LawLine({ law, laws }: { law?: Law | null; laws?: (Law | null | undefined)[] }) {
+export function LawLine({ law, laws, compact }: { law?: Law | null; laws?: (Law | null | undefined)[]; compact?: boolean }) {
   const list = (laws ?? [law]).filter((l): l is Law => !!l);
   if (!list.length) return null;
+  if (compact) {
+    return (
+      <div className="lawline compact">
+        <div>{list.map((l, i) => <span key={l.id}>{i > 0 ? " · " : ""}<a href={l.url} target="_blank" rel="noreferrer"><strong>{l.ref}</strong>, {l.name.toLowerCase()}</a></span>)}</div>
+      </div>
+    );
+  }
   return (
     <div className="lawline">
       {list.map((l) => (

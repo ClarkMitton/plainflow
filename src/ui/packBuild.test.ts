@@ -11,10 +11,10 @@ const pack = buildPack(flow, d, ruleSet);
 
 describe("the pack", () => {
   it("gives the person a verdict, the facts with the law behind them, and a numbered action plan", () => {
-    expect(pack.forPerson.verdict).toBe("Yes, once Deputy principal signs it off");
+    expect(pack.forPerson.verdict).toBe("Yes, once the deputy principal signs it off");
     expect(pack.forPerson.facts.map((f) => f.label)).toEqual(["The data", "Your policy", "DPIA"]);
     expect(pack.forPerson.facts[2].laws[0].ref).toBe("UK GDPR Art. 35");
-    expect(pack.forPerson.actions.map((a) => a.n)).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(pack.forPerson.actions.map((a) => a.n)).toEqual([1, 2, 3, 4, 5]);
     expect(pack.forPerson.actions.every((a) => a.who && a.howLong && a.meaning)).toBe(true);
     expect(pack.forPerson.easier?.change).toContain("Student work");
   });

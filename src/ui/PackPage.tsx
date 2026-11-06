@@ -89,14 +89,18 @@ function ForPerson({ p }: { p: PackData }) {
       </div>
 
       <div className="facts-print">
-        {f.facts.map((x) => (
-          <div key={x.label} className="fact-print">
-            <p className="lab">{x.label}</p>
-            <strong>{x.value}</strong>
-            <p><Glossed text={x.detail} /></p>
-            <LawLine laws={x.laws} />
-          </div>
-        ))}
+        {f.facts.map((x, i) => {
+          const earlier = new Set(f.facts.slice(0, i).flatMap((y) => y.laws.map((l) => l.id)));
+          return (
+            <div key={x.label} className="fact-print">
+              <p className="lab">{x.label}</p>
+              <strong>{x.value}</strong>
+              <p><Glossed text={x.detail} /></p>
+              <LawLine laws={x.laws.filter((l) => !earlier.has(l.id))} />
+              <LawLine laws={x.laws.filter((l) => earlier.has(l.id))} compact />
+            </div>
+          );
+        })}
       </div>
 
       {f.hardLines.map((h) => (
@@ -149,13 +153,20 @@ function ForPerson({ p }: { p: PackData }) {
             <p><Glossed text={a.meaning} /></p>
             {a.why && <p className="mu">Because {a.why}.</p>}
             {a.person !== "nothing" && <p className="mu">A person still does: {a.person}.</p>}
-            <LawLine law={a.law} />
+            <LawLine law={a.law} compact />
           </li>
         ))}
       </ol>
 
       <h3>Still needs a person</h3>
       <ul className="plain">{f.needsPerson.map((x) => <li key={x}><Glossed text={x} /></li>)}</ul>
+
+      {f.laws.length > 0 && (
+        <>
+          <h3>Where this comes from</h3>
+          <LawLine laws={f.laws} />
+        </>
+      )}
       <p className="mu small">This is a screening, not legal advice. Plainflow never says a flow is lawful; it says what still needs a person.</p>
     </>
   );
@@ -203,7 +214,7 @@ function ForDpo({ p }: { p: PackData }) {
               <dt>Contract</dt><dd className={/to do|blocked|partial/.test(c.dpa) ? "rq" : "ok"}>{c.dpa}</dd>
               <dt>Hosted</dt><dd>{c.region} · transfer: {c.transfer}</dd>
               <dt>Keeps data</dt><dd>{c.retention}</dd>
-              <dt>Article 28</dt><dd>{c.art28.evidenced} of {c.art28.of} terms evidenced{c.art28.missing.length ? `; missing: ${c.art28.missing.join(", ")}` : ""}</dd>
+              {c.via ? <><dt>Covered by</dt><dd>{c.via}</dd></> : <><dt>Article 28</dt><dd>{c.art28.evidenced} of {c.art28.of} terms evidenced{c.art28.missing.length ? `; missing: ${c.art28.missing.join(", ")}` : ""}</dd></>}
               {c.open.length > 0 && <><dt>Open</dt><dd>{c.open.join("; ")}</dd></>}
             </dl>
             {c.questions.length > 0 && (

@@ -30,6 +30,8 @@ export interface CompanyCardOut {
   art28: { evidenced: number; of: number; missing: string[] };
   open: string[];
   questions: string[];
+  /** For a sub-processor: who covers it and whether that supplier has listed it. */
+  via: string | null;
   tier: number;
 }
 
@@ -51,6 +53,7 @@ export interface Pack {
     lighter: { instead: string; feature: string; does: string; caveat: string; theirs: LighterRoute["theirs"]; ours: LighterRoute["ours"] }[];
     actions: ActionItem[];
     needsPerson: string[];
+    laws: Law[];
     effort: string;
     signoff: string;
   };
@@ -115,6 +118,8 @@ export function buildPack(flow: Flow, d: Derivation, set: RuleSet): Pack {
     const dpa = d.requirements.find((r) => r.id === "dpa_card" && r.node === n.id);
     const dsa = d.requirements.find((r) => r.id === "dsa_outline" && r.node === n.id);
     const open = d.requirements.filter((r) => r.node === n.id && r.status !== "on_file" && r.status !== "covered").map((r) => r.title);
+    const sub = n.levers.role === "sub_processor";
+    const via = sub ? `${facts.parent_title ? String(facts.parent_title) : "your supplier"}${facts.parent_authorised ? "'s contract lists it as authorised" : " must list it as an authorised sub-processor; check their list"}` : null;
     return {
       id: n.id,
       title: n.title,
@@ -125,9 +130,10 @@ export function buildPack(flow: Flow, d: Derivation, set: RuleSet): Pack {
       region: String(f.region ?? "unknown"),
       transfer: String(f.transfer_mechanism ?? "unknown").replace(/_/g, " "),
       retention: String(f.retention || "unknown"),
-      art28: { evidenced: art28Clauses.length - missing.length, of: art28Clauses.length, missing },
+      art28: sub ? { evidenced: 0, of: 0, missing: [] } : { evidenced: art28Clauses.length - missing.length, of: art28Clauses.length, missing },
       open,
-      questions: f.card_ref ? [] : set.products.supplier_questions,
+      questions: f.card_ref || sub ? [] : set.products.supplier_questions,
+      via,
       tier: Number(facts.receives_tier ?? -1),
     };
   });
@@ -180,6 +186,7 @@ export function buildPack(flow: Flow, d: Derivation, set: RuleSet): Pack {
       easier: cc ? { change: `${cc.lever === "company_id" ? "Switch" : "Change"} ${cc.node_title}: ${ccLever?.label ?? cc.lever} to ${ccTo}. ${cc.unblocks ? "That clears the block." : `That lifts ${cc.removes.length} thing${cc.removes.length === 1 ? "" : "s"} to do.`}`, cost: cc.cost, how: cc.how } : null,
       actions,
       needsPerson: d.needs_person,
+      laws: [...new Map([...lawsOf(tier.law ?? []), ...lawsOf(["art28", "art35"]), ...d.bright_lines.map((b) => b.law), ...actions.map((a) => a.law)].filter((l): l is Law => !!l).map((l) => [l.id, l] as const)).values()],
       effort: rules.effort.time_labels[d.effort.time],
       signoff: rules.effort.signoff_labels[d.effort.signoff],
     },
@@ -219,7 +226,7 @@ export function packText(p: Pack): string {
   L.push("FOR THE DPO", `Screening outcome: ${p.forDpo.outcome}`);
   for (const t of p.forDpo.tiers) L.push(`${t.title}: Level ${t.tier}, because ${t.because}.`);
   for (const s of p.forDpo.screening.filter((x) => x.yes)) L.push(`${s.id} yes: ${s.because}${s.law ? ` [${s.law}]` : ""}`);
-  for (const c of p.forDpo.cards) L.push(`${c.title}: ${c.role}; ${c.plan ? `plan: ${c.plan}; ` : ""}${c.dpa}; region ${c.region}; keeps ${c.retention}; Article 28 ${c.art28.evidenced}/${c.art28.of}${c.open.length ? `; open: ${c.open.join(", ")}` : ""}`);
+  for (const c of p.forDpo.cards) L.push(`${c.title}: ${c.role}; ${c.plan ? `plan: ${c.plan}; ` : ""}${c.dpa}; region ${c.region}; keeps ${c.retention}; ${c.via ? `covered via ${c.via}` : `Article 28 ${c.art28.evidenced}/${c.art28.of}`}${c.open.length ? `; open: ${c.open.join(", ")}` : ""}`);
   L.push("", "NEXT TIME");
   if (p.forNext.riskOwner) L.push(`Risk owner: ${p.forNext.riskOwner}`);
   if (p.forNext.bring.length) L.push("Bring:", ...p.forNext.bring.map((b) => `- ${b}`));

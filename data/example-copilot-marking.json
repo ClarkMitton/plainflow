@@ -67,13 +67,13 @@
       "dpa_card:n_microsoft": "on_file",
       "sub_processor_check:n_openai": "covered",
       "human_review": "to_do",
-      "privacy_notice_line": "to_do",
+      "privacy_notice_line": "covered",
       "retention_note": "to_do",
       "ropa_entry": "to_do",
       "transfer_mechanism:n_microsoft": "covered"
     },
     "risk": "high",
     "effort": { "signoff": "dpo_and_owner", "time": "weeks" },
-    "cheapest_change": { "node": "n_work", "lever": "identifiability", "to": "pseudonymised", "removes": ["full_dpia", "privacy_notice_line"], "cost": "Outputs can't use the person's name; someone matches them back afterwards." }
+    "cheapest_change": { "node": "n_work", "lever": "identifiability", "to": "pseudonymised", "removes": ["full_dpia"], "cost": "Outputs can't use the person's name; someone matches them back afterwards." }
   }
 }

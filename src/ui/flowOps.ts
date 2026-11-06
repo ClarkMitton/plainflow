@@ -253,7 +253,8 @@ export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boole
   const dataTitles = s.data.map((d) => short(d.label).trim()).filter(Boolean);
   const purposeLabel = s.purpose.label.trim();
   flow.title = `${toolName} ${purposeLabel ? "for " + purposeLabel.toLowerCase() : ""}`.trim();
-  flow.story = `A ${s.role.trim().toLowerCase()} puts ${dataTitles.join(" and ").toLowerCase()} into ${product?.name ?? toolName}${product?.company ? `, run by ${set.products.companies[product.company]?.name}` : ""}, to ${purposeLabel.toLowerCase()}.`;
+  const aboutLabel = s.about.label.trim().toLowerCase();
+  flow.story = `A ${s.role.trim().toLowerCase()} ${retrospective ? "has been putting" : "puts"} ${dataTitles.join(" and ").toLowerCase()}${aboutLabel ? ` about ${aboutLabel}` : ""} into ${product?.name ?? toolName}${product?.company ? `, run by ${set.products.companies[product.company]?.name}` : ""}, to ${purposeLabel.toLowerCase()}.`;
 
   const aboutKind = sentenceChoices.about.find((a) => a.id === s.about.kind);
   const subjects = newNode("people", { x: 40, y: 30 });

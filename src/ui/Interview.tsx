@@ -133,9 +133,9 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
           {assumed.length > 0 && (
             <div className="assumed">
               <button type="button" className="linkish" onClick={() => setShowAssumed(!showAssumed)} aria-expanded={showAssumed}>
-                {assumed.length} question{assumed.length === 1 ? "" : "s"} skipped
+                {assumed.length} question{assumed.length === 1 ? "" : "s"} left out
               </button>
-              <span className="mu"> · nothing you could answer would change the result yet.</span>
+              <span className="mu"> · no answer to {assumed.length === 1 ? "it" : "them"} would change the result.</span>
               {showAssumed && (
                 <ul className="plain">
                   {assumed.map((s) => (

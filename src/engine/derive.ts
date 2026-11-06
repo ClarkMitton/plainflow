@@ -34,6 +34,13 @@ function makeEnvs(flow: Flow, nodeVars: Record<string, Record<string, unknown>>,
   return { global, envs };
 }
 
+/** A role mid-sentence: "Deputy principal" reads "the deputy principal", "A senior leader" stays, "DPO" keeps its capitals. */
+function asRole(s: string): string {
+  const acronym = s.length > 1 && s[1] !== s[1].toLowerCase();
+  const t = acronym ? s : s[0].toLowerCase() + s.slice(1);
+  return /^(a|an|the|our|my|you|someone|somebody|whoever)\b/i.test(t) ? t : `the ${t}`;
+}
+
 export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = {}): Derivation {
   const { rules, requirements: catalogue } = set;
   const lawOf = (id?: string) => (id && set.laws?.[id]) || null;
@@ -49,7 +56,7 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
       safety_categories: rules.safety_categories,
       large_scale_threshold: rules.large_scale_threshold,
       power_imbalance_groups: rules.bright_lines.power_imbalance_groups,
-      risk_owner: flow.risk_owner?.trim() ? flow.risk_owner.trim() : null,
+      risk_owner: flow.risk_owner?.trim() ? asRole(flow.risk_owner.trim()) : null,
       retrospective: !!flow.retrospective,
     },
     byType: {},

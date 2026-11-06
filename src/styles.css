@@ -432,6 +432,8 @@ table.tbl code, code.x { font-family: var(--mono); font-size: 12px; background: 
 .facts-print { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
 .fact-print { border: 1.5px solid var(--ink); padding: 10px 12px; font-size: 13px; }
 .fact-print strong { display: block; font-size: 16px; margin: 2px 0 4px; }
+.fact-print .lawline strong, .actions .lawline strong { display: inline; font-size: inherit; margin: 0; }
+.lawline.compact { border-top: 0; padding-top: 0; margin-top: 4px; }
 .actions { padding-left: 22px; margin: 0; }
 .actions li { margin: 0 0 12px; padding-bottom: 10px; border-bottom: 1px solid var(--rule); }
 .action-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
