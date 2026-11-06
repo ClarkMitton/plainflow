@@ -21,6 +21,7 @@
     "ico_lawful_basis": { "label": "ICO: lawful basis", "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/lawful-basis/" },
     "ico_transfers": { "label": "ICO: international transfers", "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/international-transfers/" },
     "ico_consult": { "label": "ICO: do we need to consult the ICO?", "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/accountability-and-governance/data-protection-impact-assessments-dpias/do-we-need-to-consult-the-ico/" },
+    "ico_special_category": { "label": "ICO: special category data", "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/lawful-basis/special-category-data/" },
     "ico_purpose_limitation": { "label": "ICO: purpose limitation", "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/data-protection-principles/a-guide-to-the-data-protection-principles/purpose-limitation/" },
     "ldi_tier_rule": { "label": "Tier rule (this rules table)", "url": "#rules-tiers" }
   },
@@ -51,15 +52,15 @@
     "0": { "label": "Nothing personal", "rule": "Any tool. No DPIA.", "plain": "Nobody could be picked out from it.", "examples": "Totals, anonymous survey results, lesson plans, generic templates.", "can": "Use any tool you like." },
     "1": { "label": "Account basics", "rule": "External allowed with a DPA.", "plain": "It shows who someone is, but nothing about them.", "examples": "Names, work emails, job titles, logins, how often someone used something.", "can": "Outside tools are fine, as long as the company has signed a data protection agreement.", "law": ["art6", "art28"] },
     "2": { "label": "About a named person", "rule": "Sanctioned routes only. DPIA screening every time.", "plain": "It says something about how a named person is doing.", "examples": "Marks, attendance, feedback, essays, support notes, behaviour.", "can": "Only through the tools the organisation has approved, and always with a quick screening.", "law": ["art5", "art35"] },
-    "3": { "label": "Special category", "rule": "Never leaves organisation systems. No AI.", "plain": "The most sensitive kind. A leak could really hurt someone.", "examples": "Health, SEND, safeguarding, ethnicity, religion, sexuality, anything about crime.", "can": "Keep it inside the organisation's own systems. No AI tools.", "law": ["art9"] }
+    "3": { "label": "Special category", "rule": "Organisation systems or a route approved for Level 3 only. Into AI only with DPO advice and the risk owner's sign-off. Needs an Article 9 condition.", "plain": "The most sensitive kind. A leak could really hurt someone.", "examples": "Health, SEND, safeguarding, ethnicity, religion, sexuality, anything about crime.", "can": "Keep it in the organisation's own systems or a route approved for Level 3. AI only with the DPO's advice and the risk owner's written sign-off.", "law": ["art9"] }
   },
 
   "sanctioned": {
     "note": "Per organisation. Keyed by company id or product id from products.json. max_tier is the highest tier that may flow to it. ai says whether its AI features are approved for personal data. A company not on this list may take Tier 1 at most.",
     "unlisted_max_tier": 1,
     "list": {
-      "microsoft": { "max_tier": 2, "ai": true },
-      "power_platform": { "max_tier": 2, "ai": true },
+      "microsoft": { "max_tier": 3, "ai": true },
+      "power_platform": { "max_tier": 3, "ai": true },
       "canva": { "max_tier": 1, "ai": false },
       "lovable": { "max_tier": 1, "ai": false },
       "supabase": { "max_tier": 1, "ai": false },
@@ -77,7 +78,7 @@
     "allowed_plan": "{company}'s published terms for {plan} (checked {checked}; verify before relying on them) put it at Level {max_tier} under your rules. This sends Level {tier}, so that's fine.",
     "unlisted": "{company} isn't on your approved list, so the default for anything unlisted (Level {max_tier}) applies. If your policy approves {company} for Level {tier}, add it to the list on the Rules page and this changes.",
     "allowed_inside": "Nothing personal leaves the organisation, so no outside company needs approving.",
-    "allowed_partner": "{company} decides things with you, so it's a joint controller: you need a sharing agreement rather than a supplier contract. Level 3 data still never leaves.",
+    "allowed_partner": "{company} decides things with you, so it's a joint controller: you need a sharing agreement rather than a supplier contract. If Level 3 data is shared, the agreement has to say so.",
     "no": "No. {message}",
     "no_unlisted": "No. {message} {company} isn't on your approved list, so the default applies. If your policy approves it for Level {tier}, add it to the list on the Rules page and this changes.",
     "yes_title": "Yes, your policy allows it",
@@ -87,8 +88,7 @@
   "blocked": {
     "note": "Checked for every wire carrying personal data. Names: tier, max_tier, company, to_role (the company's role on this flow), plan_note (\" on the business plan\" when the tool has plans), data, into_ai (the wire goes into an AI system), via_ai (either end is AI), ai_approved, crosses. A blocked wire turns red and produces no paperwork.",
     "rules": [
-      { "id": "tier3_leaves", "when": "crosses && tier >= 3", "message": "Level 3 data never leaves organisation systems.", "ways_out": ["Take the special category data out of {data}.", "Keep it inside, on an organisation system."] },
-      { "id": "tier3_ai", "when": "into_ai && tier >= 3", "message": "Level 3 data can't go into AI.", "ways_out": ["Take the special category data out of {data}.", "Do this step without AI."] },
+      { "id": "tier3_leaves", "when": "crosses && tier >= 3 && max_tier < 3 && to_role in ['processor', 'sub_processor']", "message": "Level 3 data only goes to a supplier your policy approves for it. {company}'s limit is Level {max_tier}.", "ways_out": ["Take the special category data out of {data}.", "Keep it inside, on an organisation system or a route approved for Level 3."] },
       { "id": "over_max", "when": "crosses && tier > max_tier && to_role in ['processor', 'sub_processor']", "message": "{company}{plan_note} is allowed up to Level {max_tier}; this wire carries Level {tier}.", "ways_out": ["Send less: cut {data} down to what Level {max_tier} allows.", "Use a sanctioned route, or a plan that's approved for Level {tier}."] },
       { "id": "ai_not_approved", "when": "crosses && via_ai && tier >= 1 && !ai_approved", "message": "{company}'s AI features are not approved for personal data.", "ways_out": ["Anonymise {data} first.", "Use an approved AI route instead."] }
     ]

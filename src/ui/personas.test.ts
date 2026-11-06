@@ -264,7 +264,7 @@ describe("roleplay C: an AI note-taker in wellbeing meetings", () => {
     expect(d.highest_tier).toBe(3);
     const policy = policyAnswer(flow, d, ruleSet);
     expect(policy.ok).toBe(false);
-    expect(d.blocked.map((b) => b.message).join(" ")).toMatch(/Level 3 data never leaves organisation systems/);
+    expect(d.blocked.map((b) => b.message).join(" ")).toMatch(/Level 3 data only goes to a supplier your policy approves for it/);
     expect(d.blocked.map((b) => b.message).join(" ")).not.toMatch(/Tier/);
     const consent = groupLines(d.bright_lines, flow).filter((g) => g.b.id === d.bright_lines[0].id);
     expect(consent).toHaveLength(1);

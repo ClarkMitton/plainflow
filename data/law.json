@@ -26,7 +26,7 @@
       "ref": "UK GDPR Art. 9",
       "name": "Special category data",
       "says": "Health, ethnicity, religion, sexual orientation, union membership, biometrics and genetics are off limits unless a specific extra condition applies. Criminal data (Art. 10) is treated the same way.",
-      "why": "A leak of this kind of data can cause real harm: discrimination, embarrassment, danger. That's why it stays inside the organisation.",
+      "why": "A leak of this kind of data can cause real harm: discrimination, embarrassment, danger. That's why it needs a second legal condition and the tightest route.",
       "url": "https://www.legislation.gov.uk/eur/2016/679/article/9"
     },
     "art13": {

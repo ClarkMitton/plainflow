@@ -83,19 +83,19 @@ describe("variations", () => {
     expect(b.screening_tiers.n_work).toBe(1);
   });
 
-  it("special category data into Microsoft is blocked", () => {
+  it("special category data into Microsoft is gated, not blocked: an Article 9 condition and a Level 3 AI sign-off", () => {
     const b = derive(applyLever(flow, "n_work", "special_category", true), ruleSet);
     expect(b.tiers.n_work).toBe(3);
-    expect(b.blocked.length).toBeGreaterThan(0);
-    expect(b.verdict.id).toBe("not_like_this");
-    expect(b.requirements.find((r) => r.key === "dpa_card:n_microsoft")).toBeUndefined();
-    expect(b.cheapest_change).toMatchObject({ lever: "special_category", to: false, unblocks: b.blocked.length });
+    expect(b.blocked).toEqual([]);
+    expect(b.requirements.find((r) => r.id === "art9_condition")?.status).toBe("to_do");
+    expect(b.requirements.find((r) => r.id === "level3_ai_signoff")?.status).toBe("to_do");
+    expect(b.requirements.find((r) => r.key === "dpa_card:n_microsoft")).toBeDefined();
   });
 
-  it("only flags the wire into the AI, not the AI's output", () => {
-    const b = derive(applyLever(flow, "n_work", "special_category", true), ruleSet);
-    expect(b.edges.e5.blocked).toBeNull();
-    expect(b.edges.e3.blocked?.rule).toBe("tier3_ai");
+  it("special category data into a supplier not approved for Level 3 is blocked", () => {
+    const b = derive(applyLever({ ...flow, nodes: flow.nodes.map((n) => (n.id === "n_microsoft" ? { ...n, fields: { ...n.fields, company_id: "canva", card_ref: null } } : n)) }, "n_work", "special_category", true), ruleSet);
+    expect(b.blocked.length).toBeGreaterThan(0);
+    expect(b.blocked[0].message).toMatch(/Level 3 data only goes to a supplier your policy approves for it/);
   });
 
   it("tier 2 into an unlisted company is blocked with two ways out", () => {

@@ -24,7 +24,7 @@
         },
         {
           "label": "It could mention health, SEND, religion, ethnicity, sexuality or crime",
-          "hint": "The most sensitive kind of data. It has to stay inside the organisation.",
+          "hint": "The most sensitive kind of data. It stays in organisation systems or an approved route, and needs an extra legal condition.",
           "on": {
             "set": {
               "special_category": true

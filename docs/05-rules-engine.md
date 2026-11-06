@@ -148,3 +148,11 @@ Run as the IT director of a trust with a parent app built on Lovable (v0.6, cont
 - Contact details lock `identifiability` to named (`locks` in `rules.json`): an email or phone number identifies someone by itself, so the "names on it?" question is not asked about names and contact details. Student work with names on it is not locked; coding it is the whole point there.
 - A blocked wire's "send less" way out names every data item over the allowed level, not only the highest one.
 - The under-13 consent line no longer tells people to get parental consent as if that settled it; the imbalance of power still has to be answered.
+
+## Level 3: a gate, not a wall (v0.7)
+
+Policy choices, made after the roleplays; both live in `rules.json` and `requirements.json`, not code.
+
+- **The Microsoft tenant takes Level 3.** `sanctioned.microsoft` and `power_platform` go to `max_tier: 3`, since health, SEND and safeguarding records already live in SharePoint, Teams and Outlook. `tier3_leaves` now blocks only a processor whose limit is below 3; a partner sharing Level 3 needs the sharing agreement to say so, and the policy line says that.
+- **Level 3 into AI is a sign-off, not a block.** `tier3_ai` is gone. In its place `level3_ai_signoff` is a requirement whenever Level 3 data reaches an AI system: the DPO's advice and the risk owner's written sign-off, on an approved route. An AI route that isn't approved for personal data is still blocked by `ai_not_approved`.
+- **An Article 9 condition is always asked for.** `art9_condition` is a requirement whenever A2 is yes: which Article 9(2) condition applies, usually with a DPA 2018 Schedule 1 condition and the appropriate policy document on file. A person picks it; the tool never guesses.
