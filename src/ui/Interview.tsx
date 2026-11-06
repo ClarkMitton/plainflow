@@ -80,8 +80,8 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
             return (
               <button key={a.label} type="button" className={`answer${chosen || guess ? " guess" : ""}`} disabled={blocked} onClick={() => commit(s, apply(flow, s.node?.id ?? null, a), a.label)}>
                 {a.label}
-                {blocked && <small>Not at Level {pinned}, the level you started from</small>}
-                {guess && <small>Our guess from your sentence</small>}
+                {blocked && <small>Above Level {pinned}, the level you chose</small>}
+                {guess && <small>Suggested from your sentence</small>}
                 {chosen && <small>Your answer</small>}
               </button>
             );
@@ -91,7 +91,7 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
 
       <div className="qnav">
         {idx > 0 && visible.includes(s) && <button type="button" className="linkish" onClick={() => setCursor(visible[idx - 1]?.key ?? null)}>Back</button>}
-        <button type="button" className="linkish" onClick={() => { setSkipped([...skipped, s.key]); setCursor(null); }}>Not sure, skip this one</button>
+        <button type="button" className="linkish" onClick={() => { setSkipped([...skipped, s.key]); setCursor(null); }}>Not sure; skip</button>
       </div>
     </div>
   );
@@ -100,7 +100,7 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
     <div className="page">
       <div className="inner interview">
         <div>
-          <p className="lab">{flow.source?.kind === "scan" ? "Checking an app from its code" : flow.retrospective ? "Checking something already in use" : "A new idea"}</p>
+          <p className="lab">{flow.source?.kind === "scan" ? "Checking an app from its code" : flow.retrospective ? "Checking something already in use" : "A new proposal"}</p>
           <p className="story">{flow.story}</p>
 
           <div className="progress-row">
@@ -109,15 +109,15 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
                 <button key={s.key} type="button" className={`${s === step ? "on" : ""} ${s.key in answered ? "done" : ""}`} onClick={() => setCursor(s.key)} title={s.ask} />
               ))}
             </div>
-            {step && <button type="button" className="linkish" onClick={onDone}>Skip the rest and draw it</button>}
+            {step && <button type="button" className="linkish" onClick={onDone}>Skip the rest and draw the diagram</button>}
           </div>
 
           {step ? ask(step) : anyway ? ask(anyway) : (
             <div className="qcard">
-              <h2 className="ask">That's everything. Let's draw it.</h2>
-              <p className="why">You'll see your idea as a picture, with the answer beside it: whether you can go ahead, what policy says, and what to do. Then flip any switch to see what changes.</p>
-              <button type="button" className="btn dk" style={{ boxShadow: "4px 4px 0 var(--data)", fontSize: 16, padding: "10px 18px" }} onClick={onDone}>Draw my flow</button>
-              <button type="button" className="btn" style={{ marginLeft: 10 }} onClick={() => { setSkipped([]); setCursor(visible[0]?.key ?? null); }}>Go back over them</button>
+              <h2 className="ask">That is everything. The diagram can be drawn now.</h2>
+              <p className="why">You will see the proposal as a diagram, with the answer beside it: whether it can go ahead, what policy says, and what to do next. Change any setting to see what changes.</p>
+              <button type="button" className="btn dk" style={{ boxShadow: "4px 4px 0 var(--data)", fontSize: 16, padding: "10px 18px" }} onClick={onDone}>Draw the diagram</button>
+              <button type="button" className="btn" style={{ marginLeft: 10 }} onClick={() => { setSkipped([]); setCursor(visible[0]?.key ?? null); }}>Review the answers</button>
             </div>
           )}
 
@@ -127,7 +127,7 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
               {last.changes.length ? (
                 <ul className="plain">{last.changes.map((c) => <li key={c.text} className={`chg ${c.kind}`}><Glossed text={c.text} /></li>)}</ul>
               ) : (
-                <div className="mu">{last.asGuessed ? "Same as our guess, so nothing changes." : "That doesn't change the answer."}</div>
+                <div className="mu">{last.asGuessed ? "This matches the suggestion, so nothing changes." : "This does not change the answer."}</div>
               )}
             </div>
           )}
@@ -135,9 +135,9 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
           {assumed.length > 0 && (
             <div className="assumed">
               <button type="button" className="linkish" onClick={() => setShowAssumed(!showAssumed)} aria-expanded={showAssumed}>
-                {assumed.length} question{assumed.length === 1 ? "" : "s"} left out
+                {assumed.length} question{assumed.length === 1 ? "" : "s"} not asked
               </button>
-              <span className="mu"> · no answer to {assumed.length === 1 ? "it" : "them"} would change the result.</span>
+              <span className="mu">: no answer would change the result.</span>
               {showAssumed && (
                 <ul className="plain">
                   {assumed.map((s) => (
@@ -180,7 +180,7 @@ function Checklist({ step, flow, tooHigh, onSubmit }: { step: Step; flow: Flow; 
               <span className="tick-text">
                 {it.label}
                 {it.hint && <small>{it.hint}</small>}
-                {guessed[i] && <small>Ticked from your sentence</small>}
+                {guessed[i] && <small>Selected from your sentence</small>}
                 {blocked && <small>Not at the tier you started from</small>}
               </span>
             </button>
@@ -189,7 +189,7 @@ function Checklist({ step, flow, tooHigh, onSubmit }: { step: Step; flow: Flow; 
       </div>
       <div style={{ display: "flex", gap: 10, marginTop: 16 }}>
         <button type="button" className="btn dk" style={{ boxShadow: "4px 4px 0 var(--data)" }} onClick={() => onSubmit(ticked)}>
-          {ticked.some(Boolean) ? "That's right, next" : "None of these, next"}
+          {ticked.some(Boolean) ? "Confirm and continue" : "None of these; continue"}
         </button>
       </div>
     </>
@@ -203,7 +203,7 @@ function LivePanel({ flow, d, set }: { flow: Flow; d: Derivation; set: RuleSet }
     <aside className="live">
       <p className="lab">{Object.keys(flow.answers ?? {}).length ? "So far" : flow.source?.kind === "scan" ? "Starting point, from the code scan" : "Starting point, from your sentence"}</p>
       <div className="liverow">
-        <span className="q">Can I do it?</span>
+        <span className="q">Can this go ahead?</span>
         <strong className={["stop", "not_like_this", "consult"].includes(d.verdict.id) ? "rq" : undefined}>{d.verdict.label}</strong>
       </div>
       <div className="liverow">

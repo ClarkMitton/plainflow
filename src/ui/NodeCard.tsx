@@ -61,7 +61,7 @@ export function NodeCard({ data }: NodeProps & { data: CardData }) {
           <Handle type="source" position={Position.Bottom} id="b" style={{ left: "50%" }} />
         </>
       )}
-      <button type="button" className="nx nodrag" aria-label={`Remove ${node.title}`} title="Remove (Undo brings it back)" onClick={(e) => { e.stopPropagation(); remove(node.id); }}>×</button>
+      <button type="button" className="nx nodrag" aria-label={`Remove ${node.title}`} title="Remove (Undo restores it)" onClick={(e) => { e.stopPropagation(); remove(node.id); }}>×</button>
       <div
         className={`h h-${node.type}`}
         onClick={() => select(node.id)}

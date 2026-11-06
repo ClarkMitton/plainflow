@@ -5,7 +5,7 @@ import { ruleSet } from "../engine/ruleset";
 import type { Flow } from "../engine/types";
 import { buildPack, packText } from "./packBuild";
 
-const flow = { ...(example as unknown as Flow), risk_owner: "Deputy principal", answers: { "names:n_work": "Yes, names" } };
+const flow = { ...(example as unknown as Flow), risk_owner: "Deputy principal", answers: { "names:n_work": "Yes, by name" } };
 const d = derive(flow, ruleSet);
 const pack = buildPack(flow, d, ruleSet);
 

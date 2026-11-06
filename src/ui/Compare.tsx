@@ -55,7 +55,7 @@ export function Compare({ flow, d: b, set, keepA, goWithB }: Props) {
 
         <div className="box" style={{ boxShadow: "5px 5px 0 var(--data)", maxWidth: 640 }}>
           <p className="lab" style={{ marginBottom: 4 }}>What changed</p>
-          {changes.length ? <ul className="plain">{changes.map((c) => <li key={c}>{c}</li>)}</ul> : <div>Nothing yet. Go back to the canvas and flip a lever.</div>}
+          {changes.length ? <ul className="plain">{changes.map((c) => <li key={c}>{c}</li>)}</ul> : <div>Nothing yet. Return to the canvas and change a setting.</div>}
         </div>
 
         <h2>Paperwork</h2>

@@ -32,12 +32,33 @@ export function RulesPage({ set }: { set: RuleSet }) {
         <table className="tbl">
           <thead><tr><th>Tier</th><th>When</th><th>Because</th></tr></thead>
           <tbody>
-            {r.tier_rules.rules.map((x) => <tr key={x.tier}><td className="mono">{x.tier}</td><td><code>{x.when}</code></td><td>{x.because}</td></tr>)}
+            {r.tier_rules.rules.map((x, i) => <tr key={i}><td className="mono">{x.tier}</td><td><code>{x.when}</code></td><td>{x.because}</td></tr>)}
           </tbody>
         </table>
         <p className="lede" style={{ marginTop: 12 }}>
           Account basics (Tier 1): {r.tier1_categories.join(", ")}. Special category (Tier 3): {r.tier3_categories.join(", ")}. Safety: {r.safety_categories.join(", ")}.
         </p>
+
+        <h2 id="rules-why-levels">Why each level</h2>
+        <p className="lede">{r.tiers_about.why}</p>
+        {Object.entries(r.tiers).map(([t, x]) => (
+          <div key={t} className="box" style={{ marginBottom: 12 }}>
+            <p className="lab">Level {t} · {x.label}</p>
+            <p>{x.plain} {x.examples}</p>
+            {x.basis && (
+              <>
+                <p style={{ marginTop: 8 }}><strong>What the law says</strong></p>
+                <LawLine laws={x.basis.law.map((id) => set.laws[id])} />
+                <p style={{ marginTop: 8 }}><strong>Guidance:</strong> {x.basis.guidance.map((id, i) => <span key={id}>{i > 0 ? " · " : ""}{src(id)}</span>)}</p>
+                <p><strong>What this organisation chose:</strong> {x.basis.policy}</p>
+                <p><strong>The harm it guards against:</strong> {x.basis.harm}</p>
+                <p className="mu">In a public, internal, confidential and restricted scheme: {x.basis.crosswalk}.</p>
+              </>
+            )}
+          </div>
+        ))}
+        <p className="lede">{r.tiers_about.crosswalk_note}</p>
+        <ul className="plain">{r.tiers_about.limits.map((l) => <li key={l}>{l}</li>)}</ul>
 
         <h2>Pseudonymisation credit</h2>
         <table className="tbl">
@@ -153,7 +174,7 @@ export function RulesPage({ set }: { set: RuleSet }) {
         <h2>Cheapest change candidates</h2>
         <p className="lede">{r.cheapest_change.note}</p>
         <table className="tbl">
-          <thead><tr><th>Change</th><th>Offered when</th><th>You'd give up</th></tr></thead>
+          <thead><tr><th>Change</th><th>Offered when</th><th>Trade-off</th></tr></thead>
           <tbody>
             {r.cheapest_change.candidates.map((c) => (
               <tr key={c.type + c.lever + String(c.to)}><td>{c.type}: {c.lever} to {String(c.to)}</td><td><code>{c.when}</code></td><td>{c.cost}</td></tr>

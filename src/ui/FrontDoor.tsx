@@ -36,7 +36,7 @@ export function FrontDoor({ set, onOpen, onRules }: Props) {
       if (!Array.isArray(flow.nodes) || !Array.isArray(flow.edges)) throw new Error("not a flow");
       onOpen(flow, "canvas");
     } catch {
-      setError("That file isn't something saved from here, or a scanner report.");
+      setError("That file was not saved from Plainflow and is not a scanner report.");
     }
   };
 
@@ -47,26 +47,26 @@ export function FrontDoor({ set, onOpen, onRules }: Props) {
     <div className="page">
       <div className="inner">
         <p className="lab">{APP_NAME}</p>
-        <h1 style={{ fontSize: 40 }}>Want to use a tool with people's data?</h1>
-        <p className="lede">Describe the idea in one sentence, answer a few plain questions, and {APP_NAME} will tell you whether it's allowed, what it needs, and the one change that would make it easier.</p>
+        <h1 style={{ fontSize: 40 }}>Using a tool with personal data?</h1>
+        <p className="lede">Describe the proposal in one sentence and answer a few questions. {APP_NAME} tells you whether it can go ahead, what it needs, and the one change that would make it easier.</p>
 
         <p className="lab" style={{ marginTop: 28 }}>What are you checking?</p>
         <div className="door">
           <button type="button" className={route === "new" ? "on" : ""} onClick={() => pick("new")}>
             <strong>A new idea</strong>
-            <span>Something you'd like to start doing.</span>
+            <span>A proposal not yet in use.</span>
           </button>
           <button type="button" className={route === "existing" ? "on" : ""} onClick={() => pick("existing")}>
             <strong>Something we already use</strong>
-            <span>A tool that's been running a while.</span>
+            <span>A tool already in use.</span>
           </button>
           <button type="button" className={route === "tier" ? "on" : ""} onClick={() => pick("tier")}>
             <strong>How sensitive data can be used</strong>
-            <span>Pick a level and see what's allowed there.</span>
+            <span>Choose a level and see what it allows.</span>
           </button>
           <button type="button" className={route === "scan" ? "on" : ""} onClick={() => pick("scan")}>
             <strong>An app we've built</strong>
-            <span>Scan its code right here, then see it as a picture.</span>
+            <span>Scan its code here, then see it as a diagram.</span>
           </button>
         </div>
 
@@ -106,7 +106,7 @@ function TierPicker({ set, tier, setTier }: { set: RuleSet; tier: number | null;
   };
   return (
     <div style={{ marginBottom: 26 }}>
-      <p className="lab">How sensitive is the most sensitive data you'd use?</p>
+      <p className="lab">How sensitive is the most sensitive data you would use?</p>
       <div className="tiers">
         {[0, 1, 2, 3].map((t) => {
           const x = set.rules.tiers[String(t)];
@@ -270,12 +270,12 @@ function SentenceBuilder({ set, retrospective, tier, onBuild }: { set: RuleSet; 
         <div className="field" style={{ marginTop: 16 }}>
           <span>Where will it run?</span>
           <select value={hosting} onChange={(e) => { setHosting(e.target.value); if (e.target.value === OTHER) up({ otherTool: { name: "", ai: false } }); else up({ otherTool: null }); }}>
-            <option value="" disabled>Choose where it's hosted…</option>
+            <option value="" disabled>Choose where it is hosted…</option>
             {set.products.custom_app_hosting.options.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
           </select>
           {hosting === OTHER && <input value={s.otherTool?.name ?? ""} placeholder="Who hosts it?" aria-label="Who hosts it" onChange={(e) => up({ otherTool: { name: e.target.value, ai: s.otherTool?.ai ?? false } })} />}
           <span className="mu" style={{ textTransform: "none", letterSpacing: 0, fontFamily: "var(--sans)", fontWeight: 400, fontSize: 12 }}>
-            Building is cheap now; running is what matters. Who hosts it decides who holds the data, under which contract, and which level it may take.
+            Building an app is cheap; running it is what matters. The host determines who holds the data, under which contract, and which level it may take.
           </span>
         </div>
       )}
@@ -292,7 +292,7 @@ function SentenceBuilder({ set, retrospective, tier, onBuild }: { set: RuleSet; 
         )}
         {s.about.label && (
           <label className="field">
-            <span>Any of them under 18?</span>
+            <span>Are any of them under 18?</span>
             <div className="seg sm">
               {([["all_adults", "No"], ["some_under_18", "16 to 18"], ["under_16", "Under 16"], ["under_13", "Under 13"]] as const).map(([v, l]) => (
                 <button key={v} type="button" className={s.under18 === v ? "on" : ""} onClick={() => up({ under18: v })}>{l}</button>
@@ -312,7 +312,7 @@ function SentenceBuilder({ set, retrospective, tier, onBuild }: { set: RuleSet; 
         </button>
       </div>
       <p className="mu" style={{ marginTop: 12, fontSize: 13 }}>
-        {s.product && tooHigh(s.product) ? `That tool isn't approved for level ${tier}. Pick another, or a lower level.` : "Roles and groups, never people's names. Next: a few quick questions, then we draw it."}
+        {s.product && tooHigh(s.product) ? `That tool isn't approved for level ${tier}. Pick another, or a lower level.` : "Roles and groups, never individuals' names. Next: a few questions, then the diagram."}
       </p>
     </div>
   );

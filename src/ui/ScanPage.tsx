@@ -91,9 +91,9 @@ export function ScanPage({ set, onOpen, onOpenFile }: Props) {
               </>
             )}
           </dl>
-          <p style={{ fontSize: 14, margin: "10px 0 12px" }}><Glossed text="The code can't tell who the people are, the legal reason, or who signs. A few questions follow, then the picture and the answer. The full report, with the code evidence, is on the Report tab once it's open." /></p>
+          <p style={{ fontSize: 14, margin: "10px 0 12px" }}><Glossed text="The code can't tell who the people are, the legal reason, or who signs. A few questions follow, then the diagram and the answer. The full report, with the code evidence, is on the Report tab once it's open." /></p>
           <button type="button" className="btn dk" style={{ boxShadow: "4px 4px 0 var(--data)", fontSize: 16, padding: "10px 18px" }} onClick={() => onOpen(flowFromScan({ ...state.report, githubUrl: url.trim() }, set), "questions")}>
-            Open it as a picture
+            Open it as a diagram
           </button>
         </div>
       )}

@@ -4,110 +4,110 @@
     "door": [
       {
         "title": "What this does",
-        "body": "You'll describe an idea that uses people's data, in one sentence, then answer a few plain questions. Plainflow turns that into a picture of where the data goes, and reads the answer off the picture: can you do it, does your organisation's policy allow it, do you need a DPIA (a written check of what could go wrong for people), and what to do next.",
+        "body": "Describe a proposal that uses personal data in one sentence, then answer a few questions. Plainflow turns that into a diagram of where the data goes and reads the answer from it: whether it can go ahead, whether your organisation's policy allows it, whether a DPIA is needed (a written assessment of what could go wrong for people), and what to do next.",
         "aside": "Nothing you type is sent anywhere; it stays in this browser until you save it. Use roles and groups, never people's names."
       },
       {
         "anchor": ".door",
         "title": "Start here",
-        "body": "Say what you're checking: a new idea, something already running, a sensitivity level you already know, or an app you've built. Pick one and a sentence to fill in appears below."
+        "body": "Say what you are checking: a new proposal, something already in use, a sensitivity level you already know, or an app you have built. Choose one and a sentence to complete appears below."
       }
     ],
     "questions": [
       {
-        "title": "A few questions, then the picture",
-        "body": "Plainflow is building a picture of your idea. Each answer flips a switch on it. Some answers are already guessed from your sentence; change anything that's wrong.",
-        "aside": "There are no wrong answers. An honest yes means a closer look, not a no."
+        "title": "A few questions, then the diagram",
+        "body": "Plainflow is building a diagram of your proposal. Each answer sets something on it. Some answers are suggested from your sentence; change anything that is wrong.",
+        "aside": "There are no wrong answers. A yes means a closer look, not a no."
       },
       {
         "anchor": ".qcard",
         "title": "Tick what's true",
-        "body": "A list like this stands in for a run of yes or no questions. The small print under each item says what it means. Not sure? Skip it and we keep our guess."
+        "body": "A list like this stands in for a series of yes or no questions. The note under each item explains what it means. If you are not sure, skip it and the suggestion stands."
       },
       {
         "anchor": ".live",
         "title": "The answer, forming",
-        "body": "This updates as you answer. Watch it change; that's the point. Nothing here is final until a person signs it."
+        "body": "This updates as you answer. Nothing here is final until a person signs it."
       }
     ],
     "canvas": [
       {
-        "title": "Your idea, as a picture",
-        "body": "Each box is one part of your idea: the people it's about, the data, the tool, what it's for, and the companies that handle the data. Wires show where data goes; the thick amber ones carry personal data. The dashed line is the edge of your organisation: anything to the right of it is outside.",
+        "title": "Your proposal, as a diagram",
+        "body": "Each box is one part of the proposal: the people concerned, the data, the tool, the purpose, and the companies that handle the data. Connections show where data goes; the thick amber ones carry personal data. The dashed line is the boundary of your organisation: anything to the right of it is outside.",
         "aside": "You can drag boxes about, and nothing you do here is final."
       },
       {
         "anchor": ".story-strip",
-        "title": "The sentence is the picture",
-        "body": "Hover a word to light up where that data goes. Click one to open its box."
+        "title": "The sentence is the diagram",
+        "body": "Hover over a word to highlight where that data goes. Select one to open its box."
       },
       {
         "anchor": ".checkit",
         "title": "When it looks right",
-        "body": "Have a look round first. Then press this and Plainflow reads the answer off the picture: can you do it, does policy allow it, and what to do next."
+        "body": "Review the diagram first. Then select this and Plainflow reads the answer from it: whether it can go ahead, whether policy allows it, and what to do next."
       }
     ],
     "screening": [
       {
         "title": "The form your DPO signs",
-        "body": "Everything here came from your picture: the screening questions with the reason for each answer, the data's level, and what still needs a person. You don't need to read it; it's here so your DPO can."
+        "body": "Everything here comes from your diagram: the screening questions with the reason for each answer, the data's level, and what still needs a person. You do not need to read it; it is here for your DPO."
       }
     ],
     "rules": [
       {
         "title": "How the answers are worked out",
-        "body": "Every answer Plainflow gives comes from this table, not from hidden code. It's here so a DPO can check a rule and change it. You don't need to read it unless you want to see why something was said."
+        "body": "Every answer Plainflow gives comes from this table, not from hidden code. It is here so a DPO can check a rule and change it. You do not need to read it unless you want to see why something was said."
       }
     ],
     "compare": [
       {
         "title": "Two versions side by side",
-        "body": "A is the copy you pinned; B is the picture as it is now. What changed is listed, and the to-do list shows what each version needs. Keep A, or go with B."
+        "body": "A is the copy you pinned; B is the diagram as it is now. What changed is listed, and the to-do list shows what each version needs. Keep A, or proceed with B."
       }
     ],
     "answer": [
       {
-        "title": "The answer, read off the picture",
-        "body": "Everything on the right comes from the picture: whether you can do it, the facts behind that, and a list of things to do. From now on it's live: change the picture and the answer changes with it.",
+        "title": "The answer, read from the diagram",
+        "body": "Everything on the right comes from the diagram: whether it can go ahead, the facts behind that, and a list of actions. From now on it is live: change the diagram and the answer changes with it.",
         "aside": "Nothing here is final until a person signs it."
       },
       {
         "anchor": ".n-data .tg",
-        "title": "Flip any switch",
-        "body": "Switches are the choices you made in the questions. Flip one and the answer updates straight away, and a box on the right says what changed. Hover a switch to see what it means."
+        "title": "Change any setting",
+        "body": "The settings on each box are the choices you made in the questions. Change one and the answer updates immediately, and a box on the right explains what changed. Hover over a setting to see what it means."
       },
       {
         "anchor": ".rail .qa",
         "title": "Your answer",
-        "body": "Can you do it, in plain words, then the facts behind it: the data, policy, and whether a DPIA is needed. Click a fact to see why."
+        "body": "Whether it can go ahead, in plain words, then the facts behind it: the data, policy, and whether a DPIA is needed. Select a fact to see why."
       },
       {
         "anchor": ".panel.s-paperwork",
         "title": "What to do",
-        "body": "Each line is one thing that needs doing before this goes ahead, with who does it and roughly how long. Click a line to see what it is and why it's there."
+        "body": "Each line is one action needed before this goes ahead, with who does it and roughly how long it takes. Select a line to see what it is and why it is there."
       },
       {
         "anchor": ".palette",
         "title": "Tools",
-        "body": "Add a box and it arrives wired in, so the answer changes straight away. Undo takes anything back. Tidy the layout, fold boxes to their titles, or pin a copy to compare two versions."
+        "body": "Add a box and it arrives connected, so the answer changes immediately. Undo reverses anything. Tidy the layout, fold boxes to their titles, or pin a copy to compare two versions."
       },
       {
         "anchor": ".topbar .seg",
         "title": "Save, and the record",
-        "body": "Finish gives you the pages to take away: one for you, the record for your DPO, a note for next time. Save keeps the picture as a file you can open again."
+        "body": "Finish gives you the pages to take away: one for you, the record for your DPO, and a note for next time. Save keeps the diagram as a file you can open again."
       }
     ],
     "report": [
       {
         "title": "What the code shows",
-        "body": "This is everything the scan found in the code, with the exact lines as evidence, and what each finding does not prove. It's the raw material. The answer that counts is on the Canvas, where your answers fill in what code can't tell.",
+        "body": "This is everything the scan found in the code, with the exact lines as evidence, and what each finding does not prove. It is the raw material. The answer that counts is on the Canvas, where your answers fill in what code cannot tell.",
         "aside": "Each card opens to show the code and the reasoning."
       }
     ],
     "pack": [
       {
         "title": "What you leave with",
-        "body": "Three pages from the same picture: one for you (can I do it, and the steps), the record your DPO signs, and a note for whoever picks this up next. Print any page to PDF, copy the lot as text for an email, or save the file to reopen the picture.",
+        "body": "Three pages from the same diagram: one for you (whether it can go ahead, and the steps), the record your DPO signs, and a note for whoever picks this up next. Print any page to PDF, copy it all as text for an email, or save the file to reopen the diagram.",
         "aside": "Nothing here is final until a person signs it."
       }
     ]

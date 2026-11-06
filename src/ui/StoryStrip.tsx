@@ -23,7 +23,7 @@ export function StoryStrip() {
   const partners = receiving.filter(isPartner);
   const purposes = of("purpose");
 
-  if (!flow.nodes.length) return <div className="story-strip mu">Add a node to start the picture.</div>;
+  if (!flow.nodes.length) return <div className="story-strip mu">Add a node to start the diagram.</div>;
   const who = staff.length === 1 ? roleParts(staff[0].title) : { article: "", plural: staff.length > 1 };
 
   const chip = (n: FlowNode, lower = false) => (

@@ -8,6 +8,7 @@ import { flowFromSentence, type Sentence } from "./flowOps";
 import { policyAnswer, stillNo } from "./plain";
 import { apply, isDecisive, stepsFor } from "./questions";
 import { lighterRoutes } from "./lighter";
+import { buildPack } from "./packBuild";
 
 const choices = {
   data: (id: string) => ({ kind: id, label: id }),
@@ -70,7 +71,7 @@ describe("five more people", () => {
   it("F. a primary SENCO drafting EHCP paperwork in free ChatGPT: no, and Copilot in the tenant is the way", () => {
     const flow = answer(
       build({ role: "SENCO", data: [{ kind: "sensitive", label: "health, SEND or safeguarding information" }, { kind: "notes", label: "feedback or support notes" }], about: { kind: "pupils_primary", label: "primary pupils (under 13)" }, under18: "under_13", product: "chatgpt", purpose: { kind: null, label: "draft EHCP paperwork" } }),
-      { lawful_basis: "It's part of our job (public task)", plan: "Free or personal accounts", told: "No, or not sure" },
+      { lawful_basis: "It is part of our public task", plan: "Free or personal accounts", told: "No, or not sure" },
     );
     const d = derive(flow, ruleSet);
     tell("F. SENCO, EHCP paperwork, free ChatGPT", flow, d);
@@ -88,7 +89,7 @@ describe("five more people", () => {
   it("G. HR looking for sickness absence patterns in Power BI: yes with sign-off, plus the Article 9 condition", () => {
     const flow = answer(
       build({ role: "HR", data: [{ kind: "sensitive", label: "health, SEND or safeguarding information" }, { kind: "attendance", label: "attendance records" }], about: { kind: "staff", label: "staff" }, under18: "all_adults", product: "power_platform", purpose: { kind: null, label: "spot absence patterns" } }),
-      { lawful_basis: "It's in our legitimate interests", told: "Yes, it's in our privacy notice", purpose_facts: "It covers everyone, or over a thousand people|It keeps running, not a one-off" },
+      { lawful_basis: "Our legitimate interests", told: "Yes, it is in our privacy notice", purpose_facts: "It covers a whole cohort, or more than a thousand people|It runs continuously rather than once" },
     );
     const d = derive(flow, ruleSet);
     tell("G. HR, sickness patterns, Power BI", flow, d);
@@ -103,8 +104,8 @@ describe("five more people", () => {
 
   it("H. a sixth form display in Canva: photos are Level 2 for the right reason, and consent holds when saying no costs nothing", () => {
     const sentence = { role: "Head of department", data: [{ kind: "media", label: "photos or video" }], about: { kind: "students", label: "students (16 plus)" }, under18: "some_under_18" as const, product: "canva", purpose: { kind: null, label: "make an open evening display" } };
-    const coerced = answer(build(sentence), { lawful_basis: "They agree to it, but saying no isn't really an option (consent)", told: "Yes, it's in our privacy notice" });
-    const free = answer(build(sentence), { lawful_basis: "They agree to it, and could say no with nothing lost (consent)", told: "Yes, it's in our privacy notice" });
+    const coerced = answer(build(sentence), { lawful_basis: "Consent, but refusing is not a realistic option", told: "Yes, it is in our privacy notice" });
+    const free = answer(build(sentence), { lawful_basis: "Consent, and they can refuse with no consequences", told: "Yes, it is in our privacy notice" });
     const dc = derive(coerced, ruleSet);
     const df = derive(free, ruleSet);
     tell("H. Sixth form display in Canva, consent they can't refuse", coerced, dc);
@@ -120,7 +121,7 @@ describe("five more people", () => {
   it("I. a charity emailing a volunteer list with DBS status to a partner: a sharing agreement that covers Level 3", () => {
     const flow = answer(
       build({ role: "Manager", data: [{ kind: "contact", label: "names and contact details" }, { kind: "criminal", label: "DBS or criminal record information" }], about: { kind: null, label: "volunteers" }, under18: "all_adults", product: "spreadsheet_email", purpose: choices.purpose("share", "share it with a partner organisation") }),
-      { lawful_basis: "It's in our legitimate interests", told: "No, or not sure" },
+      { lawful_basis: "Our legitimate interests", told: "No, or not sure" },
     );
     const d = derive(flow, ruleSet);
     tell("I. Charity, volunteer list with DBS status, emailed to a partner", flow, d);
@@ -137,7 +138,7 @@ describe("five more people", () => {
   it("J. a teacher making lesson plans in free Gemini: nothing personal, so yes", () => {
     const flow = answer(
       build({ role: "Teacher", data: [{ kind: null, label: "lesson plans" }], about: { kind: null, label: "nobody in particular" }, under18: "all_adults", product: "gemini_consumer", purpose: choices.purpose("plan", "plan lessons") }),
-      { names: "No way to tell who", plan: "Free or personal accounts" },
+      { names: "No, nobody can be identified", plan: "Free or personal accounts" },
     );
     const d = derive(flow, ruleSet);
     tell("J. Teacher, lesson plans, free Gemini", flow, d);
@@ -145,5 +146,25 @@ describe("five more people", () => {
     expect(d.outcome).toBe("not_required");
     expect(d.verdict.id).toBe("go_once");
     expect(d.open_count).toBe(1);
+  });
+});
+
+describe("why each level", () => {
+  it("every level carries evidence that resolves, and the pack prints the note for the levels in use", () => {
+    for (const [t, x] of Object.entries(ruleSet.rules.tiers)) {
+      expect(x.basis, `Level ${t} has a basis`).toBeTruthy();
+      for (const id of x.basis!.law) expect(ruleSet.laws[id], `law ${id} on Level ${t}`).toBeTruthy();
+      for (const id of x.basis!.guidance) expect(ruleSet.rules.sources[id], `source ${id} on Level ${t}`).toBeTruthy();
+      expect(x.basis!.policy.length).toBeGreaterThan(20);
+    }
+    const flow = answer(
+      build({ role: "HR", data: [{ kind: "sensitive", label: "health, SEND or safeguarding information" }, { kind: "attendance", label: "attendance records" }], about: { kind: "staff", label: "staff" }, under18: "all_adults", product: "power_platform", purpose: { kind: null, label: "spot absence patterns" } }),
+      { lawful_basis: "Our legitimate interests", told: "Yes, it is in our privacy notice" },
+    );
+    const pack = buildPack(flow, derive(flow, ruleSet), ruleSet);
+    expect(pack.forDpo.tierNotes.map((n) => n.tier)).toEqual([2, 3]);
+    const three = pack.forDpo.tierNotes.find((n) => n.tier === 3)!;
+    expect(three.laws.map((l) => l.id)).toContain("art9");
+    expect(three.crosswalk).toBe("restricted");
   });
 });

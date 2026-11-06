@@ -51,7 +51,7 @@ const LAWFUL: [string, string][] = [
   ["consent", "Consent (they agreed, and can withdraw)"],
   ["legitimate_interests", "Legitimate interests (needs a balancing test)"],
   ["vital_interests", "Vital interests (to protect someone's life)"],
-  ["none", "We can't name one (a hard line)"],
+  ["none", "We cannot name one (a hard line)"],
 ];
 const USE_CASES: [string, string][] = [
   ["", "Not set"],
@@ -143,9 +143,9 @@ export function Drawer({ node, onProduct, onLoadCard, onDelete, onConnect, onDis
             <Select label="Lawful basis (the legal reason you can use it)" value={f.lawful_basis} options={LAWFUL} onChange={field("lawful_basis")} />
             {f.lawful_basis === "consent" && (
               <Select
-                label="Could they say no, or change their mind later, with nothing lost?"
+                label="Could they refuse, or withdraw later, with no consequences?"
                 value={f.consent_free === true ? "yes" : f.consent_free === false ? "no" : ""}
-                options={[["", "Not answered yet"], ["yes", "Yes, it's a genuine choice (a photo for the newsletter)"], ["no", "No, saying no isn't really an option"]]}
+                options={[["", "Not answered yet"], ["yes", "Yes, a genuine choice (a photograph for a newsletter)"], ["no", "No, refusing is not a realistic option"]]}
                 onChange={(v) => setField(node.id, "consent_free", v === "yes" ? true : v === "no" ? false : null)}
               />
             )}
@@ -224,7 +224,7 @@ export function Drawer({ node, onProduct, onLoadCard, onDelete, onConnect, onDis
         <div>
           <p className="lab" style={{ marginBottom: 6 }}>Connected to</p>
           {flow.edges.filter((e) => e.from === node.id || e.to === node.id).length === 0 && (
-            <div className="warn" style={{ marginBottom: 6 }}>Nothing yet, so this box doesn't change the answer. Connect it below.</div>
+            <div className="warn" style={{ marginBottom: 6 }}>Not connected yet, so this box does not change the answer. Connect it below.</div>
           )}
           <ul className="plain conn">
             {flow.edges.filter((e) => e.from === node.id || e.to === node.id).map((e) => {
@@ -311,7 +311,7 @@ function CompanyCard({ node, onLoadCard }: { node: FlowNode; onLoadCard(cardId: 
         <TextField label="Kept for" value={f.retention} onChange={field("retention")} placeholder="30 days" />
         <TextField label="How it's deleted" value={f.deletion_route} onChange={field("deletion_route")} />
       </div>
-      <Select label="Will they sign up to our terms?" value={f.vendor_position ?? "unknown"} options={[["unknown", "Don't know yet"], ["agreed", "Yes, signed or on offer"], ["refused", "No, they won't (a hard line)"]]} onChange={field("vendor_position")} />
+      <Select label="Will they sign our terms?" value={f.vendor_position ?? "unknown"} options={[["unknown", "Not known yet"], ["agreed", "Yes, signed or on offer"], ["refused", "No, they will not (a hard line)"]]} onChange={field("vendor_position")} />
       <TextField label="DPA document (the signed agreement: link or reference)" value={f.dpa_document} onChange={field("dpa_document")} />
 
       <div className="field">

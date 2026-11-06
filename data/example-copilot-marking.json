@@ -74,6 +74,6 @@
     },
     "risk": "high",
     "effort": { "signoff": "dpo_and_owner", "time": "weeks" },
-    "cheapest_change": { "node": "n_work", "lever": "identifiability", "to": "pseudonymised", "removes": ["full_dpia"], "cost": "Outputs can't use the person's name; someone matches them back afterwards." }
+    "cheapest_change": { "node": "n_work", "lever": "identifiability", "to": "pseudonymised", "removes": ["full_dpia"], "cost": "Outputs cannot use the person's name; a person matches them back afterwards." }
   }
 }

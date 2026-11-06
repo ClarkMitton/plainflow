@@ -37,7 +37,7 @@ export function PackPage({ flow, d, set }: Props) {
           <div>
             <p className="lab">What you leave with</p>
             <h1>{pack.title}</h1>
-            <p className="lede">Three pages from the same picture, so they always agree. Print any of them to PDF, or copy the lot as text for an email.</p>
+            <p className="lede">Three pages from the same diagram, so they always agree. Print any of them to PDF, or copy the lot as text for an email.</p>
           </div>
           <div className="pack-actions">
             <button type="button" className="btn dk" style={{ boxShadow: "4px 4px 0 var(--data)" }} onClick={() => window.print()}>Print to PDF</button>
@@ -46,7 +46,7 @@ export function PackPage({ flow, d, set }: Props) {
           </div>
         </div>
         <div className="seg noprint" role="tablist" style={{ display: "inline-flex", marginBottom: 24 }}>
-          <button type="button" className={section === "person" ? "on" : ""} onClick={() => setSection("person")}>For the person with the idea</button>
+          <button type="button" className={section === "person" ? "on" : ""} onClick={() => setSection("person")}>For the proposer</button>
           <button type="button" className={section === "dpo" ? "on" : ""} onClick={() => setSection("dpo")}>For the DPO</button>
           <button type="button" className={section === "next" ? "on" : ""} onClick={() => setSection("next")}>For next time</button>
         </div>
@@ -79,9 +79,9 @@ function ForPerson({ p }: { p: PackData }) {
   const f = p.forPerson;
   return (
     <>
-      <Head p={p} kicker="One page: can I do this, and what it takes" />
+      <Head p={p} kicker="One page: can this go ahead, and what it takes" />
       <div className="verdict-block">
-        <p className="lab">Can I do it?</p>
+        <p className="lab">Can this go ahead?</p>
         <div className="verdict">{f.verdict}</div>
         <p><Glossed text={f.say} /></p>
         {f.notes.map((n) => <p key={n} className="mu">{n}</p>)}
@@ -108,7 +108,7 @@ function ForPerson({ p }: { p: PackData }) {
           <p className="lab" style={{ color: "var(--rq)" }}>Hard line</p>
           <strong>{h.title}</strong>
           <p><Glossed text={h.say} /></p>
-          <p style={{ fontWeight: 600, marginBottom: 2 }}>Ways past it:</p>
+          <p style={{ fontWeight: 600, marginBottom: 2 }}>Ways forward:</p>
           <ul className="plain">{h.waysOut.map((w) => <li key={w}>{w}</li>)}</ul>
           <LawLine law={h.law} />
         </div>
@@ -118,7 +118,7 @@ function ForPerson({ p }: { p: PackData }) {
         <div className="box" style={{ marginTop: 18, boxShadow: "5px 5px 0 var(--data)" }}>
           <p className="lab">The easier version</p>
           <p><strong>{f.easier.change}</strong></p>
-          <p className="mu">You'd give up: {f.easier.cost}</p>
+          <p className="mu">Trade-off: {f.easier.cost}</p>
           <p><Glossed text={`How: ${f.easier.how}`} /></p>
         </div>
       )}
@@ -128,7 +128,7 @@ function ForPerson({ p }: { p: PackData }) {
           <p className="lab">A lighter route you may already pay for</p>
           <p><strong>Instead of {r.instead}: {r.feature}.</strong> <Glossed text={r.does} /></p>
           <table className="tbl cmp">
-            <thead><tr><th></th><th>Their way</th><th>Lighter route</th></tr></thead>
+            <thead><tr><th></th><th>Current route</th><th>Lighter route</th></tr></thead>
             <tbody>
               <tr><td>Answer</td><td>{r.theirs.verdict}</td><td>{r.ours.verdict}</td></tr>
               <tr><td>Things to do</td><td>{r.theirs.toDo}</td><td>{r.ours.toDo}</td></tr>
@@ -143,7 +143,7 @@ function ForPerson({ p }: { p: PackData }) {
       ))}
 
       <h3>What to do, in order</h3>
-      {f.actions.length === 0 && <p className="mu">Nothing to do. Keep this page with the idea.</p>}
+      {f.actions.length === 0 && <p className="mu">Nothing to do. Keep this page with the proposal.</p>}
       <ol className="actions">
         {f.actions.map((a) => (
           <li key={a.n}>
@@ -185,6 +185,15 @@ function ForDpo({ p }: { p: PackData }) {
         <thead><tr><th>Data</th><th>Level</th><th>Because</th><th>Rule that follows</th></tr></thead>
         <tbody>{r.tiers.map((t) => <tr key={t.title}><td>{t.title}</td><td className="mono">{t.tier}</td><td>{t.because}</td><td>{t.rule}</td></tr>)}</tbody>
       </table>
+      {r.tierNotes.map((t) => (
+        <div key={t.tier} className="box" style={{ marginTop: 8, marginBottom: 8 }}>
+          <p className="lab">Why Level {t.tier} · {t.label}</p>
+          <p>{t.plain} {t.policy}</p>
+          <p className="mu">Guards against: {t.harm}</p>
+          <LawLine laws={t.laws} compact />
+          {t.guidance.length > 0 && <p className="mu small">Guidance: {t.guidance.map((g, i) => <span key={g.url}>{i > 0 ? " · " : ""}<a href={g.url} target="_blank" rel="noreferrer">{g.label}</a></span>)}</p>}
+        </div>
+      ))}
 
       <h3>Screening</h3>
       <table className="tbl">
@@ -253,7 +262,7 @@ function ForNext({ p }: { p: PackData }) {
       {n.assumed.length === 0 ? <p className="mu">Every question was answered.</p> : <ul className="plain">{n.assumed.map((a) => <li key={a}>{a}</li>)}</ul>}
       <h3>What changed in this session</h3>
       <ul className="plain mono" style={{ fontSize: 12 }}>{n.changes.map((c, i) => <li key={i}>{c}</li>)}</ul>
-      <p className="mu small">Save the file to reopen the picture exactly as it is. Company cards saved from the drawer are kept in this browser for the next flow.</p>
+      <p className="mu small">Save the file to reopen the diagram exactly as it is. Company cards saved from the drawer are kept in this browser for the next flow.</p>
     </>
   );
 }

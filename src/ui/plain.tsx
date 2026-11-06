@@ -52,7 +52,7 @@ export interface Change {
 /** How much a change clears of what stands in the way. */
 export function clearsText(unblocks: number, d: Derivation): string {
   const total = d.blocked.length + d.bright_lines.length;
-  return unblocks >= total ? "That clears what's stopping it." : `That clears ${unblocks} of the ${total} things stopping it, so on its own it's still a no.`;
+  return unblocks >= total ? "That clears what is stopping it." : `That clears ${unblocks} of the ${total} things stopping it, so on its own it is still a no.`;
 }
 
 /** A lighter route that is still a no says so, and how far it gets. */
@@ -93,7 +93,7 @@ export function describeChange(before: Derivation, after: Derivation, flow: Flow
   for (const b of after.bright_lines.filter((x) => !hadLines.has(lineKey(x)))) out.push({ kind: "bad", text: `Hard line: ${b.title}. ${b.say}` });
   for (const b of before.bright_lines.filter((x) => !hasLines.has(lineKey(x)))) out.push({ kind: "good", text: `Cleared: ${b.title}.` });
   if (after.verdict.id !== before.verdict.id) out.push({ kind: "info", text: `Answer now: ${after.verdict.label}.` });
-  if (after.blocked.length > before.blocked.length) out.push({ kind: "bad", text: `Policy doesn't allow this now. ${after.blocked[0].message}` });
+  if (after.blocked.length > before.blocked.length) out.push({ kind: "bad", text: `Policy does not allow this now. ${after.blocked[0].message}` });
   if (after.blocked.length < before.blocked.length) out.push({ kind: "good", text: "Policy allows it again." });
   if (after.outcome !== before.outcome) out.push({ kind: set.rules.outcome.order.indexOf(after.outcome) > set.rules.outcome.order.indexOf(before.outcome) ? "up" : "down", text: set.rules.outcome.plain[after.outcome] });
   const was = new Set(openKeys(before));

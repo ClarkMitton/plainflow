@@ -69,7 +69,7 @@ function tell(name: string, flow: Flow, d: Derivation) {
 
 describe("people a contractor meets", () => {
   it("the LinkedIn poster: a teamwear SME wants ChatGPT for sales messages, on personal logins", () => {
-    const flow = answer(build({ role: "Sales manager", product: "chatgpt" }), { plan: "Free or personal accounts", lawful_basis: "It's in our legitimate interests", told: "Yes, it's in our privacy notice" });
+    const flow = answer(build({ role: "Sales manager", product: "chatgpt" }), { plan: "Free or personal accounts", lawful_basis: "Our legitimate interests", told: "Yes, it is in our privacy notice" });
     const d = derive(flow, ruleSet);
     tell("LinkedIn poster, free ChatGPT", flow, d);
     expect(d.highest_tier).toBe(1);
@@ -87,7 +87,7 @@ describe("people a contractor meets", () => {
 
   it("same SME: design briefs with nothing personal in Claude, free accounts", () => {
     const flow = build({ role: "Designer", data: [{ kind: null, label: "design briefs and product copy" }], about: { kind: null, label: "nobody in particular" }, product: "claude", purpose: choices.purpose("plan", "draft kit designs") });
-    const answered = answer(flow, { names: "No way to tell who", plan: "Free or personal accounts" });
+    const answered = answer(flow, { names: "No, nobody can be identified", plan: "Free or personal accounts" });
     const d = derive(answered, ruleSet);
     tell("Designer, Claude free, nothing personal", answered, d);
     expect(d.highest_tier).toBe(0);
@@ -103,7 +103,7 @@ describe("people a contractor meets", () => {
     expect(d.verdict.id).toBe("not_like_this");
     expect(d.bright_lines).toEqual([]); // the business plan doesn't train, so no hard line
     // Honest: no single flip makes Tier 2 fit a Tier 1 route; the ways out are to send less or use Microsoft.
-    expect(d.blocked[0].ways_out.join(" ")).toMatch(/sanctioned route/);
+    expect(d.blocked[0].ways_out.join(" ")).toMatch(/approved route/);
   });
 
   it("wants to build: an order tracker on Lovable", () => {
@@ -181,12 +181,12 @@ describe("whose policy, and the youngest pupils", () => {
     const policy = policyAnswer(flow, d, ruleSet);
     expect(policy.unowned).toBe(true); // the seed rules table has no owner yet
     expect(policy.source).toMatch(/owner not set/);
-    expect(policy.lines[0].text).toMatch(/isn't on your approved list/);
+    expect(policy.lines[0].text).toMatch(/is not on your approved list/);
     expect(policy.lines[0].text).toMatch(/If your policy approves Mailshot Co for Level 1/);
   });
 
   it("primary pupils can't be asked for consent themselves", () => {
-    const flow = answer(build({ role: "Teacher", data: [choices.data("work")], about: { kind: "pupils_primary", label: "primary pupils" }, under18: "under_13", product: "m365_copilot", purpose: choices.purpose("feedback", "draft feedback") }), { lawful_basis: "They agree to it, but saying no isn't really an option (consent)" });
+    const flow = answer(build({ role: "Teacher", data: [choices.data("work")], about: { kind: "pupils_primary", label: "primary pupils" }, under18: "under_13", product: "m365_copilot", purpose: choices.purpose("feedback", "draft feedback") }), { lawful_basis: "Consent, but refusing is not a realistic option" });
     const d = derive(flow, ruleSet);
     tell("Primary school, consent, Copilot", flow, d);
     expect(d.bright_lines.map((b) => b.id)).toContain("consent_under_13");
@@ -243,8 +243,8 @@ describe("roleplay C: an AI note-taker in wellbeing meetings", () => {
         purpose: choices.purpose("reports", "write reports"),
       }),
       {
-        data_facts: "It could mention health, SEND, religion, ethnicity, sexuality or crime|It's in people's own words, written or spoken",
-        lawful_basis: "They agree to it, but saying no isn't really an option (consent)",
+        data_facts: "It could reveal health, SEND, religion, ethnicity, sexuality or criminal matters|It contains free text or recordings",
+        lawful_basis: "Consent, but refusing is not a realistic option",
         told: "No, or not sure",
       },
     );
@@ -277,7 +277,7 @@ describe("roleplay C: an AI note-taker in wellbeing meetings", () => {
     expect(otter.levers.trains_on_inputs).toBeNull();
     const step = stepsFor(flow, derive(flow, ruleSet)).find((s) => s.q.id === "trains")!;
     const guess = (step.q.answers ?? []).find((a) => matches(flow, step.node, a));
-    expect(guess?.label).toBe("Don't know yet");
+    expect(guess?.label).toBe("Not known yet");
   });
 
   it("is honest that the Teams route is still a no for Level 3", () => {
@@ -301,10 +301,10 @@ describe("roleplay D: a dropout dashboard, then shared with the council", () => 
         purpose: choices.purpose("predict", "predict who might struggle"),
       }),
       {
-        data_facts: "It says how someone is doing|We already have it, but got it for a different reason",
-        names: "Yes, names",
-        lawful_basis: "It's part of our job (public task)",
-        purpose_facts: "It gives someone a mark, grade, score or prediction|It covers everyone, or over a thousand people|It keeps running, not a one-off|It tracks what individuals do, when or where",
+        data_facts: "It describes how a person is doing|We already hold it, collected for a different purpose",
+        names: "Yes, by name",
+        lawful_basis: "It is part of our public task",
+        purpose_facts: "It produces a mark, grade, score or prediction about a person|It covers a whole cohort, or more than a thousand people|It runs continuously rather than once|It tracks what individuals do, when or where",
         told: "No, or not sure",
       },
     );
@@ -379,7 +379,7 @@ describe("roleplay E: a parent app built on Lovable, already in use, with under-
         },
         true,
       ),
-      { lawful_basis: "They agree to it, but saying no isn't really an option (consent)", plan: "Free or personal accounts", told: "No, or not sure" },
+      { lawful_basis: "Consent, but refusing is not a realistic option", plan: "Free or personal accounts", told: "No, or not sure" },
     );
 
   it("says no for three reasons at once, and that the check is late", () => {
@@ -392,7 +392,7 @@ describe("roleplay E: a parent app built on Lovable, already in use, with under-
     const lines = new Set(d.bright_lines.map((b) => b.id));
     expect(lines).toEqual(new Set(["consent_imbalance", "consent_under_13", "trains_on_data"]));
     expect(d.blocked.length).toBeGreaterThan(0);
-    expect(d.notes.join(" ")).toMatch(/already running/);
+    expect(d.notes.join(" ")).toMatch(/already in use/);
   });
 
   it("doesn't ask whether contact details have names on, and names everything over the line", () => {
@@ -402,7 +402,7 @@ describe("roleplay E: a parent app built on Lovable, already in use, with under-
     expect(d.locks[contact.id]?.identifiability).toBeTruthy();
     const names = stepsFor(flow, d).filter((s) => s.q.id === "names" && isDecisive(s, flow, ruleSet, d)).map((s) => s.node?.title);
     expect(names).not.toContain("Names and contact details");
-    expect(d.blocked[0].ways_out[0]).toBe("Send less: cut Names and contact details and Photos or video down to what Level 0 allows.");
+    expect(d.blocked[0].ways_out[0]).toBe("Send less: reduce Names and contact details and Photos or video to what Level 0 allows.");
   });
 
   it("offers Power Apps in the tenant as the lighter route, honestly still a no until consent is fixed", () => {

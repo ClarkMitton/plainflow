@@ -82,7 +82,9 @@ export interface Rules {
   large_scale_threshold: number;
   tier_rules: { note: string; rules: { tier: number; when: string; because: string }[] };
   pseudonymisation_credit: { enabled: boolean; applies_when: string; effect: string; why: string };
-  tiers: Record<string, { label: string; rule: string; plain: string; examples: string; can: string; law?: string[] }>;
+  tiers: Record<string, { label: string; rule: string; plain: string; examples: string; can: string; law?: string[]; basis?: TierBasis }>;
+  /** Why the levels are what they are: shown on the Rules page and in the pack's tier note. */
+  tiers_about: { why: string; crosswalk_note: string; limits: string[] };
   policy: { note: string; source: string; unowned: string; allowed: string; allowed_plan: string; unlisted: string; allowed_inside: string; allowed_partner: string; no: string; no_unlisted: string; yes_title: string; no_title: string };
   sanctioned: { note: string; unlisted_max_tier: number; list: Record<string, { max_tier: number; ai: boolean }> };
   blocked: { note: string; rules: { id: string; when: string; message: string; ways_out: string[] }[] };
@@ -155,6 +157,15 @@ export interface Products {
   products: Record<string, Product>;
   custom_app_hosting: { note: string; options: [string, string][] };
   supplier_questions: string[];
+}
+
+/** The evidence behind one level: law ids, guidance ids, and the sentence that is this organisation's choice. */
+export interface TierBasis {
+  law: string[];
+  guidance: string[];
+  policy: string;
+  harm: string;
+  crosswalk: string;
 }
 
 export interface RuleSet {

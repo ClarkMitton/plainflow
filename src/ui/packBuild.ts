@@ -59,6 +59,8 @@ export interface Pack {
   };
   forDpo: {
     tiers: { title: string; tier: number; because: string; rule: string }[];
+    /** The tier note: why each level in use is what it is, with its law, guidance and the organisation's choice. */
+    tierNotes: { tier: number; label: string; plain: string; policy: string; harm: string; crosswalk: string; laws: Law[]; guidance: { label: string; url: string }[] }[];
     screening: { id: string; text: string; yes: boolean; because: string; law: string | null }[];
     outcome: string;
     crossings: { from: string; to: string; tier: number; blocked: boolean }[];
@@ -180,7 +182,7 @@ export function buildPack(flow: Flow, d: Derivation, set: RuleSet): Pack {
       notes: d.notes,
       facts: [
         { label: "The data", value: `Level ${d.highest_tier}: ${tier.label.toLowerCase()}`, detail: `${tier.plain} ${tier.can}`, laws: lawsOf(tier.law ?? []) },
-        { label: "Your policy", value: policy.ok ? "allows it" : "doesn't allow it", detail: `${policy.lines.map((l) => l.text + (l.ways.length ? ` Ways out: ${l.ways.join(" / ")}` : "")).join(" ")} ${policy.source}${policy.unowned ? " " + set.rules.policy.unowned : ""}`, laws: lawsOf(["art28"]) },
+        { label: "Your policy", value: policy.ok ? "allows it" : "doesn't allow it", detail: `${policy.lines.map((l) => l.text + (l.ways.length ? ` Ways forward: ${l.ways.join(" / ")}` : "")).join(" ")} ${policy.source}${policy.unowned ? " " + set.rules.policy.unowned : ""}`, laws: lawsOf(["art28"]) },
         { label: "DPIA", value: rules.outcome.labels[d.outcome], detail: rules.outcome.plain[d.outcome] + (d.floor_raised ? " Your use of AI sets this minimum." : ""), laws: lawsOf(["art35"]) },
       ],
       hardLines: groupLines(d.bright_lines, flow).map(({ b, others }) => ({ title: b.title, say: b.say + (others.length ? ` The same goes for ${others.join(" and ")}.` : ""), waysOut: b.ways_out, law: b.law })),
@@ -194,6 +196,11 @@ export function buildPack(flow: Flow, d: Derivation, set: RuleSet): Pack {
     },
     forDpo: {
       tiers: flow.nodes.filter((n) => n.type === "data").map((n) => ({ title: n.title, tier: d.tiers[n.id], because: d.tier_because[n.id], rule: rules.tiers[String(d.tiers[n.id])]?.rule ?? "" })),
+      tierNotes: [...new Set(flow.nodes.filter((n) => n.type === "data").map((n) => d.tiers[n.id]))].sort().map((t) => {
+        const x = rules.tiers[String(t)];
+        const b = x?.basis;
+        return { tier: t, label: x?.label ?? "", plain: x?.plain ?? "", policy: b?.policy ?? "", harm: b?.harm ?? "", crosswalk: b?.crosswalk ?? "", laws: lawsOf(b?.law ?? []), guidance: (b?.guidance ?? []).map((id) => rules.sources[id]).filter(Boolean) };
+      }),
       screening: Object.values(d.screening).map((a) => ({ id: a.id, text: a.text, yes: a.yes, because: a.because.join("; "), law: a.law?.ref ?? null })),
       outcome: rules.outcome.labels[d.outcome],
       crossings: d.crossings.map((c) => ({ from: title(flow.edges.find((e) => e.id === c.edge)!.from), to: title(c.to), tier: c.tier, blocked: c.blocked })),
@@ -219,14 +226,15 @@ export function packText(p: Pack): string {
   for (const f of p.forPerson.facts) L.push(`${f.label}: ${f.value}. ${f.detail}`);
   L.push("");
   for (const h of p.forPerson.hardLines) L.push(`HARD LINE: ${h.title}`, h.say, ...h.waysOut.map((w) => `  - ${w}`), "");
-  if (p.forPerson.easier) L.push("THE EASIER VERSION", p.forPerson.easier.change, `You'd give up: ${p.forPerson.easier.cost}`, `How: ${p.forPerson.easier.how}`, "");
-  for (const r of p.forPerson.lighter) L.push("A LIGHTER ROUTE YOU MAY ALREADY PAY FOR", `Instead of ${r.instead}: ${r.feature}. ${r.does}`, `Their way: ${r.theirs.verdict}; ${r.theirs.toDo} to do; ${r.theirs.contracts} contracts; cost ${r.theirs.cost}.`, `Lighter route: ${r.ours.verdict}; ${r.ours.toDo} to do; ${r.ours.contracts} contracts; cost ${r.ours.cost}.`, r.caveat ? `But: ${r.caveat}` : "", "");
+  if (p.forPerson.easier) L.push("THE EASIER VERSION", p.forPerson.easier.change, `Trade-off: ${p.forPerson.easier.cost}`, `How: ${p.forPerson.easier.how}`, "");
+  for (const r of p.forPerson.lighter) L.push("A LIGHTER ROUTE YOU MAY ALREADY PAY FOR", `Instead of ${r.instead}: ${r.feature}. ${r.does}`, `Current route: ${r.theirs.verdict}; ${r.theirs.toDo} to do; ${r.theirs.contracts} contracts; cost ${r.theirs.cost}.`, `Lighter route: ${r.ours.verdict}; ${r.ours.toDo} to do; ${r.ours.contracts} contracts; cost ${r.ours.cost}.`, r.caveat ? `But: ${r.caveat}` : "", "");
   L.push(`WHAT TO DO (${p.forPerson.effort}; sign-off: ${p.forPerson.signoff})`);
   for (const a of p.forPerson.actions) L.push(`${a.n}. ${a.what} (${a.who}, ${a.howLong}): ${a.meaning}${a.why ? ` Because ${a.why}.` : ""}${a.law ? ` [${a.law.ref}]` : ""}`);
   if (!p.forPerson.actions.length) L.push("Nothing to do.");
   L.push("", "STILL NEEDS A PERSON", ...p.forPerson.needsPerson.map((x) => `- ${x}`), "");
   L.push("FOR THE DPO", `Screening outcome: ${p.forDpo.outcome}`);
   for (const t of p.forDpo.tiers) L.push(`${t.title}: Level ${t.tier}, because ${t.because}.`);
+  for (const t of p.forDpo.tierNotes) L.push(`Why Level ${t.tier} (${t.label}): ${t.policy} Law: ${t.laws.map((l) => l.ref).join(", ")}. Guidance: ${t.guidance.map((g) => g.label).join(", ")}.`);
   for (const s of p.forDpo.screening.filter((x) => x.yes)) L.push(`${s.id} yes: ${s.because}${s.law ? ` [${s.law}]` : ""}`);
   for (const c of p.forDpo.cards) L.push(`${c.title}: ${c.role}; ${c.plan ? `plan: ${c.plan}; ` : ""}${c.dpa}; region ${c.region}; keeps ${c.retention}; ${c.via ? `covered via ${c.via}` : c.art28.of ? `Article 28 ${c.art28.evidenced}/${c.art28.of}` : "a sharing agreement, not Article 28 terms"}${c.open.length ? `; open: ${c.open.join(", ")}` : ""}`);
   L.push("", "NEXT TIME");

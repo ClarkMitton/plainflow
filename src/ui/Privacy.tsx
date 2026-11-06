@@ -20,7 +20,7 @@ export function PrivacyNote({ onCleared }: { onCleared(): void }) {
         <>
           <div className="coach-backdrop" onClick={() => setOpen(false)} />
           <div className="coach modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title" style={{ width: 520 }}>
-            <p className="lab">Practising what we preach</p>
+            <p className="lab">How this app handles data</p>
             <h2 id="privacy-title">Your data and this app</h2>
             <p><strong>Where it goes:</strong> nowhere. {APP_NAME} has no server, no accounts and no database. What you type stays in this browser until you save a file.</p>
             <p style={{ marginTop: 8 }}><strong>What's stored here:</strong> the flow you're working on, the answers you gave, any company cards you chose to save for next time, and a note of which first-time guides you've seen. Nothing else.</p>

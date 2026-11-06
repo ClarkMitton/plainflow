@@ -4,6 +4,6 @@
     "name": "GDPR Repo Scanner",
     "origin": "https://github.com/ClarkMitton/Node-TypeScript-API",
     "blurb": "Paste a public GitHub link and Plainflow reads the code here in your browser: where personal data goes, which outside services and AI it calls, and whether a DPIA looks likely.",
-    "then": "Then open it as a picture to get the same answer as any other idea."
+    "then": "Then open it as a diagram to get the same answer as any other proposal."
   }
 }

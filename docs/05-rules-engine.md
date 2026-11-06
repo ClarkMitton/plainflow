@@ -166,3 +166,9 @@ A SENCO in free ChatGPT, HR in Power BI, a sixth form display in Canva, a charit
 - **Anonymising is not offered for images, video or biometrics.** A face is not anonymous without a name on it.
 - **DBS or criminal record information** is a data choice in the sentence, tier 3 by category.
 - A product name that starts with "A" or "An" reads in lower case mid-sentence.
+
+## Why each level (v0.9)
+
+`tiers[n].basis` in `rules.json` carries the evidence for each level: the law ids it rests on, the guidance ids, the sentence that is this organisation's own choice, the harm the level guards against, and where it sits in a public, internal, confidential and restricted scheme. `tiers_about` holds the argument for having levels at all and the two known limits. The Rules page renders it under "Why each level"; the DPO page of the pack prints the note for each level in use. `law.json` gained Recital 26, Article 4, Article 10 and the Protection of Freedoms Act s.26 to anchor Levels 0, 1 and 3.
+
+The copy across the questions, rules, requirements, guides and screens was also rewritten in one register: plain, direct, and professional. The engine is unchanged; answer labels changed, so a flow saved before this version shows its old answer text in the record.

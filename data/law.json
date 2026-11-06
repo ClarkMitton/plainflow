@@ -112,6 +112,34 @@
       "says": "Updates to UK GDPR: recognised legitimate interests, changes to automated decision-making rules (people must be able to challenge and get a human review), and a complaints procedure.",
       "why": "The DfE checklist for schools follows from this Act. It's why human review and a challenge route appear in the to-do list.",
       "url": "https://www.legislation.gov.uk/ukpga/2025/18"
+    },
+    "recital26": {
+      "ref": "UK GDPR Recital 26",
+      "name": "Anonymous information",
+      "says": "Data that cannot be linked to an identifiable person, taking into account all means reasonably likely to be used, is outside the law entirely.",
+      "why": "This is the line between Level 0 and everything else. It is a high bar: no names is not the same as anonymous.",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/introduction"
+    },
+    "art4": {
+      "ref": "UK GDPR Art. 4",
+      "name": "Definitions",
+      "says": "Personal data is any information relating to an identifiable person: a name, an identifier, or factors specific to them.",
+      "why": "If a person can be identified, directly or indirectly, the whole law applies. That is why Level 1 is not low risk with no rules.",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/4"
+    },
+    "art10": {
+      "ref": "UK GDPR Art. 10",
+      "name": "Criminal offence data",
+      "says": "Data about criminal convictions and offences, including allegations and DBS checks, may only be processed under official authority or a specific condition in DPA 2018 Schedule 1.",
+      "why": "It sits alongside special category data: a second condition, and usually a policy document, are needed.",
+      "url": "https://www.legislation.gov.uk/eur/2016/679/article/10"
+    },
+    "pofa26": {
+      "ref": "Protection of Freedoms Act 2012 s.26",
+      "name": "Biometrics in schools",
+      "says": "A school or college must have written consent from a parent before using a child's biometric data, and must offer an alternative.",
+      "why": "Fingerprint or face recognition for lunch or attendance is not a tier decision; the law names the condition.",
+      "url": "https://www.legislation.gov.uk/ukpga/2012/9/section/26"
     }
   }
 }

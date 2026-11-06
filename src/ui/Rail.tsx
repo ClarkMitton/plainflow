@@ -113,19 +113,19 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
     const parts = flow.nodes.length;
     const outside = flow.nodes.filter((n) => !n.inside).length;
     return (
-      <aside className="rail" aria-label="Your picture">
+      <aside className="rail" aria-label="Your diagram">
         <div className="qa">
-          <p className="lab">Your idea, as a picture</p>
-          <div className="verdict">Have a look first</div>
+          <p className="lab">Your proposal, as a diagram</p>
+          <div className="verdict">Review the diagram first</div>
           <div className="say">
-            {parts} parts, {outside} of them outside your organisation. Drag boxes about, open one to change details, hover a word in the sentence to see where that data goes.
+            {parts} parts, {outside} of them outside your organisation. Drag boxes to rearrange them, open one to change details, or hover over a word in the sentence to see where that data goes.
           </div>
         </div>
         <div className="box" style={{ boxShadow: "5px 5px 0 var(--data)" }}>
-          <div style={{ fontSize: 15, lineHeight: 1.45 }}>When it looks right, Plainflow reads the answer off the picture: can you do it, does policy allow it, what to do next.</div>
+          <div style={{ fontSize: 15, lineHeight: 1.45 }}>When it is right, Plainflow reads the answer from the diagram: whether it can go ahead, whether policy allows it, and what to do next.</div>
           <button type="button" className="btn dk checkit" onClick={checkIt}>Check it</button>
         </div>
-        <div className="mu" style={{ fontSize: 12 }}>Nothing is decided yet. You can come back and change the picture at any time.</div>
+        <div className="mu" style={{ fontSize: 12 }}>Nothing is decided yet. You can return and change the diagram at any time.</div>
       </aside>
     );
   }
@@ -133,7 +133,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
   return (
     <aside className="rail reveal-rail" aria-label="Your answer">
       <div className="qa">
-        <p className="lab">Can I do it?</p>
+        <p className="lab">Can this go ahead?</p>
         <div className="verdict" style={{ color: bad ? "var(--rq)" : undefined }}>{d.verdict.label}</div>
         <div className="say"><Glossed text={d.verdict.say} /></div>
         <div className="mono mu" style={{ fontSize: 12, marginTop: 6 }}>
@@ -152,7 +152,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
             <strong>{b.title}</strong>
             <div style={{ marginTop: 4 }}><Glossed text={b.say} /></div>
             {others.length > 0 && <div style={{ marginTop: 4 }}>The same goes for {others.join(" and ")}.</div>}
-            <div style={{ marginTop: 6, fontWeight: 600 }}>Ways past it:</div>
+            <div style={{ marginTop: 6, fontWeight: 600 }}>Ways forward:</div>
             <ul className="plain">{b.ways_out.map((w) => <li key={w}>{w}</li>)}</ul>
             {b.source && <a href={b.source.url} target="_blank" rel="noreferrer" style={{ fontSize: 12 }}>{b.source.label}</a>}
             <LawLine law={b.law} />
@@ -167,7 +167,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
                 <Glossed text={l.text} />
                 {l.ways.length > 0 && (
                   <>
-                    <div style={{ marginTop: 4, fontWeight: 600 }}>Ways past it:</div>
+                    <div style={{ marginTop: 4, fontWeight: 600 }}>Ways forward:</div>
                     <ul className="plain">{l.ways.map((w) => <li key={w}>{w}</li>)}</ul>
                   </>
                 )}
@@ -190,8 +190,8 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
           </>
         ) : (
           <>
-            <p className="lab" style={{ marginBottom: 6 }}>Play with it</p>
-            <div>Flip any switch on the picture and this box says what changed and why. Hover a switch to see what it means.</div>
+            <p className="lab" style={{ marginBottom: 6 }}>Explore</p>
+            <div>Change any setting on the diagram and this box explains what changed and why. Hover over a setting to see what it means.</div>
           </>
         )}
       </div>
@@ -241,7 +241,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
       <div className="panel s-paperwork">
         <div className="h h-paperwork" style={{ cursor: "default" }}>
           <p className="t">What to do</p>
-          <p className="k">{toDo.length} thing{toDo.length === 1 ? "" : "s"} · click one to see why</p>
+          <p className="k">{toDo.length} item{toDo.length === 1 ? "" : "s"} · select one to see why</p>
         </div>
         <div>{toDo.map(row)}</div>
         {toDo.length === 0 && <div className="req"><div className="detail" style={{ paddingTop: 10 }}>Nothing to do.</div></div>}
@@ -274,7 +274,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
                   Instead of <strong>{r.systemTitle}</strong>: <strong>{r.feature.label}</strong>. <Glossed text={r.feature.does} />
                 </div>
                 <table className="tbl cmp">
-                  <thead><tr><th></th><th>Their way</th><th>Lighter route</th></tr></thead>
+                  <thead><tr><th></th><th>Current route</th><th>Lighter route</th></tr></thead>
                   <tbody>
                     <tr><td>Answer</td><td className={["stop", "not_like_this"].includes(r.theirs.verdictId) ? "rq" : ""}>{r.theirs.verdict}</td><td className={["stop", "not_like_this"].includes(r.ours.verdictId) ? "rq" : "ok"}>{r.ours.verdict}</td></tr>
                     <tr><td>Level allowed</td><td>{r.theirs.levelAllowed ?? "n/a"}</td><td>{r.ours.levelAllowed ?? "n/a"}</td></tr>
@@ -288,7 +288,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
                 {r.feature.caveat && <div className="mu" style={{ fontSize: 12, marginTop: 6 }}>But: {r.feature.caveat}</div>}
                 <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center" }}>
                   <button type="button" className="btn" style={{ boxShadow: "3px 3px 0 var(--data)" }} onClick={() => tryLighter(r)}>Try it</button>
-                  <span className="mono mu" style={{ fontSize: 11 }}>Keeps your way as A to compare. Your choice stays yours.</span>
+                  <span className="mono mu" style={{ fontSize: 11 }}>Keeps the current route as A for comparison. The decision remains yours.</span>
                 </div>
               </div>
             ))}
@@ -308,7 +308,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
               {cc.lever === "company_id" ? "Switch" : "Change"} <strong>{cc.node_title}</strong>: {ccLever?.label ?? cc.lever.replace(/_/g, " ")} to <strong>{ccTo}</strong>.{" "}
               {cc.unblocks > 0 ? clearsText(cc.unblocks, d) : `That lifts ${cc.removes.length} thing${cc.removes.length === 1 ? "" : "s"} to do.`}
             </div>
-            <div style={{ marginTop: 6, color: "var(--muted)", fontSize: 13 }}>You'd give up: {cc.cost}</div>
+            <div style={{ marginTop: 6, color: "var(--muted)", fontSize: 13 }}>Trade-off: {cc.cost}</div>
             <div style={{ marginTop: 6, fontSize: 13 }}><Glossed text={`How: ${cc.how}`} /></div>
             <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
               <button type="button" className="btn" style={{ boxShadow: "3px 3px 0 var(--data)" }} aria-pressed={preview} onClick={() => setPreview(!preview)} onMouseEnter={() => setHighlight([cc.node])} onMouseLeave={() => setHighlight([])}>
