@@ -412,3 +412,7 @@ table.tbl code, code.x { font-family: var(--mono); font-size: 12px; background: 
 .conn li { display: flex; align-items: center; gap: 6px; }
 .conn .remove { font-size: 16px; margin-left: auto; }
 .palette button:disabled { color: var(--muted-2); cursor: default; text-decoration: none; }
+
+.tbl.plans { font-size: 12px; margin-top: 4px; }
+.tbl.plans td, .tbl.plans th { padding: 5px 6px; }
+.tbl.plans tr.on td { background: var(--paper-2); font-weight: 600; }

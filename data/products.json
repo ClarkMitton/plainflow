@@ -1,33 +1,504 @@
 {
-  "note": "Seed product directory. Pick a product and its company and sub-processors come with it. Everything here must be verified against the supplier's current terms before a card is marked 'on file'; treat these as starting points, not facts. Fields marked [verify] are placeholders.",
+  "note": "Seed product directory. Pick a product and its company and sub-processors come with it. Everything here must be verified against the supplier's current terms before a card is marked 'on file'; treat these as starting points, not facts. Fields marked [verify] are placeholders. 'plans' says what each plan of a product allows: the same product is a different thing on its free, business and enterprise plans, and the plan decides the tier it may take (it overrides the sanctioned list). Research notes are from November 2026 and are secondary sources unless marked.",
+  "plan_labels": {
+    "free": "free or personal accounts",
+    "business": "the business plan",
+    "enterprise": "the enterprise plan"
+  },
   "companies": {
-    "microsoft": { "name": "Microsoft", "region_default": "EU", "dpa_url": "https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA", "notes": "Products and Services DPA covers M365, Copilot (enterprise), Power Platform, Azure. Consumer Copilot is a different product." },
-    "openai_azure": { "name": "OpenAI via Azure", "region_default": "EU", "dpa_url": null, "notes": "Sub-processor to Microsoft for Copilot and Azure OpenAI. Covered by the Microsoft DPA." },
-    "google": { "name": "Google", "region_default": "EU", "dpa_url": "[verify]", "notes": "Workspace for Education has its own terms; consumer Gemini is different." },
-    "canva": { "name": "Canva", "region_default": "US", "dpa_url": "[verify]", "notes": "Education terms exist. Check training on inputs for AI features." },
-    "lovable": { "name": "Lovable", "region_default": "EU", "dpa_url": "[verify]", "notes": "Hosting and AI gateway. Check which model providers sit behind the gateway." },
-    "supabase": { "name": "Supabase", "region_default": "UK", "dpa_url": "[verify]", "notes": "Runs on AWS; region selectable at project creation (e.g. eu-west-2 London)." },
-    "aws": { "name": "Amazon Web Services", "region_default": "UK", "dpa_url": "[verify]", "notes": "Common sub-processor." },
-    "openai_consumer": { "name": "OpenAI (ChatGPT)", "region_default": "US", "dpa_url": "[verify]", "notes": "Consumer and Team tiers differ on training. Not a sanctioned route for personal data by default." },
-    "anthropic_consumer": { "name": "Anthropic (Claude.ai)", "region_default": "US", "dpa_url": "[verify]", "notes": "Consumer tier. Not a sanctioned route for personal data by default." },
-    "nearpod": { "name": "Nearpod", "region_default": "US", "dpa_url": "[verify]", "notes": "" },
-    "edpuzzle": { "name": "Edpuzzle", "region_default": "US", "dpa_url": "[verify]", "notes": "" }
+    "microsoft": {
+      "name": "Microsoft",
+      "region_default": "EU",
+      "dpa_url": "https://www.microsoft.com/licensing/docs/view/Microsoft-Products-and-Services-Data-Protection-Addendum-DPA",
+      "notes": "Products and Services DPA covers M365, Copilot (enterprise), Power Platform, Azure. Consumer Copilot is a different product. The Anthropic models offered inside Copilot sit outside the EU Data Boundary (Microsoft docs); switch them off in the admin centre for Tier 2 flows."
+    },
+    "openai_azure": {
+      "name": "OpenAI via Azure",
+      "region_default": "EU",
+      "dpa_url": null,
+      "notes": "Sub-processor to Microsoft for Copilot and Azure OpenAI. Covered by the Microsoft DPA."
+    },
+    "google": {
+      "name": "Google",
+      "region_default": "EU",
+      "dpa_url": "[verify]",
+      "notes": "Workspace for Education has its own terms; consumer Gemini is different."
+    },
+    "canva": {
+      "name": "Canva",
+      "region_default": "US",
+      "dpa_url": "[verify]",
+      "notes": "Education terms exist. Check training on inputs for AI features."
+    },
+    "lovable": {
+      "name": "Lovable",
+      "region_default": "EU",
+      "dpa_url": "https://lovable.dev/security",
+      "notes": "Hosting and AI gateway. DPA on Business and Enterprise. Free and Pro users are opted in to model training by default (Account Settings, Privacy). Hosting region is selectable but the terms don't guarantee a region for AI gateway requests below Enterprise. AI subprocessor list is 'available on request', so get it in writing."
+    },
+    "replit": {
+      "name": "Replit",
+      "region_default": "US",
+      "dpa_url": "[verify]",
+      "notes": "Hosted on Google Cloud in the US, no European hosting. DPA on Pro and Enterprise only. Sources disagree on whether private code is used for training; ask in writing."
+    },
+    "base44": {
+      "name": "Base44 (Wix)",
+      "region_default": "other",
+      "dpa_url": "[verify]",
+      "notes": "Data controlled by Wix in Israel; Wix is on the UK extension of the Data Privacy Framework. The privacy policy says prompts and usage data are used to improve services including machine learning models; third-party reports say only Enterprise is excluded. DPA for app-visitor data."
+    },
+    "supabase": {
+      "name": "Supabase",
+      "region_default": "UK",
+      "dpa_url": "[verify]",
+      "notes": "Runs on AWS; region selectable at project creation (e.g. eu-west-2 London)."
+    },
+    "aws": {
+      "name": "Amazon Web Services",
+      "region_default": "UK",
+      "dpa_url": "[verify]",
+      "notes": "Common sub-processor."
+    },
+    "openai_consumer": {
+      "name": "OpenAI (ChatGPT)",
+      "region_default": "US",
+      "dpa_url": "[verify]",
+      "notes": "Free and Plus train on chats unless opted out and have no DPA. Business (was Team) and Enterprise: DPA, no training, 30-day default retention. UK data residency is Enterprise only."
+    },
+    "anthropic_consumer": {
+      "name": "Anthropic (Claude)",
+      "region_default": "US",
+      "dpa_url": "[verify]",
+      "notes": "Claude.ai personal accounts are consumer terms. Team, Enterprise and API: DPA included, no training by default. Zero retention and EU residency are Enterprise only."
+    },
+    "xai": {
+      "name": "xAI (Grok)",
+      "region_default": "US",
+      "dpa_url": "[verify]",
+      "notes": "xAI says business inputs are not used for training, but sources disagree on whether the DPA meets Article 28, processing is described as global including the USA, and the ICO opened an inquiry into xAI in 2025. Not approved for personal data on any plan until that settles."
+    },
+    "nearpod": {
+      "name": "Nearpod",
+      "region_default": "US",
+      "dpa_url": "[verify]",
+      "notes": ""
+    },
+    "edpuzzle": {
+      "name": "Edpuzzle",
+      "region_default": "US",
+      "dpa_url": "[verify]",
+      "notes": ""
+    }
   },
   "products": {
-    "m365_copilot": { "name": "Microsoft 365 Copilot", "company": "microsoft", "sub_processors": ["openai_azure"], "is_ai": true, "keeps_data_default": "30 days [verify]", "trains_on_inputs_default": false, "questions_if_unknown": [] },
-    "m365": { "name": "Microsoft 365 (Teams, SharePoint, Forms)", "company": "microsoft", "sub_processors": [], "is_ai": false, "keeps_data_default": "per tenant retention", "trains_on_inputs_default": false },
-    "power_platform": { "name": "Power Automate / Power Apps / Power BI", "company": "microsoft", "sub_processors": [], "is_ai": false, "keeps_data_default": "per tenant retention", "trains_on_inputs_default": false },
-    "ai_builder": { "name": "AI Builder", "company": "microsoft", "sub_processors": ["openai_azure"], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": false },
-    "azure_openai": { "name": "Azure OpenAI (own tenant)", "company": "microsoft", "sub_processors": ["openai_azure"], "is_ai": true, "keeps_data_default": "abuse monitoring 30 days unless exempted [verify]", "trains_on_inputs_default": false },
-    "canva": { "name": "Canva", "company": "canva", "sub_processors": ["aws"], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": "[verify]" },
-    "lovable_app": { "name": "App built on Lovable", "company": "lovable", "sub_processors": ["supabase", "aws"], "is_ai": false, "keeps_data_default": "until deleted", "trains_on_inputs_default": false },
-    "lovable_ai_gateway": { "name": "Lovable AI gateway", "company": "lovable", "sub_processors": ["google"], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": "[verify]" },
-    "chatgpt": { "name": "ChatGPT (consumer)", "company": "openai_consumer", "sub_processors": [], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": true },
-    "gemini_consumer": { "name": "Gemini (consumer)", "company": "google", "sub_processors": [], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": true },
-    "claude_consumer": { "name": "Claude.ai (consumer)", "company": "anthropic_consumer", "sub_processors": [], "is_ai": true, "keeps_data_default": "[verify]", "trains_on_inputs_default": "[verify]" },
-    "nearpod": { "name": "Nearpod", "company": "nearpod", "sub_processors": [], "is_ai": false, "keeps_data_default": "[verify]", "trains_on_inputs_default": false },
-    "edpuzzle": { "name": "Edpuzzle", "company": "edpuzzle", "sub_processors": [], "is_ai": false, "keeps_data_default": "[verify]", "trains_on_inputs_default": false },
-    "spreadsheet_email": { "name": "A spreadsheet sent by email", "company": null, "sub_processors": [], "is_ai": false, "keeps_data_default": "in mailboxes until deleted", "trains_on_inputs_default": false, "notes": "The no-tool flow. Recipient becomes a company node (independent or joint controller) if outside the organisation." }
+    "m365_copilot": {
+      "name": "Microsoft 365 Copilot",
+      "company": "microsoft",
+      "sub_processors": [
+        "openai_azure"
+      ],
+      "is_ai": true,
+      "keeps_data_default": "30 days [verify]",
+      "trains_on_inputs_default": false,
+      "questions_if_unknown": []
+    },
+    "m365": {
+      "name": "Microsoft 365 (Teams, SharePoint, Forms)",
+      "company": "microsoft",
+      "sub_processors": [],
+      "is_ai": false,
+      "keeps_data_default": "per tenant retention",
+      "trains_on_inputs_default": false
+    },
+    "power_platform": {
+      "name": "Power Automate / Power Apps / Power BI",
+      "company": "microsoft",
+      "sub_processors": [],
+      "is_ai": false,
+      "keeps_data_default": "per tenant retention",
+      "trains_on_inputs_default": false
+    },
+    "ai_builder": {
+      "name": "AI Builder",
+      "company": "microsoft",
+      "sub_processors": [
+        "openai_azure"
+      ],
+      "is_ai": true,
+      "keeps_data_default": "[verify]",
+      "trains_on_inputs_default": false
+    },
+    "azure_openai": {
+      "name": "Azure OpenAI (own tenant)",
+      "company": "microsoft",
+      "sub_processors": [
+        "openai_azure"
+      ],
+      "is_ai": true,
+      "keeps_data_default": "abuse monitoring 30 days unless exempted [verify]",
+      "trains_on_inputs_default": false
+    },
+    "custom_app": {
+      "name": "An app we're building",
+      "company": null,
+      "sub_processors": [],
+      "is_ai": false,
+      "keeps_data_default": "until deleted",
+      "trains_on_inputs_default": false,
+      "hosting_question": true,
+      "notes": "Building is cheap now; running is what matters. The hosting choice below decides who holds the data, under which contract, and which tier it may take."
+    },
+    "custom_app_m365": {
+      "name": "An app we build, run in our Microsoft tenant",
+      "company": "microsoft",
+      "sub_processors": [],
+      "is_ai": false,
+      "keeps_data_default": "per tenant retention",
+      "trains_on_inputs_default": false,
+      "notes": "Power Apps, or a React app on Azure with Microsoft sign-in and the Graph API. Inside the Microsoft contract you already have, so Tier 2 is allowed, as long as no outside AI provider is wired in."
+    },
+    "canva": {
+      "name": "Canva",
+      "company": "canva",
+      "sub_processors": [
+        "aws"
+      ],
+      "is_ai": true,
+      "keeps_data_default": "[verify]",
+      "trains_on_inputs_default": "[verify]"
+    },
+    "lovable_app": {
+      "name": "App built on Lovable",
+      "company": "lovable",
+      "sub_processors": [
+        "supabase",
+        "aws"
+      ],
+      "is_ai": false,
+      "keeps_data_default": "until deleted",
+      "trains_on_inputs_default": false,
+      "plans": {
+        "free": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": true,
+          "cost": "free, or Pro from about £20 a month",
+          "note": "Training on your prompts, code and workspace is on by default; no DPA."
+        },
+        "business": {
+          "max_tier": 1,
+          "ai": false,
+          "dpa": true,
+          "trains": false,
+          "cost": "about £40 a seat a month [verify]",
+          "note": "DPA included; no training. AI gateway region still not guaranteed."
+        },
+        "enterprise": {
+          "max_tier": 1,
+          "ai": false,
+          "dpa": true,
+          "trains": false,
+          "cost": "on application",
+          "note": "Custom DPA, EU-only AI requests available."
+        }
+      }
+    },
+    "lovable_ai_gateway": {
+      "name": "Lovable AI gateway",
+      "company": "lovable",
+      "sub_processors": [
+        "google"
+      ],
+      "is_ai": true,
+      "keeps_data_default": "[verify]",
+      "trains_on_inputs_default": "[verify]",
+      "plans": {
+        "free": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": true,
+          "cost": "free or Pro",
+          "note": "Training on by default; no DPA."
+        },
+        "business": {
+          "max_tier": 1,
+          "ai": false,
+          "dpa": true,
+          "trains": false,
+          "cost": "about £40 a seat a month [verify]",
+          "note": "Which AI providers sit behind the gateway is only disclosed on request."
+        },
+        "enterprise": {
+          "max_tier": 1,
+          "ai": true,
+          "dpa": true,
+          "trains": false,
+          "cost": "on application",
+          "note": "EU-only AI requests can be switched on; fewer models."
+        }
+      }
+    },
+    "replit_app": {
+      "name": "App built on Replit",
+      "company": "replit",
+      "sub_processors": [
+        "google"
+      ],
+      "is_ai": false,
+      "keeps_data_default": "until deleted",
+      "trains_on_inputs_default": "[verify]",
+      "plans": {
+        "free": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": true,
+          "cost": "free",
+          "note": "No DPA; terms allow training on public content and sources disagree about private."
+        },
+        "business": {
+          "max_tier": 1,
+          "ai": false,
+          "dpa": true,
+          "trains": false,
+          "cost": "Pro from about £20 a month [verify]",
+          "note": "DPA with standard contractual clauses. US hosting only, so a transfer note is needed."
+        },
+        "enterprise": {
+          "max_tier": 1,
+          "ai": false,
+          "dpa": true,
+          "trains": false,
+          "cost": "on application",
+          "note": "US hosting only."
+        }
+      }
+    },
+    "base44_app": {
+      "name": "App built on Base44",
+      "company": "base44",
+      "sub_processors": [
+        "aws"
+      ],
+      "is_ai": false,
+      "keeps_data_default": "until deleted",
+      "trains_on_inputs_default": true,
+      "plans": {
+        "free": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": true,
+          "cost": "free",
+          "note": "Prompts and usage data feed model improvement."
+        },
+        "business": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": true,
+          "cost": "from about £15 a month [verify]",
+          "note": "Third-party reports say only Enterprise is excluded from training."
+        },
+        "enterprise": {
+          "max_tier": 1,
+          "ai": false,
+          "dpa": true,
+          "trains": false,
+          "cost": "on application",
+          "note": "Training excluded; DPA; region choice."
+        }
+      }
+    },
+    "chatgpt": {
+      "name": "ChatGPT",
+      "company": "openai_consumer",
+      "sub_processors": [],
+      "is_ai": true,
+      "keeps_data_default": "30 days on business plans [verify]",
+      "trains_on_inputs_default": true,
+      "plans": {
+        "free": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": true,
+          "cost": "free, or Plus about £20 a month",
+          "note": "Trains on chats unless each person opts out; no DPA; personal logins."
+        },
+        "business": {
+          "max_tier": 1,
+          "ai": true,
+          "dpa": true,
+          "trains": false,
+          "cost": "about £20 to £25 a seat a month",
+          "note": "Business (was Team): DPA, no training, 30-day retention. Data stays in the US unless Enterprise."
+        },
+        "enterprise": {
+          "max_tier": 1,
+          "ai": true,
+          "dpa": true,
+          "trains": false,
+          "cost": "on application",
+          "note": "Custom retention; UK data residency available."
+        }
+      }
+    },
+    "claude": {
+      "name": "Claude",
+      "company": "anthropic_consumer",
+      "sub_processors": [],
+      "is_ai": true,
+      "keeps_data_default": "standard retention on Team [verify]",
+      "trains_on_inputs_default": "[verify]",
+      "plans": {
+        "free": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": true,
+          "cost": "free, or Pro about £18 a month",
+          "note": "Personal claude.ai accounts are consumer terms."
+        },
+        "business": {
+          "max_tier": 1,
+          "ai": true,
+          "dpa": true,
+          "trains": false,
+          "cost": "about £20 to £25 a seat a month",
+          "note": "Team: DPA included, no training by default."
+        },
+        "enterprise": {
+          "max_tier": 1,
+          "ai": true,
+          "dpa": true,
+          "trains": false,
+          "cost": "on application",
+          "note": "Zero retention and EU residency available."
+        }
+      }
+    },
+    "grok": {
+      "name": "Grok",
+      "company": "xai",
+      "sub_processors": [],
+      "is_ai": true,
+      "keeps_data_default": "[verify]",
+      "trains_on_inputs_default": true,
+      "plans": {
+        "free": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": true,
+          "cost": "free with X",
+          "note": "Consumer Grok trains on your content."
+        },
+        "business": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": false,
+          "cost": "[verify]",
+          "note": "xAI says no training on business data, but the DPA's Article 28 position is contested and processing is global. Not approved for personal data."
+        },
+        "enterprise": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": false,
+          "cost": "on application",
+          "note": "As above until the contract position is confirmed in writing."
+        }
+      }
+    },
+    "gemini_consumer": {
+      "name": "Gemini",
+      "company": "google",
+      "sub_processors": [],
+      "is_ai": true,
+      "keeps_data_default": "[verify]",
+      "trains_on_inputs_default": true,
+      "plans": {
+        "free": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": true,
+          "cost": "free",
+          "note": "Consumer Gemini trains on your content."
+        },
+        "business": {
+          "max_tier": 1,
+          "ai": true,
+          "dpa": true,
+          "trains": false,
+          "cost": "Workspace plans [verify]",
+          "note": "Gemini in Google Workspace is under the Workspace DPA."
+        },
+        "enterprise": {
+          "max_tier": 1,
+          "ai": true,
+          "dpa": true,
+          "trains": false,
+          "cost": "on application",
+          "note": ""
+        }
+      }
+    },
+    "nearpod": {
+      "name": "Nearpod",
+      "company": "nearpod",
+      "sub_processors": [],
+      "is_ai": false,
+      "keeps_data_default": "[verify]",
+      "trains_on_inputs_default": false
+    },
+    "edpuzzle": {
+      "name": "Edpuzzle",
+      "company": "edpuzzle",
+      "sub_processors": [],
+      "is_ai": false,
+      "keeps_data_default": "[verify]",
+      "trains_on_inputs_default": false
+    },
+    "spreadsheet_email": {
+      "name": "A spreadsheet sent by email",
+      "company": null,
+      "sub_processors": [],
+      "is_ai": false,
+      "keeps_data_default": "in mailboxes until deleted",
+      "trains_on_inputs_default": false,
+      "notes": "The no-tool flow. Recipient becomes a company node (independent or joint controller) if outside the organisation."
+    }
+  },
+  "custom_app_hosting": {
+    "note": "Asked when the tool is 'An app we're building'. Each answer is a product above; the last one is typed in.",
+    "options": [
+      [
+        "custom_app_m365",
+        "Our Microsoft tenant (Power Apps, or Azure with Microsoft sign-in)"
+      ],
+      [
+        "lovable_app",
+        "Lovable"
+      ],
+      [
+        "replit_app",
+        "Replit"
+      ],
+      [
+        "base44_app",
+        "Base44"
+      ],
+      [
+        "__other__",
+        "Somewhere else"
+      ]
+    ]
   },
   "supplier_questions": [
     "Are we using this under an organisational agreement or personal accounts?",

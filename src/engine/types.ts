@@ -83,12 +83,12 @@ export interface Rules {
   tier_rules: { note: string; rules: { tier: number; when: string; because: string }[] };
   pseudonymisation_credit: { enabled: boolean; applies_when: string; effect: string; why: string };
   tiers: Record<string, { label: string; rule: string; plain: string; examples: string; can: string; law?: string[] }>;
-  policy: { note: string; allowed: string; allowed_inside: string; no: string; yes_title: string; no_title: string };
+  policy: { note: string; allowed: string; allowed_inside: string; allowed_partner: string; no: string; yes_title: string; no_title: string };
   sanctioned: { note: string; unlisted_max_tier: number; list: Record<string, { max_tier: number; ai: boolean }> };
   blocked: { note: string; rules: { id: string; when: string; message: string; ways_out: string[] }[] };
   locks: { type: NodeType; lever: string; when: string; value: unknown; reason: string }[];
   screening: { id: string; group: "mandatory" | "criteria"; text: string; type: NodeType; when: string; because: string; source: string; law?: string }[];
-  outcome: { order: string[]; labels: Record<string, string>; plain: Record<string, string>; required_if: string; recommended_if: string };
+  outcome: { order: string[]; labels: Record<string, string>; plain: Record<string, string>; none_if?: string; required_if: string; recommended_if: string };
   use_case_floor: { note: string; levels: { id: string; label: string; min_outcome: string }[]; by_use_case: Record<string, string> };
   risk: { level: string; when: string }[];
   effort: { rules: { when: string; signoff: string; time: string }[]; signoff_labels: Record<string, string>; time_labels: Record<string, string> };
@@ -130,10 +130,28 @@ export interface RequirementsCatalogue {
   requirements: RequirementDef[];
 }
 
+export interface Plan { max_tier: number; ai: boolean; dpa: boolean; trains: boolean; cost: string; note: string }
+
+export interface Product {
+  name: string;
+  company: string | null;
+  sub_processors: string[];
+  is_ai: boolean;
+  keeps_data_default: string;
+  trains_on_inputs_default: boolean | string;
+  notes?: string;
+  /** The same product is a different thing on each plan; the plan decides the tier it may take. */
+  plans?: Record<string, Plan>;
+  /** "An app we're building": the hosting question follows. */
+  hosting_question?: boolean;
+}
+
 export interface Products {
   note: string;
+  plan_labels: Record<string, string>;
   companies: Record<string, { name: string; region_default: string; dpa_url: string | null; notes: string }>;
-  products: Record<string, { name: string; company: string | null; sub_processors: string[]; is_ai: boolean; keeps_data_default: string; trains_on_inputs_default: boolean | string; notes?: string }>;
+  products: Record<string, Product>;
+  custom_app_hosting: { note: string; options: [string, string][] };
   supplier_questions: string[];
 }
 

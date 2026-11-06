@@ -52,6 +52,7 @@ Derived: A1, A3, A4, A10, A11, A13, A17, screening outcome, cheapest change, use
 | output type: draft / suggestion / score / decision | What does it hand back? | A draft email; a suggested mark; a score; a pass/fail | suggestion |
 | validated by a person | Does someone check the output before it's used? | A teacher reads the feedback before it goes out | on |
 | staff can override | Can a person change any output? | | on |
+| plan: free / business / enterprise | Which plan is this tool on? The same product is a different thing on each. | Free ChatGPT trains on chats and has no contract; ChatGPT Business doesn't and does | free (shown only when the product has plans in `products.json`) |
 
 Fields: product (from the directory; sets the company and sub-processors), use case (generic templates / anonymised work / identifiable work / formative mark / final grade / progression decision), testing record (date, sample, result), fairness check (SEND, EAL, protected characteristics).
 Derived: A8 locked on when is AI; use case floor; C1 to C12.

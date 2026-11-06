@@ -1,39 +1,258 @@
 {
-  "note": "The dropdowns in the opening sentence. Each choice carries the levers it implies, so the canvas starts with a sensible guess. 'Something else' lets people type their own; the heuristics in flowOps then guess from the words. Edit freely; ids never show.",
-  "roles": ["Teacher", "Tutor", "Lecturer", "Head of department", "Manager", "Admin staff", "HR", "Marketing", "IT", "Student"],
+  "note": "The dropdowns in the opening sentence. Each choice carries the levers it implies, so the canvas starts with a sensible guess. 'Something else' lets people type their own; the heuristics in flowOps then guess from the words. Edit freely; ids never show. A purpose with 'partner': true adds a partner organisation outside, as a joint controller, which needs a sharing agreement rather than a processor contract. A purpose with fields.reaches_people true must get back to the named person (messages, feedback, sharing), so anonymising or coding the data isn't offered as the easier version.",
+  "roles": [
+    "Teacher",
+    "Tutor",
+    "Lecturer",
+    "Head of department",
+    "Manager",
+    "Admin staff",
+    "HR",
+    "Marketing",
+    "IT",
+    "Student"
+  ],
   "data": [
-    { "id": "work", "label": "student work (essays, assignments)", "levers": { "about_performance": true, "free_text_or_audio": true }, "categories": ["name", "grades", "free_text"] },
-    { "id": "grades", "label": "marks and grades", "levers": { "about_performance": true }, "categories": ["name", "grades"] },
-    { "id": "attendance", "label": "attendance records", "levers": { "about_performance": true }, "categories": ["name", "attendance"] },
-    { "id": "notes", "label": "feedback or support notes", "levers": { "about_performance": true, "free_text_or_audio": true }, "categories": ["name", "free_text"] },
-    { "id": "contact", "label": "names and contact details", "levers": {}, "categories": ["name", "email", "phone"] },
-    { "id": "media", "label": "photos or video", "levers": {}, "categories": ["name", "images", "video"] },
-    { "id": "sensitive", "label": "health, SEND or safeguarding information", "levers": { "special_category": true, "about_performance": true }, "categories": ["name", "health", "send", "safeguarding"] },
-    { "id": "survey", "label": "survey answers", "levers": { "free_text_or_audio": true, "new_collection": true }, "categories": ["name", "free_text"] },
-    { "id": "usage", "label": "login and usage records", "levers": {}, "categories": ["login", "usage_counts"] },
-    { "id": "recordings", "label": "meeting or lesson recordings", "levers": { "free_text_or_audio": true }, "categories": ["name", "audio", "video"] }
+    {
+      "id": "work",
+      "label": "student work (essays, assignments)",
+      "levers": {
+        "about_performance": true,
+        "free_text_or_audio": true
+      },
+      "categories": [
+        "name",
+        "grades",
+        "free_text"
+      ]
+    },
+    {
+      "id": "grades",
+      "label": "marks and grades",
+      "levers": {
+        "about_performance": true
+      },
+      "categories": [
+        "name",
+        "grades"
+      ]
+    },
+    {
+      "id": "attendance",
+      "label": "attendance records",
+      "levers": {
+        "about_performance": true
+      },
+      "categories": [
+        "name",
+        "attendance"
+      ]
+    },
+    {
+      "id": "notes",
+      "label": "feedback or support notes",
+      "levers": {
+        "about_performance": true,
+        "free_text_or_audio": true
+      },
+      "categories": [
+        "name",
+        "free_text"
+      ]
+    },
+    {
+      "id": "contact",
+      "label": "names and contact details",
+      "levers": {},
+      "categories": [
+        "name",
+        "email",
+        "phone"
+      ]
+    },
+    {
+      "id": "media",
+      "label": "photos or video",
+      "levers": {},
+      "categories": [
+        "name",
+        "images",
+        "video"
+      ]
+    },
+    {
+      "id": "sensitive",
+      "label": "health, SEND or safeguarding information",
+      "levers": {
+        "special_category": true,
+        "about_performance": true
+      },
+      "categories": [
+        "name",
+        "health",
+        "send",
+        "safeguarding"
+      ]
+    },
+    {
+      "id": "survey",
+      "label": "survey answers",
+      "levers": {
+        "free_text_or_audio": true,
+        "new_collection": true
+      },
+      "categories": [
+        "name",
+        "free_text"
+      ]
+    },
+    {
+      "id": "usage",
+      "label": "login and usage records",
+      "levers": {},
+      "categories": [
+        "login",
+        "usage_counts"
+      ]
+    },
+    {
+      "id": "recordings",
+      "label": "meeting or lesson recordings",
+      "levers": {
+        "free_text_or_audio": true
+      },
+      "categories": [
+        "name",
+        "audio",
+        "video"
+      ]
+    }
   ],
   "about": [
-    { "id": "students", "label": "students", "group": "learners", "age_mix": "some_under_18" },
-    { "id": "staff", "label": "staff", "group": "staff", "age_mix": "all_adults" },
-    { "id": "parents", "label": "parents", "group": "parents", "age_mix": "all_adults" },
-    { "id": "applicants", "label": "applicants", "group": "public", "age_mix": "some_under_18" },
-    { "id": "customers", "label": "customers", "group": "customers", "age_mix": "all_adults" },
-    { "id": "patients", "label": "patients", "group": "patients", "age_mix": "some_under_18" },
-    { "id": "care", "label": "people in care", "group": "care", "age_mix": "some_under_18" },
-    { "id": "public", "label": "members of the public", "group": "public", "age_mix": "some_under_18" }
+    {
+      "id": "students",
+      "label": "students",
+      "group": "learners",
+      "age_mix": "some_under_18"
+    },
+    {
+      "id": "staff",
+      "label": "staff",
+      "group": "staff",
+      "age_mix": "all_adults"
+    },
+    {
+      "id": "parents",
+      "label": "parents",
+      "group": "parents",
+      "age_mix": "all_adults"
+    },
+    {
+      "id": "applicants",
+      "label": "applicants",
+      "group": "public",
+      "age_mix": "some_under_18"
+    },
+    {
+      "id": "customers",
+      "label": "customers",
+      "group": "customers",
+      "age_mix": "all_adults"
+    },
+    {
+      "id": "patients",
+      "label": "patients",
+      "group": "patients",
+      "age_mix": "some_under_18"
+    },
+    {
+      "id": "care",
+      "label": "people in care",
+      "group": "care",
+      "age_mix": "some_under_18"
+    },
+    {
+      "id": "public",
+      "label": "members of the public",
+      "group": "public",
+      "age_mix": "some_under_18"
+    }
   ],
   "purposes": [
-    { "id": "mark", "label": "suggest a mark", "levers": { "scores": true } },
-    { "id": "feedback", "label": "draft feedback", "levers": {} },
-    { "id": "predict", "label": "predict who might struggle", "levers": { "scores": true, "ongoing": true } },
-    { "id": "attendance", "label": "track attendance", "levers": { "ongoing": true, "tracks_behaviour": true } },
-    { "id": "plan", "label": "plan lessons", "levers": {} },
-    { "id": "reports", "label": "write reports", "levers": {} },
-    { "id": "analyse", "label": "analyse results", "levers": { "scores": true } },
-    { "id": "share", "label": "share it with a partner organisation", "levers": {} },
-    { "id": "messages", "label": "send messages", "levers": {} }
+    {
+      "id": "mark",
+      "label": "suggest a mark",
+      "levers": {
+        "scores": true
+      }
+    },
+    {
+      "id": "feedback",
+      "label": "draft feedback",
+      "levers": {},
+      "fields": {
+        "reaches_people": true
+      }
+    },
+    {
+      "id": "predict",
+      "label": "predict who might struggle",
+      "levers": {
+        "scores": true,
+        "ongoing": true
+      }
+    },
+    {
+      "id": "attendance",
+      "label": "track attendance",
+      "levers": {
+        "ongoing": true,
+        "tracks_behaviour": true
+      }
+    },
+    {
+      "id": "plan",
+      "label": "plan lessons",
+      "levers": {}
+    },
+    {
+      "id": "reports",
+      "label": "write reports",
+      "levers": {}
+    },
+    {
+      "id": "analyse",
+      "label": "analyse results",
+      "levers": {
+        "scores": true
+      }
+    },
+    {
+      "id": "share",
+      "label": "share it with a partner organisation",
+      "levers": {},
+      "partner": true,
+      "fields": {
+        "reaches_people": true
+      }
+    },
+    {
+      "id": "messages",
+      "label": "send messages",
+      "levers": {},
+      "fields": {
+        "reaches_people": true
+      }
+    }
   ],
   "other_label": "Something else...",
-  "example": { "role": "Teacher", "data": ["work"], "about": "students", "product": "m365_copilot", "purpose": "mark" }
+  "example": {
+    "role": "Teacher",
+    "data": [
+      "work"
+    ],
+    "about": "students",
+    "product": "m365_copilot",
+    "purpose": "mark"
+  }
 }

@@ -12,7 +12,9 @@ export function NodeCard({ data }: NodeProps & { data: CardData }) {
   const facts = d.facts[node.id] ?? {};
   const locks = d.locks[node.id] ?? {};
   // Staff are adults; their age chips are noise.
-  const face = set.rules.levers[node.type].filter((l) => l.face && !(node.type === "people" && node.fields.group === "staff" && l.id === "age_mix"));
+  const face = set.rules.levers[node.type].filter(
+    (l) => l.face && !(node.type === "people" && node.fields.group === "staff" && l.id === "age_mix") && !(l.id === "plan" && !d.facts[node.id]?.has_plans),
+  );
   const hidden = set.rules.levers[node.type].length - face.length;
 
   const personalIn = flow.edges.some((e) => e.to === node.id && (d.edges[e.id]?.tier ?? -1) >= 1);

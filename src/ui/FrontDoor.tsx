@@ -124,6 +124,7 @@ function TierPicker({ set, tier, setTier }: { set: RuleSet; tier: number | null;
 }
 
 const OTHER = "__other__";
+// "Somewhere else" in products.json custom_app_hosting uses the same id.
 
 /** A dropdown that reads as a word in a sentence. "Something else..." reveals a box to type in. */
 function Slot({ value, kind, options, placeholder, onPick, onType, label }: {
@@ -162,9 +163,15 @@ function Slot({ value, kind, options, placeholder, onPick, onType, label }: {
 function SentenceBuilder({ set, retrospective, tier, onBuild }: { set: RuleSet; retrospective: boolean; tier: number | null; onBuild(f: Flow): void }) {
   const [s, setS] = useState<Sentence>(emptySentence);
   const [since, setSince] = useState("");
+  const [hosting, setHosting] = useState<string>("");
   const up = (p: Partial<Sentence>) => setS({ ...s, ...p });
+  const building = s.product === "custom_app";
   const roles = sentenceChoices.roles.map((r) => ({ id: r, label: r }));
-  const products = Object.entries(set.products.products).map(([id, p]) => ({ id, label: p.name }));
+  const hostingIds = new Set(set.products.custom_app_hosting.options.map(([id]) => id));
+  const products = Object.entries(set.products.products)
+    .filter(([id]) => !hostingIds.has(id) || id === "lovable_app" || id === "replit_app" || id === "base44_app")
+    .filter(([id]) => id !== "custom_app_m365")
+    .map(([id, p]) => ({ id, label: p.name }));
 
   const tooHigh = (productId: string) => {
     if (tier == null || tier === 0) return false;
@@ -177,10 +184,16 @@ function SentenceBuilder({ set, retrospective, tier, onBuild }: { set: RuleSet; 
   const productOptions = products.map((p) => (tooHigh(p.id) ? { ...p, label: `${p.label} (not at level ${tier})` } : p));
   const roleKind = s.role ? (roles.some((r) => r.id === s.role) ? s.role : OTHER) : null;
   const toolKind = s.product ? s.product : s.otherTool ? OTHER : null;
-  const ready = sentenceComplete(s) && !(s.product && tooHigh(s.product));
+  const ready = sentenceComplete(s) && !(s.product && tooHigh(s.product)) && (!building || (hosting && (hosting !== OTHER || s.otherTool?.name.trim())));
 
   const go = () => {
-    const flow = flowFromSentence(s, set, retrospective, tier);
+    // An app being built: where it runs is the tool that matters, so the hosting choice becomes the product.
+    const resolved: Sentence = building ? (hosting === OTHER ? { ...s, product: null } : { ...s, product: hosting, otherTool: null }) : s;
+    const flow = flowFromSentence(resolved, set, retrospective, tier);
+    if (building) {
+      const app = flow.nodes.find((n) => n.type === "system");
+      if (app) app.title = "Our app";
+    }
     if (retrospective) flow.dates = { ...flow.dates, running_since: since || null };
     onBuild(flow);
   };
@@ -250,8 +263,22 @@ function SentenceBuilder({ set, retrospective, tier, onBuild }: { set: RuleSet; 
         .
       </div>
 
+      {building && (
+        <div className="field" style={{ marginTop: 16 }}>
+          <span>Where will it run?</span>
+          <select value={hosting} onChange={(e) => { setHosting(e.target.value); if (e.target.value === OTHER) up({ otherTool: { name: "", ai: false } }); else up({ otherTool: null }); }}>
+            <option value="" disabled>Choose where it's hosted…</option>
+            {set.products.custom_app_hosting.options.map(([id, label]) => <option key={id} value={id}>{label}</option>)}
+          </select>
+          {hosting === OTHER && <input value={s.otherTool?.name ?? ""} placeholder="Who hosts it?" aria-label="Who hosts it" onChange={(e) => up({ otherTool: { name: e.target.value, ai: s.otherTool?.ai ?? false } })} />}
+          <span className="mu" style={{ textTransform: "none", letterSpacing: 0, fontFamily: "var(--sans)", fontWeight: 400, fontSize: 12 }}>
+            Building is cheap now; running is what matters. Who hosts it decides who holds the data, under which contract, and which level it may take.
+          </span>
+        </div>
+      )}
+
       <div className="sentence-extras">
-        {s.otherTool && (
+        {s.otherTool && !building && (
           <label className="field">
             <span>Does that tool use AI?</span>
             <div className="seg sm">

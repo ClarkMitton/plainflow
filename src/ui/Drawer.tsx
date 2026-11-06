@@ -100,7 +100,7 @@ export function Drawer({ node, onProduct, onLoadCard, onDelete, onConnect, onDis
         <div>
           <p className="lab" style={{ marginBottom: 10 }}>Switches</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            {set.rules.levers[node.type].map((def) => (
+            {set.rules.levers[node.type].filter((def) => !(def.id === "plan" && !facts.has_plans)).map((def) => (
               <Lever key={def.id} nodeId={node.id} def={def} value={facts[def.id] ?? node.levers[def.id]} lockReason={locks[def.id]} variant="drawer" />
             ))}
           </div>
@@ -182,6 +182,30 @@ export function Drawer({ node, onProduct, onLoadCard, onDelete, onConnect, onDis
               </span>
             </label>
             <Select label="AI use case" value={f.use_case} options={USE_CASES} onChange={field("use_case")} />
+            {(() => {
+              const product = set.products.products[String(f.product_id ?? "")];
+              if (!product?.plans) return null;
+              return (
+                <div className="field">
+                  <span>What each plan allows</span>
+                  <table className="tbl plans">
+                    <thead><tr><th>Plan</th><th>Up to</th><th>Contract</th><th>Trains</th><th>Cost</th></tr></thead>
+                    <tbody>
+                      {Object.entries(product.plans).map(([id, pl]) => (
+                        <tr key={id} className={node.levers.plan === id ? "on" : undefined}>
+                          <td>{(set.products.plan_labels[id] ?? id).replace(/^the /, "").replace(/^[a-z]/, (c) => c.toUpperCase())}</td>
+                          <td className="mono">Tier {pl.max_tier}</td>
+                          <td className={pl.dpa ? "ok" : "rq"}>{pl.dpa ? "DPA" : "none"}</td>
+                          <td className={pl.trains ? "rq" : "ok"}>{pl.trains ? "yes" : "no"}</td>
+                          <td>{pl.cost}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {product.plans[String(node.levers.plan ?? "free")]?.note && <span className="mu" style={{ textTransform: "none", letterSpacing: 0, fontFamily: "var(--sans)", fontWeight: 400, fontSize: 12 }}>{product.plans[String(node.levers.plan ?? "free")]?.note}</span>}
+                </div>
+              );
+            })()}
           </>
         )}
 

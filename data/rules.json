@@ -24,7 +24,7 @@
     "ldi_tier_rule": { "label": "Tier rule (this rules table)", "url": "#rules-tiers" }
   },
 
-  "tier1_categories": ["name", "email", "job_title", "department", "login", "usage_counts"],
+  "tier1_categories": ["name", "email", "phone", "address", "job_title", "department", "login", "usage_counts"],
   "tier3_categories": ["health", "send", "biometrics", "safeguarding", "criminal", "ethnicity", "religion", "sexual_orientation", "union", "genetic"],
   "safety_categories": ["safeguarding", "location", "health"],
   "large_scale_threshold": 1000,
@@ -72,17 +72,18 @@
     "note": "Plain words for the 'does policy allow it?' answer. {company}, {tier}, {max_tier} and {data} are filled in.",
     "allowed": "{company} is approved for Tier {max_tier}. This sends Tier {tier}, so that's fine.",
     "allowed_inside": "Nothing personal leaves the organisation, so no outside company needs approving.",
+    "allowed_partner": "{company} decides things with you, so it's a joint controller: you need a sharing agreement rather than a supplier contract. Level 3 data still never leaves.",
     "no": "No. {message}",
     "yes_title": "Yes, policy allows it",
     "no_title": "Not as it stands"
   },
 
   "blocked": {
-    "note": "Checked for every wire carrying personal data. Names: tier, max_tier, company, data, into_ai (the wire goes into an AI system), via_ai (either end is AI), ai_approved, crosses. A blocked wire turns red and produces no paperwork.",
+    "note": "Checked for every wire carrying personal data. Names: tier, max_tier, company, to_role (the company's role on this flow), plan_note (\" on the business plan\" when the tool has plans), data, into_ai (the wire goes into an AI system), via_ai (either end is AI), ai_approved, crosses. A blocked wire turns red and produces no paperwork.",
     "rules": [
       { "id": "tier3_leaves", "when": "crosses && tier >= 3", "message": "Tier 3 data never leaves organisation systems.", "ways_out": ["Take the special category data out of {data}.", "Keep it inside, on an organisation system."] },
       { "id": "tier3_ai", "when": "into_ai && tier >= 3", "message": "Tier 3 data can't go into AI.", "ways_out": ["Take the special category data out of {data}.", "Do this step without AI."] },
-      { "id": "over_max", "when": "crosses && tier > max_tier", "message": "{company} is allowed up to Tier {max_tier}; this wire carries Tier {tier}.", "ways_out": ["Send less: cut {data} down to what Tier {max_tier} allows.", "Use a sanctioned route instead."] },
+      { "id": "over_max", "when": "crosses && tier > max_tier && to_role in ['processor', 'sub_processor']", "message": "{company}{plan_note} is allowed up to Tier {max_tier}; this wire carries Tier {tier}.", "ways_out": ["Send less: cut {data} down to what Tier {max_tier} allows.", "Use a sanctioned route, or a plan that's approved for Tier {tier}."] },
       { "id": "ai_not_approved", "when": "crosses && via_ai && tier >= 1 && !ai_approved", "message": "{company}'s AI features are not approved for personal data.", "ways_out": ["Anonymise {data} first.", "Use an approved AI route instead."] }
     ]
   },
@@ -120,6 +121,7 @@
       "recommended": "A short risk assessment is a good idea, but not a must. The DPO will say how far to take it.",
       "required": "You need a full risk assessment (a DPIA) before this goes ahead. The canvas fills in most of it; a person does the rest."
     },
+    "none_if": "highest_tier == 0",
     "required_if": "mandatory_yes >= 1 || criteria_yes >= 2",
     "recommended_if": "criteria_yes == 1"
   },
@@ -198,10 +200,11 @@
   },
 
   "cheapest_change": {
-    "note": "For each candidate whose 'when' matches a node, the engine re-runs the rules with that one change. A change that unblocks a red wire beats one that doesn't; then the one that removes the most open requirements wins; ties go to the first in this list.",
+    "note": "For each candidate whose 'when' matches a node, the engine re-runs the rules with that one change. A change that clears a red wire or a hard line beats one that doesn't; then the one that removes the most open requirements wins; ties go to the first in this list, so the plan change (cheap, and doesn't change the idea) sits first.",
     "candidates": [
-      { "type": "data", "lever": "identifiability", "to": "pseudonymised", "when": "identifiability == 'named'", "cost": "Outputs can't use the person's name; someone matches them back afterwards.", "how": "Swap names for a code (a candidate number works) before the data leaves you. Keep the list that links codes to names inside the organisation." },
-      { "type": "data", "lever": "identifiability", "to": "anonymised", "when": "identifiability in ['named', 'pseudonymised'] && !any(purpose, scores)", "cost": "No link back to the person at all.", "how": "Remove names, codes and anything that could single someone out. Only possible when nothing needs to go back to a person." },
+      { "type": "system", "lever": "plan", "to": "business", "when": "has_plans && plan == 'free'", "cost": "A paid business plan, roughly £20 a seat a month.", "how": "Move the people who use it onto the organisation's business plan, so a contract and no-training terms apply, and stop using personal logins." },
+      { "type": "data", "lever": "identifiability", "to": "pseudonymised", "when": "identifiability == 'named' && !any(purpose, reaches_people)", "cost": "Outputs can't use the person's name; someone matches them back afterwards.", "how": "Swap names for a code (a candidate number works) before the data leaves you. Keep the list that links codes to names inside the organisation." },
+      { "type": "data", "lever": "identifiability", "to": "anonymised", "when": "identifiability in ['named', 'pseudonymised'] && !any(purpose, scores) && !any(purpose, reaches_people)", "cost": "No link back to the person at all.", "how": "Remove names, codes and anything that could single someone out. Only possible when nothing needs to go back to a person." },
       { "type": "data", "lever": "special_category", "to": false, "when": "special_category", "cost": "The health, SEND or other special category details stay out.", "how": "Strip those details before the data goes anywhere, or keep that part in an organisation system." },
       { "type": "data", "lever": "free_text_or_audio", "to": false, "when": "free_text_or_audio", "cost": "Only structured fields go in; no open text or recordings.", "how": "Use a form with fixed answers instead of a comments box or recording." },
       { "type": "purpose", "lever": "decides_alone", "to": false, "when": "decides_alone", "cost": "Someone has to check each outcome.", "how": "Add a step where a named role reviews each result before it counts." },
@@ -239,7 +242,8 @@
       { "id": "is_ai", "label": "is AI", "kind": "toggle", "face": true, "sentence": "Does it use AI, machine learning or generative models anywhere?", "example": "Copilot, AI Builder, a model behind an app." },
       { "id": "output_type", "label": "it hands back", "kind": "choice", "face": true, "options": [["draft", "Draft"], ["suggestion", "Suggestion"], ["score", "Score"], ["decision", "Decision"]], "sentence": "What does it hand back?", "example": "A draft email; a suggested mark; a score; a pass or fail." },
       { "id": "validated_by_person", "label": "a person checks it", "kind": "toggle", "face": true, "sentence": "Does someone check the output before it's used?", "example": "A teacher reads the feedback before it goes out." },
-      { "id": "staff_can_override", "label": "staff can override", "kind": "toggle", "face": false, "sentence": "Can a person change any output?", "example": "A teacher edits the suggested feedback before sending." }
+      { "id": "staff_can_override", "label": "staff can override", "kind": "toggle", "face": false, "sentence": "Can a person change any output?", "example": "A teacher edits the suggested feedback before sending." },
+      { "id": "plan", "label": "plan", "kind": "choice", "face": true, "options": [["free", "Free/personal"], ["business", "Business"], ["enterprise", "Enterprise"]], "sentence": "Which plan is this tool on? The same product is a different thing on each: free and personal plans usually train on what you type and come with no contract.", "example": "Free ChatGPT trains on your chats; ChatGPT Business doesn't, and comes with a data protection agreement." }
     ],
     "company": [
       { "id": "role", "label": "role", "kind": "choice", "face": false, "options": [["processor", "Processor"], ["joint_controller", "Joint"], ["independent_controller", "Independent"], ["sub_processor", "Sub"]], "sentence": "Who decides what happens to the data?", "example": "Microsoft running Copilot on your instructions is a processor; a partner school you share with is joint." },

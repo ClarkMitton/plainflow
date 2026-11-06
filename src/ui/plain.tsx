@@ -79,14 +79,25 @@ export function policyAnswer(flow: Flow, d: Derivation, set: RuleSet) {
   const p = set.rules.policy;
   const title = (id: string) => flow.nodes.find((n) => n.id === id)?.title ?? id;
   if (d.blocked.length) {
-    return { ok: false, title: p.no_title, lines: d.blocked.map((b) => ({ ok: false, text: p.no.replace("{message}", b.message), ways: b.ways_out })) };
+    return {
+      ok: false,
+      title: p.no_title,
+      lines: d.blocked.map((b) => {
+        const f = d.facts[b.to] ?? {};
+        const needed = String(f.plan_needed ?? "");
+        const plan = needed ? `${needed[0].toUpperCase()}${needed.slice(1)} would take it (${f.plan_needed_cost}).` : "";
+        return { ok: false, text: `${p.no.replace("{message}", b.message)}${plan ? " " + plan : ""}`, ways: b.ways_out };
+      }),
+    };
   }
   const lines = d.crossings
     .filter((c) => c.tier >= 1)
     .map((c) => ({
       ok: true,
-      text: p.allowed
-        .replace("{company}", title(c.to))
+      text: ["joint_controller", "independent_controller"].includes(String(flow.nodes.find((n) => n.id === c.to)?.levers.role))
+        ? p.allowed_partner.replace("{company}", title(c.to))
+        : p.allowed
+        .replace("{company}", `${title(c.to)}${d.facts[c.to]?.plan_label ? ` on ${String(d.facts[c.to].plan_label)}` : ""}`)
         .replace("{max_tier}", String(d.facts[c.to]?.sanctioned_max_tier ?? ""))
         .replace("{tier}", String(c.tier)),
       ways: [] as string[],

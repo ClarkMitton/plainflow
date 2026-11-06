@@ -112,7 +112,16 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
   }
 
   // 2 and 3. Crossings and blocked wires.
+  const planOf = (from: FlowNode | undefined) => {
+    const pid = from?.fields.product_id as string | undefined;
+    const product = pid ? set.products.products[pid] : undefined;
+    const plan = String(from?.levers.plan ?? "free");
+    return product?.plans ? { id: plan, info: product.plans[plan] ?? product.plans.free, plans: product.plans } : null;
+  };
+  // The plan the tool is on overrides the sanctioned list: free ChatGPT and ChatGPT Business are different products.
   const sanctionFor = (company: FlowNode, from: FlowNode | undefined) => {
+    const plan = planOf(from);
+    if (plan?.info) return { max_tier: plan.info.max_tier, ai: plan.info.ai };
     const list = rules.sanctioned.list;
     const cid = company.fields.company_id as string | undefined;
     const pid = from?.fields.product_id as string | undefined;
@@ -132,10 +141,13 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
       const s = to.type === "company" ? sanctionFor(to, from) : null;
       const maxTier = to.inside ? 3 : s ? s.max_tier : rules.sanctioned.unlisted_max_tier;
       const topData = data.filter((d) => tiers[d] === tier).map((d) => byId.get(d)!.title);
+      const plan = planOf(from);
       const wireVars: Record<string, unknown> = {
         tier,
         max_tier: maxTier,
         company: to.title,
+        to_role: to.type === "company" ? String(to.levers.role ?? "processor") : "inside",
+        plan_note: plan ? ` on ${set.products.plan_labels[plan.id] ?? plan.id}` : "",
         data: topData.join(", "),
         into_ai: !!vars[to.id].is_ai,
         via_ai: !!vars[from.id].is_ai || !!vars[to.id].is_ai,
@@ -161,6 +173,10 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
       v.reaches_ai = aiSystems.some((s) => reach[s.id].has(n.id));
       v.crosses = crossings.some((c) => edgeInfo[c.edge].data.includes(n.id));
     }
+    if (n.type === "system") {
+      const product = set.products.products[String(n.fields.product_id ?? "")];
+      v.has_plans = !!product?.plans;
+    }
     if (n.type === "purpose") {
       const sources = [...new Set([...reach[n.id]]
         .map((d) => String(byId.get(d)?.fields.source_system ?? "").trim())
@@ -180,8 +196,20 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
       v.parent_title = parent?.title ?? null;
       const art28 = (parent?.fields.art28 ?? {}) as Record<string, unknown>;
       v.parent_authorised = !!art28.sub_processor_authorisation;
-      const s = sanctionFor(n, undefined);
+      const feederEdge = inbound.find((e) => byId.get(e.from)?.type === "system") ?? inbound[0];
+      const feeder = feederEdge ? byId.get(feederEdge.from) : undefined;
+      const s = sanctionFor(n, feeder);
       v.sanctioned_max_tier = s ? s.max_tier : rules.sanctioned.unlisted_max_tier;
+      const plan = planOf(feeder);
+      v.plan_label = plan ? set.products.plan_labels[plan.id] ?? plan.id : null;
+      if (plan?.info) {
+        v.trains_on_inputs = plan.info.trains;
+        (locks[n.id] ??= {}).trains_on_inputs = `Decided by the plan ${feeder?.title ?? "the tool"} is on (${String(v.plan_label)}).`;
+      }
+      // The cheapest plan that would take the data this company receives, and what it costs.
+      const needed = plan ? Object.entries(plan.plans).find(([, x]) => x.max_tier >= Number(v.receives_tier)) : undefined;
+      v.plan_needed = needed ? set.products.plan_labels[needed[0]] ?? needed[0] : null;
+      v.plan_needed_cost = needed ? needed[1].cost : null;
     }
   }
   ({ global, envs } = makeEnvs(flow, vars, scope));
@@ -210,6 +238,7 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
   // 5. Outcome, with the pseudonymisation credit.
   const order = rules.outcome.order;
   let outcomeIdx = test(rules.outcome.required_if, global) ? 2 : test(rules.outcome.recommended_if, global) ? 1 : 0;
+  if (rules.outcome.none_if && test(rules.outcome.none_if, global)) outcomeIdx = 0;
   const outcomeFromScreening = order[outcomeIdx];
   const creditApplied = rules.pseudonymisation_credit.enabled && test(rules.pseudonymisation_credit.applies_when, global);
   if (creditApplied) outcomeIdx = Math.max(0, outcomeIdx - 1);
@@ -404,7 +433,9 @@ function cheapestChange(flow: Flow, set: RuleSet, base: Derivation, envs: Record
       const removes = [...before].filter((k) => !stillOpen.has(k));
       const unblocks = base.blocked.length + base.bright_lines.length - after.blocked.length - after.bright_lines.length;
       if (unblocks < 0 || (unblocks === 0 && removes.length === 0)) continue;
-      if (!best || unblocks > best.unblocks || (unblocks === best.unblocks && removes.length > best.removes.length)) {
+      // Clearing a red wire or a hard line wins. Among changes that clear the same amount, the first in the list wins:
+      // the list is ordered by what the person gives up, and a plan change gives up nothing about the idea.
+      if (!best || unblocks > best.unblocks || (unblocks === best.unblocks && unblocks === 0 && removes.length > best.removes.length)) {
         best = { node: n.id, node_title: n.title, lever: c.lever, to, removes, unblocks, cost: c.cost, how: c.how };
       }
     }

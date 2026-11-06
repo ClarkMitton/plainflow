@@ -28,7 +28,7 @@ const DEFAULTS: Record<NodeType, { title: string; levers: Record<string, unknown
   },
   system: {
     title: "System",
-    levers: { is_ai: false, output_type: "suggestion", validated_by_person: true, staff_can_override: true },
+    levers: { is_ai: false, output_type: "suggestion", validated_by_person: true, staff_can_override: true, plan: "free" },
     fields: { product_id: null, use_case: null, testing: { date: "", sample: "", result: "" }, fairness_check: { date: "", groups: [], result: "" } },
   },
   company: {
@@ -263,6 +263,7 @@ export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boole
   const purpose = newNode("purpose", { x: 360, y: 460 });
   purpose.title = purposeLabel ? purposeLabel[0].toUpperCase() + purposeLabel.slice(1) : "Purpose";
   if (purposeKind) Object.assign(purpose.levers, purposeKind.levers);
+  if (purposeKind && (purposeKind as { fields?: Record<string, unknown> }).fields) Object.assign(purpose.fields, (purposeKind as { fields?: Record<string, unknown> }).fields);
   else purpose.levers.scores = /mark|grade|score|rank|predict|assess/i.test(purposeLabel);
 
   const system = newNode("system", { x: 360, y: 160 });
@@ -297,6 +298,17 @@ export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boole
   for (const d of dataNodes) flow = connect(flow, d.id, system.id);
   flow = connect(flow, system.id, purpose.id);
   if (s.product) flow = applyProduct(flow, system.id, s.product, set);
+  if (purposeKind && (purposeKind as { partner?: boolean }).partner) {
+    // Sharing with a partner: they decide things too, so they're a joint controller, not a supplier.
+    const partner = newNode("company", { x: BOUNDARY_X + 60, y: 460 });
+    partner.title = "Partner organisation";
+    partner.levers.role = "joint_controller";
+    partner.levers.decides_purpose = true;
+    partner.fields.region = "UK";
+    partner.fields.transfer_mechanism = "none_needed";
+    flow.nodes = [...flow.nodes, partner];
+    flow = connect(flow, purpose.id, partner.id);
+  }
   if (!s.product && s.otherTool?.name.trim()) {
     // A tool we don't know: the company behind it is unknown too, so it gets the supplier questions and Tier 1 at most.
     const company = newNode("company", { x: BOUNDARY_X + 60, y: 120 });
