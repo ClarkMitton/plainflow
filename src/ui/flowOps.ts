@@ -270,6 +270,7 @@ export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boole
   const purpose = newNode("purpose", { x: 360, y: 460 });
   purpose.title = purposeLabel ? purposeLabel[0].toUpperCase() + purposeLabel.slice(1) : "Purpose";
   if (purposeKind) Object.assign(purpose.levers, purposeKind.levers);
+  if (purposeKind) purpose.fields.kind = purposeKind.id;
   if (purposeKind && (purposeKind as { fields?: Record<string, unknown> }).fields) Object.assign(purpose.fields, (purposeKind as { fields?: Record<string, unknown> }).fields);
   else purpose.levers.scores = /mark|grade|score|rank|predict|assess/i.test(purposeLabel);
 
@@ -285,6 +286,7 @@ export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boole
     if (kind) {
       Object.assign(d.levers, kind.levers);
       d.fields.categories = [...kind.categories];
+      d.fields.kind = kind.id;
     } else {
       d.levers.about_performance = /work|mark|grade|attend|progress|behaviour|support|note|assess/i.test(t);
       d.levers.free_text_or_audio = /work|essay|note|comment|record|audio|recording/i.test(t);

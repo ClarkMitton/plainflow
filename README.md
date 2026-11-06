@@ -49,6 +49,8 @@ data/
   tools.json                  sibling tools linked from the front door (the GDPR Repo Scanner)
   tips.json                   the first-time guide: what each screen is making and doing, shown once per screen
   law.json                    where each answer comes from in law and why it matters; rules and requirements point at these ids
+  m365.json                   what each Microsoft 365 licence includes, and which outside tool each part replaces (the lighter route)
+  sources-status.json         written by npm run check-sources: when each source page was last checked and whether it changed
   examples/                   a real scanner report, used as a test fixture
 mockups/
   Master.html                 A5, flow first, the main canvas

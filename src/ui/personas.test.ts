@@ -7,6 +7,7 @@ import type { Derivation, Flow } from "../engine/types";
 import { flowFromSentence, type Sentence } from "./flowOps";
 import { policyAnswer } from "./plain";
 import { apply, isDecisive, stepsFor } from "./questions";
+import { lighterRoutes, swapProduct } from "./lighter";
 
 const choices = {
   data: (id: string) => ({ kind: id, label: id }),
@@ -188,5 +189,42 @@ describe("whose policy, and the youngest pupils", () => {
     const d = derive(flow, ruleSet);
     tell("Primary school, consent, Copilot", flow, d);
     expect(d.bright_lines.map((b) => b.id)).toContain("consent_under_13");
+  });
+});
+
+describe("the lighter route", () => {
+  it("offers Copilot Chat instead of free ChatGPT, with less to do and nothing to sign", () => {
+    const flow = answer(build({ role: "Sales manager", product: "chatgpt" }), { plan: "Free or personal accounts" });
+    const d = derive(flow, ruleSet);
+    const routes = lighterRoutes(flow, d, ruleSet);
+    expect(routes.map((r) => r.feature.id)).toEqual(["copilot_chat", "copilot"]);
+    const chat = routes[0];
+    expect(chat.ours.blocked + chat.ours.hardLines).toBe(0);
+    expect(chat.ours.toDo).toBeLessThan(chat.theirs.toDo);
+    expect(chat.ours.cost).toMatch(/included/);
+    expect(chat.lighter).toBe(true);
+    // the swap removed OpenAI and brought Microsoft
+    expect(chat.altFlow.nodes.some((n) => n.fields.company_id === "openai_consumer")).toBe(false);
+    expect(chat.altFlow.nodes.some((n) => n.fields.company_id === "microsoft")).toBe(true);
+  });
+
+  it("knows the licence: full Copilot is an add-on, Copilot Chat is included", () => {
+    const flow = { ...answer(build({ role: "Sales manager", product: "chatgpt" }), { plan: "A paid business plan" }), organisation: { name: "Kitlab", type: "small_business", m365_licence: "business_standard" } };
+    const routes = lighterRoutes(flow, derive(flow, ruleSet), ruleSet);
+    expect(routes[0].ours.cost).toBe("included in your Business Standard");
+    expect(routes[1].ours.cost).toMatch(/£24 a seat/);
+  });
+
+  it("offers nothing lighter when they're already on Microsoft", () => {
+    const flow = build({ role: "Teacher", product: "m365_copilot" });
+    expect(lighterRoutes(flow, derive(flow, ruleSet), ruleSet)).toEqual([]);
+  });
+
+  it("finds a route for an unknown AI note-taker from what it's for", () => {
+    const flow = build({ role: "Admin staff", data: [choices.data("recordings")], product: null, otherTool: { name: "Otter", ai: true }, purpose: choices.purpose("reports", "write reports") });
+    const routes = lighterRoutes(flow, derive(flow, ruleSet), ruleSet);
+    expect(routes.map((r) => r.feature.id)).toContain("teams_transcription");
+    const swapped = swapProduct(flow, flow.nodes.find((n) => n.type === "system")!.id, "m365", ruleSet);
+    expect(swapped.nodes.some((n) => n.title === "Otter")).toBe(false);
   });
 });

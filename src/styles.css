@@ -459,3 +459,10 @@ table.tbl code, code.x { font-family: var(--mono); font-size: 12px; background: 
   a { color: inherit; text-decoration: none; }
   .lawline a::after { content: " (" attr(href) ")"; font-size: 10px; color: #6b6a66; }
 }
+
+/* The lighter route */
+.lighter .route-cmp + .route-cmp { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rule); }
+.tbl.cmp { font-size: 12px; margin-top: 8px; }
+.tbl.cmp td, .tbl.cmp th { padding: 4px 6px; }
+.tbl.cmp td:first-child { color: var(--muted); }
+.tbl.cmp td:last-child { font-weight: 600; }

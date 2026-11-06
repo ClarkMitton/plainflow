@@ -39,7 +39,7 @@ export interface Flow {
   status: "draft" | "with_dpo" | "approved" | "live" | "review_due" | "retired";
   retrospective?: boolean;
   owner?: string;
-  organisation: { name: string; type: string; default_lawful_basis?: string };
+  organisation: { name: string; type: string; default_lawful_basis?: string; /** Which Microsoft 365 licence, for the lighter route's costs. */ m365_licence?: string };
   dates?: { created?: string; launch?: string | null; running_since?: string | null; review?: string | null };
   version: number;
   nodes: FlowNode[];

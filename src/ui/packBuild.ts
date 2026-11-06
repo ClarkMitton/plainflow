@@ -4,6 +4,7 @@ import { stepsFor } from "./questions";
 import { policyAnswer } from "./plain";
 import { art28Clauses } from "./flowOps";
 import type { Derivation, Flow, Law, Requirement, RuleSet } from "../engine/types";
+import { lighterRoutes, type LighterRoute } from "./lighter";
 
 export interface ActionItem {
   n: number;
@@ -47,6 +48,7 @@ export interface Pack {
     facts: { label: string; value: string; detail: string; laws: Law[] }[];
     hardLines: { title: string; say: string; waysOut: string[]; law: Law | null }[];
     easier: { change: string; cost: string; how: string } | null;
+    lighter: { instead: string; feature: string; does: string; caveat: string; theirs: LighterRoute["theirs"]; ours: LighterRoute["ours"] }[];
     actions: ActionItem[];
     needsPerson: string[];
     effort: string;
@@ -174,6 +176,7 @@ export function buildPack(flow: Flow, d: Derivation, set: RuleSet): Pack {
         { label: "DPIA", value: rules.outcome.labels[d.outcome], detail: rules.outcome.plain[d.outcome] + (d.floor_raised ? " Your use of AI sets this minimum." : ""), laws: lawsOf(["art35"]) },
       ],
       hardLines: d.bright_lines.map((b) => ({ title: b.title, say: b.say, waysOut: b.ways_out, law: b.law })),
+      lighter: lighterRoutes(flow, d, set).map((r) => ({ instead: r.systemTitle, feature: r.feature.label, does: r.feature.does, caveat: r.feature.caveat, theirs: r.theirs, ours: r.ours })),
       easier: cc ? { change: `${cc.lever === "company_id" ? "Switch" : "Change"} ${cc.node_title}: ${ccLever?.label ?? cc.lever} to ${ccTo}. ${cc.unblocks ? "That clears the block." : `That lifts ${cc.removes.length} thing${cc.removes.length === 1 ? "" : "s"} to do.`}`, cost: cc.cost, how: cc.how } : null,
       actions,
       needsPerson: d.needs_person,
@@ -208,6 +211,7 @@ export function packText(p: Pack): string {
   L.push("");
   for (const h of p.forPerson.hardLines) L.push(`HARD LINE: ${h.title}`, h.say, ...h.waysOut.map((w) => `  - ${w}`), "");
   if (p.forPerson.easier) L.push("THE EASIER VERSION", p.forPerson.easier.change, `You'd give up: ${p.forPerson.easier.cost}`, `How: ${p.forPerson.easier.how}`, "");
+  for (const r of p.forPerson.lighter) L.push("A LIGHTER ROUTE YOU MAY ALREADY PAY FOR", `Instead of ${r.instead}: ${r.feature}. ${r.does}`, `Their way: ${r.theirs.verdict}; ${r.theirs.toDo} to do; ${r.theirs.contracts} contracts; cost ${r.theirs.cost}.`, `Lighter route: ${r.ours.verdict}; ${r.ours.toDo} to do; ${r.ours.contracts} contracts; cost ${r.ours.cost}.`, r.caveat ? `But: ${r.caveat}` : "", "");
   L.push(`WHAT TO DO (${p.forPerson.effort}; sign-off: ${p.forPerson.signoff})`);
   for (const a of p.forPerson.actions) L.push(`${a.n}. ${a.what} (${a.who}, ${a.howLong}): ${a.meaning}${a.why ? ` Because ${a.why}.` : ""}${a.law ? ` [${a.law.ref}]` : ""}`);
   if (!p.forPerson.actions.length) L.push("Nothing to do.");

@@ -103,6 +103,17 @@
       "trains_on_inputs_default": false,
       "questions_if_unknown": []
     },
+    "m365_copilot_chat": {
+      "name": "Microsoft 365 Copilot Chat",
+      "company": "microsoft",
+      "sub_processors": [
+        "openai_azure"
+      ],
+      "is_ai": true,
+      "keeps_data_default": "per tenant retention [verify]",
+      "trains_on_inputs_default": false,
+      "notes": "Included with work and school Microsoft 365 licences; enterprise data protection applies when signed in with a work account. Sees only what's pasted or uploaded unless the full Copilot licence is there."
+    },
     "m365": {
       "name": "Microsoft 365 (Teams, SharePoint, Forms)",
       "company": "microsoft",

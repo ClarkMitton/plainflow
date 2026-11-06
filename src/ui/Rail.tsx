@@ -3,6 +3,7 @@ import type { Law, Requirement } from "../engine/types";
 import { leverDef, useFlow } from "./context";
 import { nameWarning } from "./names";
 import { Glossed, policyAnswer, Term, type Change } from "./plain";
+import { licences, lighterRoutes, m365Checked, type LighterRoute } from "./lighter";
 
 /** Where this comes from in law, and why it matters. */
 export function LawLine({ law, laws }: { law?: Law | null; laws?: (Law | null | undefined)[] }) {
@@ -33,13 +34,15 @@ interface Props {
   setRiskOwner(role: string): void;
   checkIt(): void;
   finish(): void;
+  tryLighter(route: LighterRoute): void;
+  setLicence(id: string): void;
 }
 
 /**
  * The answer, in order of what matters: can I do it; what just changed; three facts behind the answer
  * (each one line, open for more); what to do; the one change that helps. Everything else is folded away.
  */
-export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner, checkIt, finish }: Props) {
+export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner, checkIt, finish, tryLighter, setLicence }: Props) {
   const { d, set, flow, checked } = useFlow();
   const [open, setOpen] = useState<string | null>(null);
   const [fact, setFact] = useState<string | null>(null);
@@ -60,6 +63,8 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
   const toDo = d.requirements.filter((r) => r.rail && (r.status === "to_do" || r.status === "partial")).sort((a, b) => a.build_order - b.build_order);
   const covered = d.requirements.filter((r) => r.rail && r.status !== "to_do" && r.status !== "partial");
   const needsOwner = d.outcome !== "not_required";
+  const routes = lighterRoutes(flow, d, set);
+  const licence = String(flow.organisation.m365_licence ?? "unknown");
 
   const row = (r: Requirement) => (
     <div key={r.key} className={`req${struck.has(r.key) ? " struck" : ""}`} onMouseEnter={() => setHighlight(r.cause.nodes)} onMouseLeave={() => setHighlight([])}>
@@ -224,6 +229,47 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
         )}
         {showCovered && <div>{covered.map(row)}</div>}
       </div>
+
+      {routes.length > 0 && (
+        <div className="panel s-ink lighter">
+          <div className="h h-ink" style={{ cursor: "default" }}>
+            <p className="t">A lighter route</p>
+            <p className="k">You may already pay for one</p>
+          </div>
+          <div style={{ padding: "12px 14px 14px" }}>
+            <label className="field" style={{ marginBottom: 10 }}>
+              <span>Your Microsoft 365 licence</span>
+              <select value={licence} onChange={(e) => setLicence(e.target.value)}>
+                {Object.entries(licences).map(([id, l]) => <option key={id} value={id}>{l.label}</option>)}
+              </select>
+            </label>
+            {routes.map((r) => (
+              <div key={r.systemId + r.feature.id} className="route-cmp">
+                <div style={{ fontSize: 13, lineHeight: 1.45 }}>
+                  Instead of <strong>{r.systemTitle}</strong>: <strong>{r.feature.label}</strong>. <Glossed text={r.feature.does} />
+                </div>
+                <table className="tbl cmp">
+                  <thead><tr><th></th><th>Their way</th><th>Lighter route</th></tr></thead>
+                  <tbody>
+                    <tr><td>Answer</td><td className={["stop", "not_like_this"].includes(r.theirs.verdictId) ? "rq" : ""}>{r.theirs.verdict}</td><td className={["stop", "not_like_this"].includes(r.ours.verdictId) ? "rq" : "ok"}>{r.ours.verdict}</td></tr>
+                    <tr><td>Level allowed</td><td>{r.theirs.levelAllowed ?? "n/a"}</td><td>{r.ours.levelAllowed ?? "n/a"}</td></tr>
+                    <tr><td>Things to do</td><td>{r.theirs.toDo}</td><td>{r.ours.toDo}</td></tr>
+                    <tr><td>Contracts to sign</td><td>{r.theirs.contracts}</td><td>{r.ours.contracts}</td></tr>
+                    <tr><td>Hard lines or blocks</td><td className={r.theirs.hardLines + r.theirs.blocked ? "rq" : ""}>{r.theirs.hardLines + r.theirs.blocked}</td><td className={r.ours.hardLines + r.ours.blocked ? "rq" : "ok"}>{r.ours.hardLines + r.ours.blocked}</td></tr>
+                    <tr><td>Cost</td><td>{r.theirs.cost}</td><td>{r.ours.cost}</td></tr>
+                  </tbody>
+                </table>
+                {r.feature.caveat && <div className="mu" style={{ fontSize: 12, marginTop: 6 }}>But: {r.feature.caveat}</div>}
+                <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center" }}>
+                  <button type="button" className="btn" style={{ boxShadow: "3px 3px 0 var(--data)" }} onClick={() => tryLighter(r)}>Try it</button>
+                  <span className="mono mu" style={{ fontSize: 11 }}>Keeps your way as A to compare. Your choice stays yours.</span>
+                </div>
+              </div>
+            ))}
+            <div className="mono mu" style={{ fontSize: 11, marginTop: 8 }}>Licence contents as understood {m365Checked}; check your own agreement.</div>
+          </div>
+        </div>
+      )}
 
       {cc ? (
         <div className="panel s-ink">

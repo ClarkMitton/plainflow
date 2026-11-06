@@ -20,6 +20,7 @@ import { Rail, type LastChange } from "./Rail";
 import { ScanReport } from "./ScanReport";
 import { PackPage } from "./PackPage";
 import { cardFor } from "./cardLibrary";
+import { type LighterRoute } from "./lighter";
 
 type View = "questions" | "canvas" | "screening" | "report" | "rules" | "compare" | "pack";
 const STORE = "plainflow.current";
@@ -293,6 +294,13 @@ export function App() {
                 )}
               </div>
               <Rail
+                tryLighter={(r: LighterRoute) =>
+                  update(
+                    { ...r.altFlow, pinned: { nodes: structuredClone(flow.nodes), edges: structuredClone(flow.edges) } },
+                    `tried the lighter route: ${r.feature.label} instead of ${r.systemTitle} (your way is pinned as A)`,
+                  )
+                }
+                setLicence={(id) => update({ ...flow, organisation: { ...flow.organisation, m365_licence: id } }, null)}
                 finish={() => { setView("pack"); setReplay(0); }}
                 checkIt={checkIt}
                 setRiskOwner={(role) => update({ ...flow, risk_owner: role || null }, null)}

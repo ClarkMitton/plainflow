@@ -88,6 +88,10 @@
             "legitimate_interests",
             "vital_interests"
           ]
+        },
+        "m365_licence": {
+          "type": "string",
+          "description": "Which Microsoft 365 licence the organisation has (ids in data/m365.json), so the lighter route can say what's included."
         }
       }
     },
@@ -495,6 +499,10 @@
             "type": "string"
           },
           "description": "People node ids this data is about."
+        },
+        "kind": {
+          "type": "string",
+          "description": "The sentence data kind it came from (data/sentence.json)."
         }
       }
     },
@@ -569,6 +577,10 @@
             "unsure"
           ],
           "description": "Can access, deletion and explanation requests be honoured? 'no' is a bright line."
+        },
+        "kind": {
+          "type": "string",
+          "description": "The sentence purpose it came from (data/sentence.json), used to find a Microsoft equivalent for an unknown tool."
         }
       }
     },

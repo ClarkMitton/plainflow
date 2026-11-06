@@ -119,6 +119,24 @@ function ForPerson({ p }: { p: PackData }) {
         </div>
       )}
 
+      {f.lighter.map((r) => (
+        <div key={r.instead + r.feature} className="box" style={{ marginTop: 18 }}>
+          <p className="lab">A lighter route you may already pay for</p>
+          <p><strong>Instead of {r.instead}: {r.feature}.</strong> <Glossed text={r.does} /></p>
+          <table className="tbl cmp">
+            <thead><tr><th></th><th>Their way</th><th>Lighter route</th></tr></thead>
+            <tbody>
+              <tr><td>Answer</td><td>{r.theirs.verdict}</td><td>{r.ours.verdict}</td></tr>
+              <tr><td>Things to do</td><td>{r.theirs.toDo}</td><td>{r.ours.toDo}</td></tr>
+              <tr><td>Contracts to sign</td><td>{r.theirs.contracts}</td><td>{r.ours.contracts}</td></tr>
+              <tr><td>Hard lines or blocks</td><td>{r.theirs.hardLines + r.theirs.blocked}</td><td>{r.ours.hardLines + r.ours.blocked}</td></tr>
+              <tr><td>Cost</td><td>{r.theirs.cost}</td><td>{r.ours.cost}</td></tr>
+            </tbody>
+          </table>
+          {r.caveat && <p className="mu">But: {r.caveat}</p>}
+        </div>
+      ))}
+
       <h3>What to do, in order</h3>
       {f.actions.length === 0 && <p className="mu">Nothing to do. Keep this page with the idea.</p>}
       <ol className="actions">
