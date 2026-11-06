@@ -16,7 +16,11 @@ export function StoryStrip() {
   const systems = of("system");
   // "into Otter, run by Otter" says nothing twice: a company named like its tool is left out of "run by".
   const toolNames = new Set(systems.map((n) => n.title.trim().toLowerCase()));
-  const companies = of("company", (n) => n.levers.role !== "sub_processor" && Number(d.facts[n.id]?.receives_tier ?? -1) >= 0 && !toolNames.has(n.title.trim().toLowerCase()));
+  const receiving = of("company", (n) => n.levers.role !== "sub_processor" && Number(d.facts[n.id]?.receives_tier ?? -1) >= 0 && !toolNames.has(n.title.trim().toLowerCase()));
+  // A supplier runs the tool for you; a partner decides things with you, so it's "shared with", not "run by".
+  const isPartner = (n: FlowNode) => n.levers.role === "joint_controller" || n.levers.role === "independent_controller";
+  const companies = receiving.filter((n) => !isPartner(n));
+  const partners = receiving.filter(isPartner);
   const purposes = of("purpose");
 
   if (!flow.nodes.length) return <div className="story-strip mu">Add a node to start the picture.</div>;
@@ -50,6 +54,7 @@ export function StoryStrip() {
         {systems.length ? list(systems) : "The app"} handles {data.length ? list(data, true) : "data"}
         {subjects.length > 0 && <> about {list(subjects, true)}</>}
         {companies.length > 0 && <>, and sends it to {list(companies)}</>}
+        {partners.length > 0 && <>, shared with {list(partners)}</>}
         {purposes.length > 0 && <>, to {list(purposes, true)}</>}.
       </div>
     );
@@ -64,6 +69,7 @@ export function StoryStrip() {
       {subjects.length > 0 && <> about {list(subjects, true)}</>}
       {systems.length > 0 && <> into {list(systems)}</>}
       {companies.length > 0 && <>, run by {list(companies)}</>}
+      {partners.length > 0 && <>, shared with {list(partners)}</>}
       {purposes.length > 0 && <>, to {list(purposes, true)}</>}.
     </div>
   );

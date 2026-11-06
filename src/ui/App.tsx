@@ -168,7 +168,10 @@ export function App() {
         const def = n ? ruleSet.rules.levers[n.type].find((l) => l.id === lever) : undefined;
         const optionLabel = def?.options?.find(([v]) => v === value)?.[1];
         const said = typeof value === "boolean" ? `turned ${value ? "on" : "off"}` : `set to ${optionLabel ?? String(value).replace(/_/g, " ")}`;
-        update(applyLever(flow, id, lever, value), `${n?.title}: "${def?.label ?? lever.replace(/_/g, " ")}" ${said}`);
+        let next = applyLever(flow, id, lever, value);
+        // A partner decides things with you: that's what joint or independent means, so say so on the card too.
+        if (lever === "role" && (value === "joint_controller" || value === "independent_controller") && !n?.levers.decides_purpose) next = applyLever(next, id, "decides_purpose", true);
+        update(next, `${n?.title}: "${def?.label ?? lever.replace(/_/g, " ")}" ${said}`);
       },
       setField: (id, field, value) => update(patchNode(id, (n) => ({ ...n, fields: { ...n.fields, [field]: value } })), null),
       setTitle: (id, title) => update(patchNode(id, (n) => ({ ...n, title })), null),

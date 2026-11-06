@@ -4,7 +4,8 @@ import { describe, expect, it } from "vitest";
 import { applyLever, derive } from "../engine/derive";
 import { ruleSet } from "../engine/ruleset";
 import type { Derivation, Flow } from "../engine/types";
-import { flowFromSentence, subject, type Sentence } from "./flowOps";
+import { addNode, connect, flowFromSentence, subject, type Sentence } from "./flowOps";
+import { buildPack } from "./packBuild";
 import { groupLines, policyAnswer, stillNo } from "./plain";
 import { apply, isDecisive, matches, stepsFor } from "./questions";
 import { lighterRoutes, swapProduct } from "./lighter";
@@ -285,5 +286,81 @@ describe("roleplay C: an AI note-taker in wellbeing meetings", () => {
     const teams = routes.find((r) => r.feature.id === "teams_transcription")!;
     expect(teams.ours.verdictId).not.toBe("go");
     expect(stillNo(teams)).toMatch(/^Still a no on its own/);
+  });
+});
+
+describe("roleplay D: a dropout dashboard, then shared with the council", () => {
+  const leah = () =>
+    answer(
+      build({
+        role: "IT",
+        data: [{ kind: "attendance", label: "attendance records" }],
+        about: { kind: "students", label: "students (16 plus)" },
+        under18: "some_under_18",
+        product: "power_platform",
+        purpose: choices.purpose("predict", "predict who might struggle"),
+      }),
+      {
+        data_facts: "It says how someone is doing|We already have it, but got it for a different reason",
+        names: "Yes, names",
+        lawful_basis: "It's part of our job (public task)",
+        purpose_facts: "It gives someone a mark, grade, score or prediction|It covers everyone, or over a thousand people|It keeps running, not a one-off|It tracks what individuals do, when or where",
+        told: "No, or not sure",
+      },
+    );
+
+  /** Leah adds the council from the canvas, names it, and makes it a joint controller fed by the purpose. */
+  const withCouncil = () => {
+    const flow = leah();
+    const { flow: added, node } = addNode(flow, "company");
+    const named: Flow = {
+      ...added,
+      nodes: added.nodes.map((n) =>
+        n.id === node.id
+          ? { ...n, title: "The council", levers: { ...n.levers, role: "joint_controller", decides_purpose: true }, fields: { ...n.fields, region: "UK", transfer_mechanism: "none_needed" } }
+          : n,
+      ),
+    };
+    return connect(named, named.nodes.find((n) => n.type === "purpose")!.id, node.id);
+  };
+
+  it("is a yes with sign-off and a full DPIA, not an ICO matter", () => {
+    const flow = leah();
+    const d = derive(flow, ruleSet);
+    const { asked } = tell("Leah: the dropout dashboard", flow, d);
+    expect(d.highest_tier).toBe(2);
+    expect(d.outcome).toBe("required");
+    expect(d.bright_lines).toEqual([]);
+    expect(d.verdict.id).toBe("needs_owner");
+    expect(asked).toContain("risk_owner");
+    const yes = Object.values(d.screening).filter((s) => s.yes).map((s) => s.id);
+    expect(yes).toEqual(expect.arrayContaining(["A3", "A4", "A6", "A13", "A14"]));
+    expect(d.requirements.find((r) => r.id === "human_review")?.status).toBe("to_do");
+  });
+
+  it("turns 'we already had it for another reason' into a to-do, in words that agree", () => {
+    const d = derive(leah(), ruleSet);
+    const check = d.requirements.find((r) => r.id === "new_purpose_check")!;
+    expect(check.status).toBe("to_do");
+    expect(check.cause.text).toMatch(/^A14: Attendance records was held for a different reason/);
+    expect(d.requirements.find((r) => r.id === "ropa_entry")?.cause.text).toBe("there's personal data in Attendance records");
+    expect(d.requirements.find((r) => r.id === "privacy_notice_line")?.cause.text).toMatch(/^A10: no privacy notice covers/);
+  });
+
+  it("treats the council as a partner: shared with, one policy line, a sharing agreement and no supplier questions", () => {
+    const flow = withCouncil();
+    const d = derive(flow, ruleSet);
+    tell("Leah: shared with the council", flow, d);
+    expect(d.verdict.id).toBe("needs_owner");
+    const policy = policyAnswer(flow, d, ruleSet);
+    expect(policy.ok).toBe(true);
+    expect(policy.lines.filter((l) => l.text.includes("The council"))).toHaveLength(1);
+    expect(d.requirements.find((r) => r.id === "retention_note")?.cause.text).toBe("a copy stays with Microsoft and The council");
+    const pack = buildPack(flow, d, ruleSet);
+    const council = pack.forDpo.cards.find((c) => c.title === "The council")!;
+    expect(council.dpa).toMatch(/^sharing agreement/);
+    expect(council.art28.of).toBe(0);
+    expect(council.questions).toEqual([]);
+    expect(pack.forDpo.cards.find((c) => c.title === "Microsoft")?.art28.of).toBe(9);
   });
 });

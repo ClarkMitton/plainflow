@@ -346,7 +346,7 @@ function CompanyCard({ node, onLoadCard }: { node: FlowNode; onLoadCard(cardId: 
         </div>
       )}
 
-      {!f.card_ref && node.levers.role !== "sub_processor" && (
+      {!f.card_ref && node.levers.role === "processor" && (
         <div className="box dashed">
           <p className="lab" style={{ marginBottom: 4 }}>Questions to send {node.title}</p>
           <ol style={{ margin: "6px 0 0", paddingLeft: 18 }}>

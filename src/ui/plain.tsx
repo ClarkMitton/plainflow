@@ -173,5 +173,6 @@ export function policyAnswer(flow: Flow, d: Derivation, set: RuleSet): PolicyAns
       const text = ["joint_controller", "independent_controller"].includes(role) ? p.allowed_partner : f.plan_label ? p.allowed_plan : f.listed ? p.allowed : p.unlisted;
       return { ok: true, text: fillFor(c.to, text, c.tier), ways: [] as string[] };
     });
-  return { ok: true, title: p.yes_title, source, unowned, lines: lines.length ? lines : [{ ok: true, text: p.allowed_inside, ways: [] as string[] }] };
+  // A company wired in twice (from the tool and from the purpose) is still one company: say its line once.
+  return { ok: true, title: p.yes_title, source, unowned, lines: lines.length ? mergeLines(lines) : [{ ok: true, text: p.allowed_inside, ways: [] as string[] }] };
 }

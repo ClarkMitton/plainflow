@@ -119,6 +119,8 @@ export function buildPack(flow: Flow, d: Derivation, set: RuleSet): Pack {
     const dsa = d.requirements.find((r) => r.id === "dsa_outline" && r.node === n.id);
     const open = d.requirements.filter((r) => r.node === n.id && r.status !== "on_file" && r.status !== "covered").map((r) => r.title);
     const sub = n.levers.role === "sub_processor";
+    // A partner decides with you: a sharing agreement, not Article 28 terms or supplier questions.
+    const partner = n.levers.role === "joint_controller" || n.levers.role === "independent_controller";
     const via = sub ? `${facts.parent_title ? String(facts.parent_title) : "your supplier"}${facts.parent_authorised ? "'s contract lists it as authorised" : " must list it as an authorised sub-processor; check their list"}` : null;
     return {
       id: n.id,
@@ -130,9 +132,9 @@ export function buildPack(flow: Flow, d: Derivation, set: RuleSet): Pack {
       region: String(f.region ?? "unknown"),
       transfer: String(f.transfer_mechanism ?? "unknown").replace(/_/g, " "),
       retention: String(f.retention || "unknown"),
-      art28: sub ? { evidenced: 0, of: 0, missing: [] } : { evidenced: art28Clauses.length - missing.length, of: art28Clauses.length, missing },
+      art28: sub || partner ? { evidenced: 0, of: 0, missing: [] } : { evidenced: art28Clauses.length - missing.length, of: art28Clauses.length, missing },
       open,
-      questions: f.card_ref || sub ? [] : set.products.supplier_questions,
+      questions: f.card_ref || sub || partner ? [] : set.products.supplier_questions,
       via,
       tier: Number(facts.receives_tier ?? -1),
     };
@@ -226,7 +228,7 @@ export function packText(p: Pack): string {
   L.push("FOR THE DPO", `Screening outcome: ${p.forDpo.outcome}`);
   for (const t of p.forDpo.tiers) L.push(`${t.title}: Level ${t.tier}, because ${t.because}.`);
   for (const s of p.forDpo.screening.filter((x) => x.yes)) L.push(`${s.id} yes: ${s.because}${s.law ? ` [${s.law}]` : ""}`);
-  for (const c of p.forDpo.cards) L.push(`${c.title}: ${c.role}; ${c.plan ? `plan: ${c.plan}; ` : ""}${c.dpa}; region ${c.region}; keeps ${c.retention}; ${c.via ? `covered via ${c.via}` : `Article 28 ${c.art28.evidenced}/${c.art28.of}`}${c.open.length ? `; open: ${c.open.join(", ")}` : ""}`);
+  for (const c of p.forDpo.cards) L.push(`${c.title}: ${c.role}; ${c.plan ? `plan: ${c.plan}; ` : ""}${c.dpa}; region ${c.region}; keeps ${c.retention}; ${c.via ? `covered via ${c.via}` : c.art28.of ? `Article 28 ${c.art28.evidenced}/${c.art28.of}` : "a sharing agreement, not Article 28 terms"}${c.open.length ? `; open: ${c.open.join(", ")}` : ""}`);
   L.push("", "NEXT TIME");
   if (p.forNext.riskOwner) L.push(`Risk owner: ${p.forNext.riskOwner}`);
   if (p.forNext.bring.length) L.push("Bring:", ...p.forNext.bring.map((b) => `- ${b}`));

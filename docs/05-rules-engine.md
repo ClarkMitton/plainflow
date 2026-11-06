@@ -133,3 +133,12 @@ A DPIA rarely says no because nobody defines what a no looks like, and the DPO i
 ## Where it comes from (v0.4)
 
 `data/law.json` holds the legal anchors: for each article (UK GDPR Art. 5, 6, 7, 9, 13, 15, 22, 26, 28, 30, 32, 35, 36, 44, DPA 2018 s.123, the Data (Use and Access) Act 2025) a short reference, what it says in plain words, why it matters to the person, and a link to the legislation. Screening questions, requirements, hard lines and tiers carry a `law` id. The engine attaches the law object to every answer, the rail shows it under each fact, to-do and hard line, and the Record page lists every law used. The ICO and DfE `source` links stay as the guidance on top of the law.
+
+## Partners, new purposes and when the ICO comes in (v0.6)
+
+Run as the MIS manager with a dropout dashboard shared with the council:
+
+- `ico_consult` no longer fires on tracking plus a missing privacy notice. Telling people is a to-do (`privacy_notice_line`), not a reason to consult the regulator; the ICO's own line is high risk that a DPIA can't bring down. It still fires on automated decisions that can block children or vulnerable people, and on biometrics of children.
+- `new_purpose_check` is a requirement when A14 is yes: using data you already hold for a new reason needs a written compatibility judgement, and usually a line in the privacy notice. It cites the ICO's purpose limitation guidance.
+- A company with the role joint or independent controller is a partner, not a supplier: the story says "shared with", the pack gives it a sharing agreement instead of Article 28 terms, and the supplier questions are not sent to it. Picking either role turns "decides the purpose" on, since that is what the role means.
+- Requirement causes are phrased so that one or many titles read the same ("there's personal data in X", "a copy stays with X and Y").

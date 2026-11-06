@@ -215,7 +215,7 @@ function ForDpo({ p }: { p: PackData }) {
               <dt>Contract</dt><dd className={/to do|blocked|partial/.test(c.dpa) ? "rq" : "ok"}>{c.dpa}</dd>
               <dt>Hosted</dt><dd>{c.region} · transfer: {c.transfer}</dd>
               <dt>Keeps data</dt><dd>{c.retention}</dd>
-              {c.via ? <><dt>Covered by</dt><dd>{c.via}</dd></> : <><dt>Article 28</dt><dd>{c.art28.evidenced} of {c.art28.of} terms evidenced{c.art28.missing.length ? `; missing: ${c.art28.missing.join(", ")}` : ""}</dd></>}
+              {c.via ? <><dt>Covered by</dt><dd>{c.via}</dd></> : c.art28.of ? <><dt>Article 28</dt><dd>{c.art28.evidenced} of {c.art28.of} terms evidenced{c.art28.missing.length ? `; missing: ${c.art28.missing.join(", ")}` : ""}</dd></> : <><dt>Article 28</dt><dd>not needed: a partner signs a sharing agreement instead</dd></>}
               {c.open.length > 0 && <><dt>Open</dt><dd>{c.open.join("; ")}</dd></>}
             </dl>
             {c.questions.length > 0 && (

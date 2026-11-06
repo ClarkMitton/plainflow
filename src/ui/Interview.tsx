@@ -28,7 +28,7 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
   const assumed = steps.filter((s) => !decisive[s.key]);
   const [cursor, setCursor] = useState<string | null>(null);
   const [skipped, setSkipped] = useState<string[]>([]);
-  const [last, setLast] = useState<{ label: string; changes: Change[] } | null>(null);
+  const [last, setLast] = useState<{ label: string; changes: Change[]; asGuessed: boolean } | null>(null);
   const [showAssumed, setShowAssumed] = useState(false);
 
   const step = visible.find((s) => s.key === cursor) ?? (cursor ? undefined : visible.find((s) => !(s.key in answered) && !skipped.includes(s.key)));
@@ -38,7 +38,9 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
 
   const commit = (s: Step, next: Flow, label: string) => {
     const after = derive(next, set, { cheapest: false });
-    setLast({ label, changes: describeChange(d, after, next, set) });
+    // Confirming the guess is not news: say so, rather than "that doesn't change the answer".
+    const asGuessed = (s.q.answers ?? []).find((x) => matches(flow, s.node, x))?.label === label;
+    setLast({ label, changes: describeChange(d, after, next, set), asGuessed });
     onChange({ ...next, answers: { ...answered, [s.key]: label } }, `${s.ask} ${label}`);
     setCursor(null);
   };
@@ -125,7 +127,7 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
               {last.changes.length ? (
                 <ul className="plain">{last.changes.map((c) => <li key={c.text} className={`chg ${c.kind}`}><Glossed text={c.text} /></li>)}</ul>
               ) : (
-                <div className="mu">That doesn't change the answer.</div>
+                <div className="mu">{last.asGuessed ? "Same as our guess, so nothing changes." : "That doesn't change the answer."}</div>
               )}
             </div>
           )}

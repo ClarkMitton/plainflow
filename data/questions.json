@@ -98,7 +98,7 @@
     {
       "id": "names",
       "target": "data",
-      "ask": "When {title} goes into the tool, will people's names be on it?",
+      "ask": "Once in the tool, will {title} have people's names on?",
       "why": "Swapping names for a code is often the single easiest way to make an idea simpler to approve.",
       "example": "A candidate number instead of a name, with the list kept inside the organisation.",
       "answers": [
