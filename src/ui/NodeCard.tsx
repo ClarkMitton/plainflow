@@ -85,7 +85,7 @@ export function NodeCard({ data }: NodeProps & { data: CardData }) {
             how sensitive
             <span className="v meter" aria-label={`Level ${tier} of 3`}>
               {[1, 2, 3].map((i) => <span key={i} className={`blk${i <= tier ? " on" : ""}${tier === 3 ? " t3" : ""}`} />)}
-              <span>T{tier}</span>
+              <span>L{tier}</span>
             </span>
             <span className="tipbox">
               Level {tier}: {set.rules.tiers[String(tier)]?.label}, because {d.tier_because[node.id]}.

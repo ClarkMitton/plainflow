@@ -183,6 +183,22 @@ export function applyProduct(flow: Flow, systemId: string, productId: string | n
       : n,
   );
   let edges = flow.edges;
+  // Changing tool: the old tool's company and its sub-processors go, unless something else still sends to them.
+  const oldId = sys.fields.product_id as string | undefined;
+  const old = oldId && oldId !== productId ? set.products.products[oldId] : null;
+  if (old?.company && old.company !== product?.company) {
+    const oldCompany = nodes.find((n) => n.type === "company" && n.fields.company_id === old.company);
+    if (oldCompany) {
+      edges = edges.filter((e) => !(e.from === systemId && e.to === oldCompany.id));
+      const stillFed = edges.some((e) => e.to === oldCompany.id && e.kind !== "sub_processor");
+      if (!stillFed) {
+        const gone = new Set([oldCompany.id]);
+        for (const e of edges) if (e.kind === "sub_processor" && e.from === oldCompany.id) gone.add(e.to);
+        nodes = nodes.filter((n) => !gone.has(n.id));
+        edges = edges.filter((e) => !gone.has(e.from) && !gone.has(e.to));
+      }
+    }
+  }
   if (product?.company) {
     let company = nodes.find((n) => n.type === "company" && n.fields.company_id === product.company);
     if (!company) {
@@ -219,6 +235,21 @@ export interface Sentence {
 
 type SentenceChoices = typeof sentenceJson;
 export const sentenceChoices = sentenceJson as SentenceChoices;
+
+/** Give a data box a kind from the sentence list: its name, categories and the switches that kind implies. */
+export function applyDataKind(flow: Flow, nodeId: string, kindId: string): Flow {
+  const kind = sentenceChoices.data.find((x) => x.id === kindId);
+  if (!kind) return flow;
+  const t = kind.label.trim();
+  return {
+    ...flow,
+    nodes: flow.nodes.map((n) =>
+      n.id === nodeId && n.type === "data"
+        ? { ...n, title: t[0].toUpperCase() + t.slice(1), levers: { ...n.levers, ...kind.levers }, fields: { ...n.fields, categories: [...kind.categories], kind: kind.id } }
+        : n,
+    ),
+  };
+}
 
 export function emptySentence(): Sentence {
   return { role: "", data: [{ kind: null, label: "" }], about: { kind: null, label: "" }, under18: "some_under_18", product: null, otherTool: null, purpose: { kind: null, label: "" } };

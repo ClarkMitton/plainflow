@@ -40,6 +40,8 @@ interface Props {
   lastChange: LastChange | null;
   setRiskOwner(role: string): void;
   checkIt(): void;
+  /** True for the moment between Check it and the answer: the rail narrates what it is reading. */
+  checking: boolean;
   finish(): void;
   tryLighter(route: LighterRoute): void;
   setLicence(id: string): void;
@@ -49,7 +51,7 @@ interface Props {
  * The answer, in order of what matters: can I do it; what just changed; three facts behind the answer
  * (each one line, open for more); what to do; the one change that helps. Everything else is folded away.
  */
-export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner, checkIt, finish, tryLighter, setLicence }: Props) {
+export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner, checkIt, checking, finish, tryLighter, setLicence }: Props) {
   const { d, set, flow, checked } = useFlow();
   const [open, setOpen] = useState<string | null>(null);
   const [fact, setFact] = useState<string | null>(null);
@@ -108,6 +110,24 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
       {fact === id && <div className="fm">{more}</div>}
     </div>
   );
+
+  if (checking) {
+    const dataCount = flow.nodes.filter((n) => n.type === "data").length;
+    const lines = [
+      `${dataCount} data item${dataCount === 1 ? "" : "s"} given a level`,
+      `${d.crossings.length} connection${d.crossings.length === 1 ? "" : "s"} checked against your approved list`,
+      `${Object.keys(d.screening).length} screening questions answered from the diagram`,
+      `${d.open_count} action${d.open_count === 1 ? "" : "s"} listed with an owner and effort`,
+    ];
+    return (
+      <aside className="rail" aria-label="Reading the diagram" aria-busy="true">
+        <div className="qa reading">
+          <p className="lab">Reading the diagram</p>
+          <ul className="plain">{lines.map((l, i) => <li key={l} style={{ animationDelay: `${0.25 + i * 0.3}s` }}>{l}</li>)}</ul>
+        </div>
+      </aside>
+    );
+  }
 
   if (!checked) {
     const parts = flow.nodes.length;
@@ -178,7 +198,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
       </div>
 
       <div className="box changed" aria-live="polite">
-        {lastChange ? (
+        {lastChange && !/^asked for the answer$/i.test(lastChange.what) ? (
           <>
             <p className="lab" style={{ marginBottom: 6 }}>What that changed</p>
             <div className="mu" style={{ fontSize: 12, marginBottom: 4 }}>{lastChange.what}</div>

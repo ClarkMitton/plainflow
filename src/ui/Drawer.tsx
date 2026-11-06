@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { FlowNode } from "../engine/types";
 import { GROUP_LABEL, ROLE_LABEL, TYPE_LABEL, useFlow } from "./context";
-import { art28Clauses, cards } from "./flowOps";
+import { applyDataKind, art28Clauses, cards, sentenceChoices } from "./flowOps";
 import { cardFor, saveCard } from "./cardLibrary";
 import { Lever } from "./Lever";
 import { nameWarning } from "./names";
@@ -66,7 +66,7 @@ const REGIONS: [string, string][] = [["unknown", "Unknown"], ["UK", "UK"], ["EU"
 const TRANSFER: [string, string][] = [["unknown", "Unknown"], ["none_needed", "None needed"], ["adequacy", "Adequacy"], ["idta", "IDTA"], ["addendum", "UK addendum"], ["none", "None in place"]];
 
 export function Drawer({ node, onProduct, onLoadCard, onDelete, onConnect, onDisconnect }: Props) {
-  const { d, set, flow, setField, setTitle, select } = useFlow();
+  const { d, set, flow, setField, setTitle, select, replace } = useFlow();
   const facts = d.facts[node.id] ?? {};
   const locks = d.locks[node.id] ?? {};
   const f = node.fields;
@@ -121,6 +121,17 @@ export function Drawer({ node, onProduct, onLoadCard, onDelete, onConnect, onDis
 
         {node.type === "data" && (
           <>
+            {!f.kind && (
+              <div className="field">
+                <span>What kind of data is it?</span>
+                <div className="cats">
+                  {sentenceChoices.data.map((k) => (
+                    <button key={k.id} type="button" className="ch" onClick={() => replace(applyDataKind(flow, node.id, k.id), `${node.title}: set to ${k.label}`)}>{k.label}</button>
+                  ))}
+                </div>
+                <span className="mono mu" style={{ fontSize: 11 }}>Picking one names the box and sets its switches. Or name it yourself below.</span>
+              </div>
+            )}
             <div className="field">
               <span>What's in it</span>
               <div className="cats">

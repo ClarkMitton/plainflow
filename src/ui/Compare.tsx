@@ -47,6 +47,8 @@ export function Compare({ flow, d: b, set, keepA, goWithB }: Props) {
         <p className="lab">Compare · A is pinned, B is the canvas now</p>
         <h1>{flow.title}</h1>
         <div style={{ display: "flex", gap: 44, flexWrap: "wrap", margin: "20px 0 28px" }}>
+          {delta("Can this go ahead?", a.verdict.label, b.verdict.label)}
+          {delta("Hard lines or blocks", a.bright_lines.length + a.blocked.length, b.bright_lines.length + b.blocked.length)}
           {delta("To do", a.open_count, b.open_count)}
           {delta("Outcome", set.rules.outcome.labels[a.outcome], set.rules.outcome.labels[b.outcome])}
           {delta("Risk", a.risk, b.risk)}

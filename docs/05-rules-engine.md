@@ -172,3 +172,13 @@ A SENCO in free ChatGPT, HR in Power BI, a sixth form display in Canva, a charit
 `tiers[n].basis` in `rules.json` carries the evidence for each level: the law ids it rests on, the guidance ids, the sentence that is this organisation's own choice, the harm the level guards against, and where it sits in a public, internal, confidential and restricted scheme. `tiers_about` holds the argument for having levels at all and the two known limits. The Rules page renders it under "Why each level"; the DPO page of the pack prints the note for each level in use. `law.json` gained Recital 26, Article 4, Article 10 and the Protection of Freedoms Act s.26 to anchor Levels 0, 1 and 3.
 
 The copy across the questions, rules, requirements, guides and screens was also rewritten in one register: plain, direct, and professional. The engine is unchanged; answer labels changed, so a flow saved before this version shows its old answer text in the record.
+
+## Sitting beside someone (v0.9, continued)
+
+Three runs with a facilitator in mind: changing their mind mid-way, comparing two tools, and finishing. What they changed:
+
+- Switching the tool on the canvas replaces the old tool's company and sub-processors instead of leaving them wired in; the story and the hard lines follow the new tool.
+- Compare leads with the answer and the hard lines, then the to-do count.
+- A new data box offers the sentence's kinds as a one-click pick, which names it and sets its switches.
+- "T2" reads as "Level 2" on wires and cards; asking for the answer no longer produces a "What that changed" box.
+- Check it pauses for under two seconds and narrates what was read, with real counts, before the answer lands.

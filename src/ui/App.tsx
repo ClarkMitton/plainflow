@@ -43,6 +43,7 @@ export function App() {
   const [preview, setPreview] = useState(false);
   const [lastChange, setLastChange] = useState<LastChange | null>(null);
   const [reveal, setReveal] = useState(false);
+  const [checking, setChecking] = useState(false);
   const [replay, setReplay] = useState(0);
   const [rulesOnly, setRulesOnly] = useState(false);
   const flowRef = useRef(flow);
@@ -132,8 +133,13 @@ export function App() {
   };
 
   const checkIt = () => {
-    update({ ...flow!, checked: true }, "asked for the answer");
-    setReplay(0);
+    // The engine is instant; the pause shows what was read, line by line, before the answer lands.
+    setChecking(true);
+    window.setTimeout(() => {
+      update({ ...flowRef.current!, checked: true }, "asked for the answer");
+      setChecking(false);
+      setReplay(0);
+    }, 1700);
   };
 
   const finishQuestions = () => {
@@ -175,6 +181,7 @@ export function App() {
       },
       setField: (id, field, value) => update(patchNode(id, (n) => ({ ...n, fields: { ...n.fields, [field]: value } })), null),
       setTitle: (id, title) => update(patchNode(id, (n) => ({ ...n, title })), null),
+      replace: (next, what) => update(next, what),
       allowedAtTier: (id, lever, value) => {
         if (flow.mode !== "tier_first" || flow.tier_pinned == null) return true;
         const n = flow.nodes.find((x) => x.id === id);
@@ -306,6 +313,7 @@ export function App() {
                 setLicence={(id) => update({ ...flow, organisation: { ...flow.organisation, m365_licence: id } }, null)}
                 finish={() => { setView("pack"); setReplay(0); }}
                 checkIt={checkIt}
+                checking={checking}
                 setRiskOwner={(role) => update({ ...flow, risk_owner: role || null }, null)}
                 lastChange={lastChange}
                 preview={preview}

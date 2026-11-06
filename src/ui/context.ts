@@ -10,6 +10,8 @@ export interface Ctx {
   setLever(nodeId: string, lever: string, value: unknown): void;
   setField(nodeId: string, field: string, value: unknown): void;
   setTitle(nodeId: string, title: string): void;
+  /** Replace the whole flow in one undo step, with a line for "What that changed". */
+  replace(next: Flow, what: string | null): void;
   select(nodeId: string | null): void;
   /** In tier-first mode: is this lever value allowed for this data node at the pinned tier? */
   allowedAtTier(nodeId: string, lever: string, value: unknown): boolean;

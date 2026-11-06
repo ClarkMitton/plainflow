@@ -27,7 +27,7 @@ export function Wire(props: EdgeProps & { data: WireData }) {
   if (blocked) { style = { stroke: "var(--paperwork)", strokeWidth: 2.5, strokeDasharray: "8 6" }; arrow = "red"; }
   if (selected || data.lit) style = { ...style, strokeWidth: (Number(style.strokeWidth) || 2) + 2 };
 
-  const label = info?.crosses && personal && !blocked ? `T${info.tier} crosses` : null;
+  const label = info?.crosses && personal && !blocked ? `Level ${info.tier} crosses` : null;
 
   return (
     <g className={`wire${data.dim ? " dim" : ""}`}>
