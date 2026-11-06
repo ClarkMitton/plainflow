@@ -49,6 +49,34 @@ export interface Change {
   text: string;
 }
 
+/** How much a change clears of what stands in the way. */
+export function clearsText(unblocks: number, d: Derivation): string {
+  const total = d.blocked.length + d.bright_lines.length;
+  return unblocks >= total ? "That clears what's stopping it." : `That clears ${unblocks} of the ${total} things stopping it, so on its own it's still a no.`;
+}
+
+/** A lighter route that is still a no says so, and how far it gets. */
+export function stillNo(r: { theirs: { hardLines: number; blocked: number }; ours: { hardLines: number; blocked: number } }): string | null {
+  const before = r.theirs.hardLines + r.theirs.blocked;
+  const after = r.ours.hardLines + r.ours.blocked;
+  if (!after) return null;
+  return before > after ? `Still a no on its own: it clears ${before - after} of the ${before} things stopping it.` : "Still a no on its own: the same things stop it.";
+}
+
+/** The same hard line on several nodes reads once, naming the others. */
+export function groupLines(lines: Derivation["bright_lines"], flow: Flow) {
+  const groups = new Map<string, { b: Derivation["bright_lines"][number]; nodes: string[]; others: string[] }>();
+  for (const b of lines) {
+    const g = groups.get(b.id);
+    if (!g) groups.set(b.id, { b, nodes: b.node ? [b.node] : [], others: [] });
+    else if (b.node) {
+      g.nodes.push(b.node);
+      g.others.push(flow.nodes.find((n) => n.id === b.node)?.title ?? b.node);
+    }
+  }
+  return [...groups.values()];
+}
+
 /** What one answer changed, in plain words. This is the moment people learn why it matters. */
 export function describeChange(before: Derivation, after: Derivation, flow: Flow, set: RuleSet): Change[] {
   const out: Change[] = [];
@@ -56,7 +84,7 @@ export function describeChange(before: Derivation, after: Derivation, flow: Flow
   for (const [id, t] of Object.entries(after.tiers)) {
     const was = before.tiers[id];
     if (was !== undefined && was !== t) {
-      out.push({ kind: t > was ? "up" : "down", text: `${title(id)} is now Tier ${t}. ${set.rules.tiers[String(t)].plain}` });
+      out.push({ kind: t > was ? "up" : "down", text: `${title(id)} is now Level ${t}. ${set.rules.tiers[String(t)].plain}` });
     }
   }
   const lineKey = (b: Derivation["bright_lines"][number]) => `${b.id}:${b.node}`;
@@ -80,6 +108,28 @@ export interface PolicyAnswer { ok: boolean; title: string; source: string; unow
 
 const placeholder = (v: unknown) => typeof v !== "string" || v.trim() === "" || /^\[.*\]$/.test(v.trim());
 
+/** "Take it out of A." and "Take it out of B." read as "Take it out of A and B." */
+function joinDiff(x: string, y: string): string {
+  if (x === y || x.includes(y)) return x;
+  let i = 0;
+  while (i < x.length && i < y.length && x[i] === y[i]) i++;
+  i = x.lastIndexOf(" ", i - 1) + 1;
+  let j = 0;
+  while (j < x.length - i && j < y.length - i && x[x.length - 1 - j] === y[y.length - 1 - j] && !/[A-Za-z0-9]/.test(x[x.length - 1 - j])) j++;
+  return `${x.slice(0, i)}${x.slice(i, x.length - j)} and ${y.slice(i, y.length - j)}${x.slice(x.length - j)}`;
+}
+
+/** The same policy line on two wires reads once, with the ways past it naming both. */
+function mergeLines(lines: PolicyLine[]): PolicyLine[] {
+  const out: PolicyLine[] = [];
+  for (const l of lines) {
+    const same = out.find((o) => o.text === l.text);
+    if (!same) out.push({ ...l, ways: [...l.ways] });
+    else same.ways = same.ways.length === l.ways.length ? same.ways.map((w, k) => joinDiff(w, l.ways[k])) : [...new Set([...same.ways, ...l.ways])];
+  }
+  return out;
+}
+
 /** Whose rule the policy answer rests on, and what would change it. 'Policy' is always this organisation's list. */
 export function policyAnswer(flow: Flow, d: Derivation, set: RuleSet): PolicyAnswer {
   const p = set.rules.policy;
@@ -102,14 +152,16 @@ export function policyAnswer(flow: Flow, d: Derivation, set: RuleSet): PolicyAns
       title: p.no_title,
       source,
       unowned,
-      lines: d.blocked.map((b) => {
-        const f = d.facts[b.to] ?? {};
-        const edge = d.edges[b.edge];
-        const needed = String(f.plan_needed ?? "");
-        const plan = needed ? ` ${needed[0].toUpperCase()}${needed.slice(1)} would take it (${f.plan_needed_cost}).` : "";
-        const base = !f.listed && !f.plan_label && edge && edge.tier <= 2 ? p.no_unlisted : p.no;
-        return { ok: false, text: fillFor(b.to, base.replace("{message}", b.message), edge?.tier ?? 0) + plan, ways: b.ways_out };
-      }),
+      lines: mergeLines(
+        d.blocked.map((b) => {
+          const f = d.facts[b.to] ?? {};
+          const edge = d.edges[b.edge];
+          const needed = String(f.plan_needed ?? "");
+          const plan = needed ? ` ${needed[0].toUpperCase()}${needed.slice(1)} would take it (${f.plan_needed_cost}).` : "";
+          const base = !f.listed && !f.plan_label && edge && edge.tier <= 2 ? p.no_unlisted : p.no;
+          return { ok: false, text: fillFor(b.to, base.replace("{message}", b.message), edge?.tier ?? 0) + plan, ways: b.ways_out };
+        }),
+      ),
     };
   }
   const lines: PolicyLine[] = d.crossings

@@ -73,12 +73,12 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
         <div className="answers">
           {(s.q.answers ?? []).map((a) => {
             const chosen = answered[s.key] === a.label;
-            const guess = !(s.key in answered) && matches(flow, s.node, a);
+            const guess = !(s.key in answered) && (s.q.answers ?? []).find((x) => matches(flow, s.node, x)) === a;
             const blocked = tooHigh(s, a);
             return (
               <button key={a.label} type="button" className={`answer${chosen || guess ? " guess" : ""}`} disabled={blocked} onClick={() => commit(s, apply(flow, s.node?.id ?? null, a), a.label)}>
                 {a.label}
-                {blocked && <small>Not at Tier {pinned}, the tier you started from</small>}
+                {blocked && <small>Not at Level {pinned}, the level you started from</small>}
                 {guess && <small>Our guess from your sentence</small>}
                 {chosen && <small>Your answer</small>}
               </button>

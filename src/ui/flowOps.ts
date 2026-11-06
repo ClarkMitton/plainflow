@@ -245,6 +245,28 @@ export function sentenceComplete(s: Sentence): boolean {
 
 const short = (label: string) => label.replace(/\s*\(.*\)$/, "");
 
+/** Lower case for the middle of a sentence, but SEND, HR and IT keep their capitals. */
+export function keepAcronyms(s: string): string {
+  return s.split(" ").map((w) => (/[A-Z].*[A-Z]/.test(w) ? w : w.toLowerCase())).join(" ");
+}
+
+/** How a role starts a sentence: "A teacher", "An admin officer", "Admin staff" (plural, no article), "HR" (a team, no article). */
+export function roleParts(role: string): { article: string; plural: boolean } {
+  const r = role.trim();
+  if (/\b(staff|team|teachers|tutors|lecturers|students|people|governors)$/i.test(r)) return { article: "", plural: true };
+  if (/^[A-Z]{2,}$/.test(r) || /^(marketing|finance|admissions|estates|exams)$/i.test(r)) return { article: "", plural: false };
+  return { article: /^[aeiou]/i.test(r) ? "An " : "A ", plural: false };
+}
+
+/** The start of the story as text. */
+export function subject(role: string): { text: string; plural: boolean } {
+  const r = role.trim();
+  if (!r) return { text: "Someone", plural: false };
+  const { article, plural } = roleParts(r);
+  const lower = keepAcronyms(r);
+  return { text: article ? article + lower : lower[0].toUpperCase() + lower.slice(1), plural };
+}
+
 /** The story builder: each slot becomes a node, laid out like the worked example. */
 export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boolean, tierPinned: number | null = null): Flow {
   let flow = emptyFlow(retrospective);
@@ -253,8 +275,10 @@ export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boole
   const dataTitles = s.data.map((d) => short(d.label).trim()).filter(Boolean);
   const purposeLabel = s.purpose.label.trim();
   flow.title = `${toolName} ${purposeLabel ? "for " + purposeLabel.toLowerCase() : ""}`.trim();
-  const aboutLabel = s.about.label.trim().toLowerCase();
-  flow.story = `A ${s.role.trim().toLowerCase()} ${retrospective ? "has been putting" : "puts"} ${dataTitles.join(" and ").toLowerCase()}${aboutLabel ? ` about ${aboutLabel}` : ""} into ${product?.name ?? toolName}${product?.company ? `, run by ${set.products.companies[product.company]?.name}` : ""}, to ${purposeLabel.toLowerCase()}.`;
+  const aboutLabel = keepAcronyms(s.about.label.trim());
+  const who = subject(s.role);
+  const verb = retrospective ? (who.plural ? "have been putting" : "has been putting") : who.plural ? "put" : "puts";
+  flow.story = `${who.text} ${verb} ${keepAcronyms(dataTitles.join(" and "))}${aboutLabel ? ` about ${aboutLabel}` : ""} into ${product?.name ?? toolName}${product?.company ? `, run by ${set.products.companies[product.company]?.name}` : ""}, to ${keepAcronyms(purposeLabel)}.`;
 
   const aboutKind = sentenceChoices.about.find((a) => a.id === s.about.kind);
   const subjects = newNode("people", { x: 40, y: 30 });
@@ -323,6 +347,8 @@ export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boole
     // A tool we don't know: the company behind it is unknown too, so it gets the supplier questions and Tier 1 at most.
     const company = newNode("company", { x: BOUNDARY_X + 60, y: 120 });
     company.title = s.otherTool.name.trim();
+    // Nobody has asked them yet, so whether they train on it is unknown, not "no".
+    company.levers.trains_on_inputs = null;
     flow.nodes = [...flow.nodes, company];
     flow = connect(flow, system.id, company.id);
   }

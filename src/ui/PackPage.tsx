@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import type { Derivation, Flow, RuleSet } from "../engine/types";
 import { downloadJson } from "./flowOps";
 import { buildPack, packText, type Pack as PackData } from "./packBuild";
-import { Glossed } from "./plain";
+import { Glossed, stillNo } from "./plain";
 import { LawLine } from "./Rail";
 
 interface Props {
@@ -137,6 +137,7 @@ function ForPerson({ p }: { p: PackData }) {
               <tr><td>Cost</td><td>{r.theirs.cost}</td><td>{r.ours.cost}</td></tr>
             </tbody>
           </table>
+          {stillNo(r) && <p className="warn">{stillNo(r)}</p>}
           {r.caveat && <p className="mu">But: {r.caveat}</p>}
         </div>
       ))}

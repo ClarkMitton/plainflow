@@ -87,9 +87,9 @@ export function Drawer({ node, onProduct, onLoadCard, onDelete, onConnect, onDis
 
         {node.type === "data" && (
           <div className="box info">
-            <strong>Tier {d.tiers[node.id]}</strong>: {set.rules.tiers[String(d.tiers[node.id])]?.label}, because {d.tier_because[node.id]}.
+            <strong>Level {d.tiers[node.id]}</strong>: {set.rules.tiers[String(d.tiers[node.id])]?.label}, because {d.tier_because[node.id]}.
             <div style={{ marginTop: 4 }}>{set.rules.tiers[String(d.tiers[node.id])]?.rule}</div>
-            {pinned != null && d.tiers[node.id] > pinned && <div className="warn" style={{ marginTop: 6 }}>Above the Tier {pinned} you set. Change a lever below or pick a higher tier.</div>}
+            {pinned != null && d.tiers[node.id] > pinned && <div className="warn" style={{ marginTop: 6 }}>Above the Level {pinned} you set. Change a switch below or pick a higher level.</div>}
           </div>
         )}
 
@@ -174,7 +174,7 @@ export function Drawer({ node, onProduct, onLoadCard, onDelete, onConnect, onDis
                   const blocked = pinned != null && max < pinned;
                   return (
                     <option key={id} value={id} disabled={blocked}>
-                      {p.name}{blocked ? ` (not at Tier ${pinned})` : ""}
+                      {p.name}{blocked ? ` (not at Level ${pinned})` : ""}
                     </option>
                   );
                 })}
@@ -196,7 +196,7 @@ export function Drawer({ node, onProduct, onLoadCard, onDelete, onConnect, onDis
                       {Object.entries(product.plans).map(([id, pl]) => (
                         <tr key={id} className={node.levers.plan === id ? "on" : undefined}>
                           <td>{(set.products.plan_labels[id] ?? id).replace(/^the /, "").replace(/^[a-z]/, (c) => c.toUpperCase())}</td>
-                          <td className="mono">Tier {pl.max_tier}</td>
+                          <td className="mono">Level {pl.max_tier}</td>
                           <td className={pl.dpa ? "ok" : "rq"}>{pl.dpa ? "DPA" : "none"}</td>
                           <td className={pl.trains ? "rq" : "ok"}>{pl.trains ? "yes" : "no"}</td>
                           <td>{pl.cost}</td>

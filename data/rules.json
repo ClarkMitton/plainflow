@@ -86,9 +86,9 @@
   "blocked": {
     "note": "Checked for every wire carrying personal data. Names: tier, max_tier, company, to_role (the company's role on this flow), plan_note (\" on the business plan\" when the tool has plans), data, into_ai (the wire goes into an AI system), via_ai (either end is AI), ai_approved, crosses. A blocked wire turns red and produces no paperwork.",
     "rules": [
-      { "id": "tier3_leaves", "when": "crosses && tier >= 3", "message": "Tier 3 data never leaves organisation systems.", "ways_out": ["Take the special category data out of {data}.", "Keep it inside, on an organisation system."] },
-      { "id": "tier3_ai", "when": "into_ai && tier >= 3", "message": "Tier 3 data can't go into AI.", "ways_out": ["Take the special category data out of {data}.", "Do this step without AI."] },
-      { "id": "over_max", "when": "crosses && tier > max_tier && to_role in ['processor', 'sub_processor']", "message": "{company}{plan_note} is allowed up to Tier {max_tier}; this wire carries Tier {tier}.", "ways_out": ["Send less: cut {data} down to what Tier {max_tier} allows.", "Use a sanctioned route, or a plan that's approved for Tier {tier}."] },
+      { "id": "tier3_leaves", "when": "crosses && tier >= 3", "message": "Level 3 data never leaves organisation systems.", "ways_out": ["Take the special category data out of {data}.", "Keep it inside, on an organisation system."] },
+      { "id": "tier3_ai", "when": "into_ai && tier >= 3", "message": "Level 3 data can't go into AI.", "ways_out": ["Take the special category data out of {data}.", "Do this step without AI."] },
+      { "id": "over_max", "when": "crosses && tier > max_tier && to_role in ['processor', 'sub_processor']", "message": "{company}{plan_note} is allowed up to Level {max_tier}; this wire carries Level {tier}.", "ways_out": ["Send less: cut {data} down to what Level {max_tier} allows.", "Use a sanctioned route, or a plan that's approved for Level {tier}."] },
       { "id": "ai_not_approved", "when": "crosses && via_ai && tier >= 1 && !ai_approved", "message": "{company}'s AI features are not approved for personal data.", "ways_out": ["Anonymise {data} first.", "Use an approved AI route instead."] }
     ]
   },

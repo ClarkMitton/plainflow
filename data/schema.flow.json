@@ -681,7 +681,8 @@
           "type": "boolean"
         },
         "trains_on_inputs": {
-          "type": "boolean"
+          "type": ["boolean", "null"],
+          "description": "null means not known yet: no hard line, but the supplier questions ask it."
         },
         "keeps_data": {
           "type": "boolean"

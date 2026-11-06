@@ -4,9 +4,9 @@ import { describe, expect, it } from "vitest";
 import { applyLever, derive } from "../engine/derive";
 import { ruleSet } from "../engine/ruleset";
 import type { Derivation, Flow } from "../engine/types";
-import { flowFromSentence, type Sentence } from "./flowOps";
-import { policyAnswer } from "./plain";
-import { apply, isDecisive, stepsFor } from "./questions";
+import { flowFromSentence, subject, type Sentence } from "./flowOps";
+import { groupLines, policyAnswer, stillNo } from "./plain";
+import { apply, isDecisive, matches, stepsFor } from "./questions";
 import { lighterRoutes, swapProduct } from "./lighter";
 
 const choices = {
@@ -226,5 +226,64 @@ describe("the lighter route", () => {
     expect(routes.map((r) => r.feature.id)).toContain("teams_transcription");
     const swapped = swapProduct(flow, flow.nodes.find((n) => n.type === "system")!.id, "m365", ruleSet);
     expect(swapped.nodes.some((n) => n.title === "Otter")).toBe(false);
+  });
+});
+
+describe("roleplay C: an AI note-taker in wellbeing meetings", () => {
+  const sam = () =>
+    answer(
+      build({
+        role: "Admin staff",
+        data: [{ kind: "recordings", label: "meeting or lesson recordings" }, { kind: "sensitive", label: "health, SEND or safeguarding information" }],
+        about: { kind: "students", label: "students (16 plus)" },
+        under18: "some_under_18",
+        product: null,
+        otherTool: { name: "Otter", ai: true },
+        purpose: choices.purpose("reports", "write reports"),
+      }),
+      {
+        data_facts: "It could mention health, SEND, religion, ethnicity, sexuality or crime|It's in people's own words, written or spoken",
+        lawful_basis: "They agree to it (consent)",
+        told: "No, or not sure",
+      },
+    );
+
+  it("reads as a sentence, with SEND still SEND", () => {
+    expect(sam().story).toBe("Admin staff put meeting or lesson recordings and health, SEND or safeguarding information about students (16 plus) into Otter, to write reports.");
+    expect(subject("Teacher")).toEqual({ text: "A teacher", plural: false });
+    expect(subject("Exams officer").text).toBe("An exams officer");
+    expect(subject("HR")).toEqual({ text: "HR", plural: false });
+  });
+
+  it("says no, puts policy up front in Levels, and names the same hard line once", () => {
+    const flow = sam();
+    const d = derive(flow, ruleSet);
+    tell("Sam: Otter in wellbeing meetings", flow, d);
+    expect(["stop", "not_like_this"]).toContain(d.verdict.id);
+    expect(d.highest_tier).toBe(3);
+    const policy = policyAnswer(flow, d, ruleSet);
+    expect(policy.ok).toBe(false);
+    expect(d.blocked.map((b) => b.message).join(" ")).toMatch(/Level 3 data never leaves organisation systems/);
+    expect(d.blocked.map((b) => b.message).join(" ")).not.toMatch(/Tier/);
+    const consent = groupLines(d.bright_lines, flow).filter((g) => g.b.id === d.bright_lines[0].id);
+    expect(consent).toHaveLength(1);
+    expect(consent[0].others).toEqual(["Health, SEND or safeguarding information"]);
+  });
+
+  it("guesses 'don't know' for whether an unknown note-taker trains on it", () => {
+    const flow = sam();
+    const otter = flow.nodes.find((n) => n.type === "company")!;
+    expect(otter.levers.trains_on_inputs).toBeNull();
+    const step = stepsFor(flow, derive(flow, ruleSet)).find((s) => s.q.id === "trains")!;
+    const guess = (step.q.answers ?? []).find((a) => matches(flow, step.node, a));
+    expect(guess?.label).toBe("Don't know yet");
+  });
+
+  it("is honest that the Teams route is still a no for Level 3", () => {
+    const flow = sam();
+    const routes = lighterRoutes(flow, derive(flow, ruleSet), ruleSet);
+    const teams = routes.find((r) => r.feature.id === "teams_transcription")!;
+    expect(teams.ours.verdictId).not.toBe("go");
+    expect(stillNo(teams)).toMatch(/^Still a no on its own/);
   });
 });

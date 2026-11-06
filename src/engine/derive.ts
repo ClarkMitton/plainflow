@@ -34,6 +34,11 @@ function makeEnvs(flow: Flow, nodeVars: Record<string, Record<string, unknown>>,
   return { global, envs };
 }
 
+/** "A", "A and B", "A, B and C". */
+function andList(xs: string[]): string {
+  return xs.length > 1 ? `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}` : xs.join("");
+}
+
 /** A role mid-sentence: "Deputy principal" reads "the deputy principal", "A senior leader" stays, "DPO" keeps its capitals. */
 function asRole(s: string): string {
   const acronym = s.length > 1 && s[1] !== s[1].toLowerCase();
@@ -155,7 +160,7 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
         company: to.title,
         to_role: to.type === "company" ? String(to.levers.role ?? "processor") : "inside",
         plan_note: plan ? ` on ${set.products.plan_labels[plan.id] ?? plan.id}` : "",
-        data: topData.join(", "),
+        data: andList(topData),
         into_ai: !!vars[to.id].is_ai,
         via_ai: !!vars[from.id].is_ai || !!vars[to.id].is_ai,
         ai_approved: s ? s.ai : true,
@@ -312,7 +317,7 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
     }
     if (cause.type && cause.where) {
       const hits = nodes.filter((n) => n.type === cause.type && test(cause.where!, envs[n.id]));
-      const titles = hits.map((n) => n.title).join(", ");
+      const titles = andList(hits.map((n) => n.title));
       const text = (cause.text ?? "{titles}").replace("{titles}", titles);
       return { text, nodes: hits.map((n) => n.id) };
     }

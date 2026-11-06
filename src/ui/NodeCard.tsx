@@ -83,14 +83,14 @@ export function NodeCard({ data }: NodeProps & { data: CardData }) {
         {node.type === "data" && (
           <div className="r tip">
             how sensitive
-            <span className="v meter" aria-label={`Tier ${tier} of 3`}>
+            <span className="v meter" aria-label={`Level ${tier} of 3`}>
               {[1, 2, 3].map((i) => <span key={i} className={`blk${i <= tier ? " on" : ""}${tier === 3 ? " t3" : ""}`} />)}
               <span>T{tier}</span>
             </span>
             <span className="tipbox">
-              Tier {tier}: {set.rules.tiers[String(tier)]?.label}, because {d.tier_because[node.id]}.
+              Level {tier}: {set.rules.tiers[String(tier)]?.label}, because {d.tier_because[node.id]}.
               <em>{set.rules.tiers[String(tier)]?.rule}</em>
-              {d.screening_tiers[node.id] !== tier && <em>Counts as Tier {d.screening_tiers[node.id]} for screening, because it is pseudonymised.</em>}
+              {d.screening_tiers[node.id] !== tier && <em>Counts as Level {d.screening_tiers[node.id]} for screening, because it is pseudonymised.</em>}
             </span>
           </div>
         )}

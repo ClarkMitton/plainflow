@@ -2,7 +2,7 @@ import { useState, type ReactNode } from "react";
 import type { Law, Requirement } from "../engine/types";
 import { leverDef, useFlow } from "./context";
 import { nameWarning } from "./names";
-import { Glossed, policyAnswer, Term, type Change } from "./plain";
+import { Glossed, policyAnswer, Term, type Change, groupLines, clearsText, stillNo } from "./plain";
 import { licences, lighterRoutes, m365Checked, type LighterRoute } from "./lighter";
 
 /** Where this comes from in law, and why it matters. */
@@ -140,23 +140,41 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
           {rules.effort.time_labels[d.effort.time]} · sign-off: {rules.effort.signoff_labels[d.effort.signoff]}
         </div>
         {d.notes.map((n) => <div key={n} className="box info" style={{ marginTop: 8 }}>{n}</div>)}
-        {d.bright_lines.map((b) => (
+        {groupLines(d.bright_lines, flow).map(({ b, nodes, others }) => (
           <div
-            key={b.id + b.node}
+            key={b.id}
             className={`box ${b.kind === "stop" ? "alert" : "consult"}`}
             style={{ marginTop: 10 }}
-            onMouseEnter={() => setHighlight(b.node ? [b.node] : [])}
+            onMouseEnter={() => setHighlight(nodes)}
             onMouseLeave={() => setHighlight([])}
           >
             <p className="lab" style={{ color: "var(--rq)", marginBottom: 2 }}>{b.kind === "stop" ? "Hard line" : "ICO consultation"}</p>
             <strong>{b.title}</strong>
             <div style={{ marginTop: 4 }}><Glossed text={b.say} /></div>
+            {others.length > 0 && <div style={{ marginTop: 4 }}>The same goes for {others.join(" and ")}.</div>}
             <div style={{ marginTop: 6, fontWeight: 600 }}>Ways past it:</div>
             <ul className="plain">{b.ways_out.map((w) => <li key={w}>{w}</li>)}</ul>
             {b.source && <a href={b.source.url} target="_blank" rel="noreferrer" style={{ fontSize: 12 }}>{b.source.label}</a>}
             <LawLine law={b.law} />
           </div>
         ))}
+        {!policy.ok && (
+          <div className="box alert" style={{ marginTop: 10 }}>
+            <p className="lab" style={{ color: "var(--rq)", marginBottom: 2 }}>Your policy</p>
+            <strong>{policy.title}</strong>
+            {policy.lines.map((l) => (
+              <div key={l.text} style={{ marginTop: 6 }}>
+                <Glossed text={l.text} />
+                {l.ways.length > 0 && (
+                  <>
+                    <div style={{ marginTop: 4, fontWeight: 600 }}>Ways past it:</div>
+                    <ul className="plain">{l.ways.map((w) => <li key={w}>{w}</li>)}</ul>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="box changed" aria-live="polite">
@@ -266,6 +284,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
                     <tr><td>Cost</td><td>{r.theirs.cost}</td><td>{r.ours.cost}</td></tr>
                   </tbody>
                 </table>
+                {stillNo(r) && <div className="warn" style={{ marginTop: 6 }}>{stillNo(r)}</div>}
                 {r.feature.caveat && <div className="mu" style={{ fontSize: 12, marginTop: 6 }}>But: {r.feature.caveat}</div>}
                 <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "center" }}>
                   <button type="button" className="btn" style={{ boxShadow: "3px 3px 0 var(--data)" }} onClick={() => tryLighter(r)}>Try it</button>
@@ -287,7 +306,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
           <div style={{ padding: "12px 14px 14px" }}>
             <div>
               {cc.lever === "company_id" ? "Switch" : "Change"} <strong>{cc.node_title}</strong>: {ccLever?.label ?? cc.lever.replace(/_/g, " ")} to <strong>{ccTo}</strong>.{" "}
-              {cc.unblocks > 0 ? "That clears the red wire." : `That lifts ${cc.removes.length} thing${cc.removes.length === 1 ? "" : "s"} to do.`}
+              {cc.unblocks > 0 ? clearsText(cc.unblocks, d) : `That lifts ${cc.removes.length} thing${cc.removes.length === 1 ? "" : "s"} to do.`}
             </div>
             <div style={{ marginTop: 6, color: "var(--muted)", fontSize: 13 }}>You'd give up: {cc.cost}</div>
             <div style={{ marginTop: 6, fontSize: 13 }}><Glossed text={`How: ${cc.how}`} /></div>

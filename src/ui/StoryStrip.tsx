@@ -1,6 +1,7 @@
 import { Fragment, type ReactNode } from "react";
 import type { FlowNode } from "../engine/types";
 import { useFlow } from "./context";
+import { keepAcronyms, roleParts } from "./flowOps";
 
 /**
  * The sentence the flow tells, read off the canvas. Each word is its node: underlined in the node's
@@ -13,10 +14,13 @@ export function StoryStrip() {
   const subjects = of("people", (n) => n.fields.group !== "staff");
   const data = of("data");
   const systems = of("system");
-  const companies = of("company", (n) => n.levers.role !== "sub_processor" && Number(d.facts[n.id]?.receives_tier ?? -1) >= 0);
+  // "into Otter, run by Otter" says nothing twice: a company named like its tool is left out of "run by".
+  const toolNames = new Set(systems.map((n) => n.title.trim().toLowerCase()));
+  const companies = of("company", (n) => n.levers.role !== "sub_processor" && Number(d.facts[n.id]?.receives_tier ?? -1) >= 0 && !toolNames.has(n.title.trim().toLowerCase()));
   const purposes = of("purpose");
 
   if (!flow.nodes.length) return <div className="story-strip mu">Add a node to start the picture.</div>;
+  const who = staff.length === 1 ? roleParts(staff[0].title) : { article: "", plural: staff.length > 1 };
 
   const chip = (n: FlowNode, lower = false) => (
     <button
@@ -27,7 +31,7 @@ export function StoryStrip() {
       onMouseEnter={() => setTrace({ node: n.id })}
       onMouseLeave={() => setTrace(null)}
     >
-      {lower ? n.title[0].toLowerCase() + n.title.slice(1) : n.title}
+      {lower ? keepAcronyms(n.title) : n.title}
     </button>
   );
   const list = (ns: FlowNode[], lower = false): ReactNode =>
@@ -54,8 +58,8 @@ export function StoryStrip() {
   return (
     <div className="story-strip" aria-label="The story of this flow">
       {trace && trace.data.length > 0 && <Route />}
-      {staff.length ? <>A {list(staff, true)}</> : "Someone"}
-      {flow.retrospective ? " has been putting " : " puts "}
+      {staff.length === 0 ? "Someone" : who.article ? <>{who.article}{list(staff, true)}</> : list(staff)}
+      {flow.retrospective ? (who.plural ? " have been putting " : " has been putting ") : who.plural ? " put " : " puts "}
       {data.length ? list(data, true) : "data"}
       {subjects.length > 0 && <> about {list(subjects, true)}</>}
       {systems.length > 0 && <> into {list(systems)}</>}

@@ -134,7 +134,7 @@
       "show_when": "tier >= 1",
       "ask": "What's the legal reason you're allowed to use {title}?",
       "why": "Every use of personal data needs a lawful basis. Consent sounds safest but often isn't valid for students or staff, because they can't freely say no to the organisation.",
-      "example": "Marking work is part of a college's job, so 'public task' usually fits.",
+      "example": "Teaching, marking and supporting students are part of a college's job, so 'public task' usually fits.",
       "answers": [
         {
           "label": "It's part of our job (public task)",
@@ -462,8 +462,8 @@
         },
         {
           "label": "Don't know yet",
-          "fields": {
-            "vendor_position": "unknown"
+          "set": {
+            "trains_on_inputs": null
           }
         }
       ]

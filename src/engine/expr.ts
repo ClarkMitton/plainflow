@@ -257,6 +257,6 @@ export function test(src: string, env: Env): boolean {
 export function fill(template: string, env: Env): string {
   return template.replace(/\{(\w+)\}/g, (_, k) => {
     const v = env.lookup(k);
-    return isNil(v) ? "" : Array.isArray(v) ? v.join(", ") : String(v);
+    return isNil(v) ? "" : Array.isArray(v) ? (v.length > 1 ? `${v.slice(0, -1).join(", ")} and ${v[v.length - 1]}` : v.join("")) : String(v);
   });
 }

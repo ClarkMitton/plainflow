@@ -1,7 +1,7 @@
 // The pack: what people leave with. Three documents built from the same derivation, so they always agree.
 // Pure: no React. The Finish page renders it; packText flattens it for an email or a Teams message.
 import { stepsFor } from "./questions";
-import { policyAnswer } from "./plain";
+import { policyAnswer, groupLines, clearsText } from "./plain";
 import { art28Clauses } from "./flowOps";
 import type { Derivation, Flow, Law, Requirement, RuleSet } from "../engine/types";
 import { lighterRoutes, type LighterRoute } from "./lighter";
@@ -181,9 +181,9 @@ export function buildPack(flow: Flow, d: Derivation, set: RuleSet): Pack {
         { label: "Your policy", value: policy.ok ? "allows it" : "doesn't allow it", detail: `${policy.lines.map((l) => l.text + (l.ways.length ? ` Ways out: ${l.ways.join(" / ")}` : "")).join(" ")} ${policy.source}${policy.unowned ? " " + set.rules.policy.unowned : ""}`, laws: lawsOf(["art28"]) },
         { label: "DPIA", value: rules.outcome.labels[d.outcome], detail: rules.outcome.plain[d.outcome] + (d.floor_raised ? " Your use of AI sets this minimum." : ""), laws: lawsOf(["art35"]) },
       ],
-      hardLines: d.bright_lines.map((b) => ({ title: b.title, say: b.say, waysOut: b.ways_out, law: b.law })),
+      hardLines: groupLines(d.bright_lines, flow).map(({ b, others }) => ({ title: b.title, say: b.say + (others.length ? ` The same goes for ${others.join(" and ")}.` : ""), waysOut: b.ways_out, law: b.law })),
       lighter: lighterRoutes(flow, d, set).map((r) => ({ instead: r.systemTitle, feature: r.feature.label, does: r.feature.does, caveat: r.feature.caveat, theirs: r.theirs, ours: r.ours })),
-      easier: cc ? { change: `${cc.lever === "company_id" ? "Switch" : "Change"} ${cc.node_title}: ${ccLever?.label ?? cc.lever} to ${ccTo}. ${cc.unblocks ? "That clears the block." : `That lifts ${cc.removes.length} thing${cc.removes.length === 1 ? "" : "s"} to do.`}`, cost: cc.cost, how: cc.how } : null,
+      easier: cc ? { change: `${cc.lever === "company_id" ? "Switch" : "Change"} ${cc.node_title}: ${ccLever?.label ?? cc.lever} to ${ccTo}. ${cc.unblocks ? clearsText(cc.unblocks, d) : `That lifts ${cc.removes.length} thing${cc.removes.length === 1 ? "" : "s"} to do.`}`, cost: cc.cost, how: cc.how } : null,
       actions,
       needsPerson: d.needs_person,
       laws: [...new Map([...lawsOf(tier.law ?? []), ...lawsOf(["art28", "art35"]), ...d.bright_lines.map((b) => b.law), ...actions.map((a) => a.law)].filter((l): l is Law => !!l).map((l) => [l.id, l] as const)).values()],
