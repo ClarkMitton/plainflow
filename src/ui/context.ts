@@ -21,6 +21,7 @@ export interface Ctx {
   setCollapse(nodeId: string, collapse: "pill" | "standard"): void;
   /** Has the person asked for the answer yet? Before that, the picture is shown without verdicts or to-dos. */
   checked: boolean;
+  remove(nodeId: string): void;
 }
 
 export interface Trace {

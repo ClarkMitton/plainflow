@@ -10,7 +10,7 @@ import { PrivacyNote } from "./Privacy";
 import { Compare } from "./Compare";
 import { FlowCtx, traceOf, type Ctx, type Trace } from "./context";
 import { Drawer } from "./Drawer";
-import { applyProduct, cards, downloadJson } from "./flowOps";
+import { applyProduct, cards, disconnect, downloadJson, smartConnect } from "./flowOps";
 import { FrontDoor } from "./FrontDoor";
 import { nameWarning } from "./names";
 import { Interview } from "./Interview";
@@ -43,6 +43,11 @@ export function App() {
   const [replay, setReplay] = useState(0);
   const flowRef = useRef(flow);
   flowRef.current = flow;
+  /** Undo history: past flows and, after an undo, the ones undone. Typing in a box coalesces into one step. */
+  const past = useRef<Flow[]>([]);
+  const future = useRef<Flow[]>([]);
+  const lastPush = useRef(0);
+  const [historyTick, setHistoryTick] = useState(0);
 
   useEffect(() => {
     try {
@@ -59,6 +64,14 @@ export function App() {
   const update = useCallback((next: Flow, what: string | null) => {
     const prev = flowRef.current;
     let out = next;
+    if (prev && prev.id === next.id) {
+      // Quiet edits (typing a field) within a second of each other are one undo step.
+      const now = Date.now();
+      if (!(what === null && now - lastPush.current < 1000 && past.current.length)) past.current = [...past.current.slice(-99), prev];
+      lastPush.current = what === null ? now : 0;
+      future.current = [];
+      setHistoryTick((t) => t + 1);
+    }
     if (prev && what && what !== "moved") {
       const before = derive(prev, ruleSet, { cheapest: false });
       const after = derive(next, ruleSet, { cheapest: false });
@@ -72,7 +85,40 @@ export function App() {
     setPreview(false);
   }, []);
 
+  const step = useCallback((dir: "undo" | "redo") => {
+    const cur = flowRef.current;
+    const from = dir === "undo" ? past.current : future.current;
+    const to = dir === "undo" ? future.current : past.current;
+    if (!cur || !from.length) return;
+    const target = from[from.length - 1];
+    from.splice(from.length - 1, 1);
+    to.push(cur);
+    lastPush.current = 0;
+    const before = derive(cur, ruleSet, { cheapest: false });
+    const after = derive(target, ruleSet, { cheapest: false });
+    setLastChange({ what: dir === "undo" ? "Undid the last change" : "Redid the change", changes: describeChange(before, after, target, ruleSet) });
+    flowRef.current = target;
+    setFlow(target);
+    setPreview(false);
+    setHistoryTick((t) => t + 1);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement | null;
+      if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable)) return;
+      if (!(e.ctrlKey || e.metaKey)) return;
+      if (e.key.toLowerCase() === "z") { e.preventDefault(); step(e.shiftKey ? "redo" : "undo"); }
+      if (e.key.toLowerCase() === "y") { e.preventDefault(); step("redo"); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [step]);
+
   const open = (f: Flow, to: "questions" | "canvas") => {
+    past.current = [];
+    future.current = [];
+    setHistoryTick((t) => t + 1);
     // From the questions, the picture comes first and the answer waits for Check it. Anything else opens already checked.
     setFlow({ ...f, checked: to === "canvas" ? f.checked !== false : f.checked === true });
     setView(to);
@@ -108,6 +154,11 @@ export function App() {
       previewing: preview && d.cheapest_change ? { node: d.cheapest_change.node, lever: d.cheapest_change.lever } : null,
       setCollapse: (id, collapse) => update(patchNode(id, (n) => ({ ...n, collapse })), null),
       checked: flow.checked !== false,
+      remove: (id) => {
+        const n = flow.nodes.find((x) => x.id === id);
+        update({ ...flow, nodes: flow.nodes.filter((x) => x.id !== id), edges: flow.edges.filter((e) => e.from !== id && e.to !== id) }, `removed ${n?.title ?? "a box"}`);
+        setSelected((s) => (s === id ? null : s));
+      },
       setLever: (id, lever, value) => {
         const n = flow.nodes.find((x) => x.id === id);
         const def = n ? ruleSet.rules.levers[n.type].find((l) => l.id === lever) : undefined;
@@ -190,6 +241,10 @@ export function App() {
                   reveal={reveal}
                   pin={() => update({ ...flow, pinned: { nodes: structuredClone(flow.nodes), edges: structuredClone(flow.edges) } }, "pinned a copy to compare")}
                   pinned={!!flow.pinned}
+                  undo={() => step("undo")}
+                  redo={() => step("redo")}
+                  canUndo={historyTick >= 0 && past.current.length > 0}
+                  canRedo={historyTick >= 0 && future.current.length > 0}
                   toggleTier={() =>
                     flow.mode === "tier_first"
                       ? update({ ...flow, mode: "flow_first", tier_pinned: null }, "building freely again")
@@ -206,6 +261,15 @@ export function App() {
                         `${selNode.title}: used saved card`,
                       )
                     }
+                    onConnect={(otherId) => {
+                      const other = flow.nodes.find((n) => n.id === otherId);
+                      update(smartConnect(flow, selNode.id, otherId), `connected ${selNode.title} to ${other?.title ?? "a box"}`);
+                    }}
+                    onDisconnect={(edgeId) => {
+                      const e = flow.edges.find((x) => x.id === edgeId);
+                      const other = flow.nodes.find((n) => n.id === (e?.from === selNode.id ? e?.to : e?.from));
+                      update(disconnect(flow, edgeId), `disconnected ${selNode.title} from ${other?.title ?? "a box"}`);
+                    }}
                     onDelete={() => {
                       update({ ...flow, nodes: flow.nodes.filter((n) => n.id !== selNode.id), edges: flow.edges.filter((e) => e.from !== selNode.id && e.to !== selNode.id) }, `removed ${selNode.title}`);
                       setSelected(null);

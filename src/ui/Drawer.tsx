@@ -10,6 +10,8 @@ interface Props {
   onProduct(productId: string | null): void;
   onLoadCard(cardId: string): void;
   onDelete(): void;
+  onConnect(otherId: string): void;
+  onDisconnect(edgeId: string): void;
 }
 
 export function TextField({ label, value, onChange, area, placeholder }: { label: string; value: unknown; onChange(v: string): void; area?: boolean; placeholder?: string }) {
@@ -61,7 +63,7 @@ const USE_CASES: [string, string][] = [
 const REGIONS: [string, string][] = [["unknown", "Unknown"], ["UK", "UK"], ["EU", "EU"], ["US", "US"], ["other", "Other"]];
 const TRANSFER: [string, string][] = [["unknown", "Unknown"], ["none_needed", "None needed"], ["adequacy", "Adequacy"], ["idta", "IDTA"], ["addendum", "UK addendum"], ["none", "None in place"]];
 
-export function Drawer({ node, onProduct, onLoadCard, onDelete }: Props) {
+export function Drawer({ node, onProduct, onLoadCard, onDelete, onConnect, onDisconnect }: Props) {
   const { d, set, flow, setField, setTitle, select } = useFlow();
   const facts = d.facts[node.id] ?? {};
   const locks = d.locks[node.id] ?? {};
@@ -184,6 +186,35 @@ export function Drawer({ node, onProduct, onLoadCard, onDelete }: Props) {
         )}
 
         {node.type === "company" && <CompanyCard node={node} onLoadCard={onLoadCard} />}
+
+        <div>
+          <p className="lab" style={{ marginBottom: 6 }}>Connected to</p>
+          {flow.edges.filter((e) => e.from === node.id || e.to === node.id).length === 0 && (
+            <div className="warn" style={{ marginBottom: 6 }}>Nothing yet, so this box doesn't change the answer. Connect it below.</div>
+          )}
+          <ul className="plain conn">
+            {flow.edges.filter((e) => e.from === node.id || e.to === node.id).map((e) => {
+              const other = flow.nodes.find((n) => n.id === (e.from === node.id ? e.to : e.from));
+              const outgoing = e.from === node.id;
+              return (
+                <li key={e.id}>
+                  <span className="mono mu" style={{ fontSize: 11 }}>{outgoing ? "to" : "from"}</span> {other?.title ?? "?"}
+                  <button type="button" className="remove" aria-label={`Disconnect from ${other?.title ?? "this box"}`} title="Disconnect" onClick={() => onDisconnect(e.id)}>×</button>
+                </li>
+              );
+            })}
+          </ul>
+          <label className="field" style={{ marginTop: 6 }}>
+            <span>Also connect to</span>
+            <select value="" onChange={(e) => e.target.value && onConnect(e.target.value)}>
+              <option value="">Choose a box…</option>
+              {flow.nodes
+                .filter((n) => n.id !== node.id && !flow.edges.some((e) => (e.from === node.id && e.to === n.id) || (e.to === node.id && e.from === n.id)))
+                .map((n) => <option key={n.id} value={n.id}>{n.title} ({TYPE_LABEL[n.type].toLowerCase()})</option>)}
+            </select>
+            <span className="mu" style={{ textTransform: "none", letterSpacing: 0, fontFamily: "var(--sans)", fontWeight: 400, fontSize: 12 }}>Plainflow picks the direction: people and data go into the tool, the tool into the purpose and the companies.</span>
+          </label>
+        </div>
 
         {(triggered.length > 0 || reqs.length > 0) && (
           <div>

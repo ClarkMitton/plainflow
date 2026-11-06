@@ -82,6 +82,74 @@ export function connect(flow: Flow, fromId: string, toId: string): Flow {
   return { ...flow, edges: [...flow.edges, edge] };
 }
 
+/**
+ * Which way a wire runs between two boxes, from what they are: people and data feed the tool,
+ * the tool feeds the purpose and the companies, a company can have a company behind it.
+ */
+export function smartConnect(flow: Flow, aId: string, bId: string): Flow {
+  const a = flow.nodes.find((n) => n.id === aId);
+  const b = flow.nodes.find((n) => n.id === bId);
+  if (!a || !b || a.id === b.id) return flow;
+  const rank: Record<NodeType, number> = { people: 0, data: 1, system: 2, purpose: 3, company: 4 };
+  let from = a, to = b;
+  if (a.type === b.type) {
+    // Two of a kind: the one asked for the connection is the source (a company behind a company, say).
+  } else if (a.type === "purpose" && b.type === "company") {
+    // Sharing with a partner: the purpose sends to the company.
+  } else if (b.type === "purpose" && a.type === "company") {
+    from = b; to = a;
+  } else if (rank[a.type] > rank[b.type]) {
+    from = b; to = a;
+  }
+  return connect(flow, from.id, to.id);
+}
+
+export function disconnect(flow: Flow, edgeId: string): Flow {
+  return { ...flow, edges: flow.edges.filter((e) => e.id !== edgeId) };
+}
+
+/** Add a box and wire it in, so it changes the answer straight away instead of floating. */
+export function addNode(flow: Flow, type: NodeType): { flow: Flow; node: FlowNode; wiredTo: string[] } {
+  const outside = type === "company";
+  const x = outside ? BOUNDARY_X + 60 : type === "people" || type === "data" ? 40 : 360;
+  // Below the lowest box already in that column, so nothing lands on top of anything.
+  const column = flow.nodes.filter((n) => Math.abs(n.position.x - x) < 200);
+  const y = column.length ? Math.max(...column.map((n) => n.position.y + (n.collapse === "pill" ? 62 : EST_HEIGHT[n.type]))) + 48 : 40;
+  const node = newNode(type, { x, y }, flow);
+  const first = (t: NodeType, pred: (n: FlowNode) => boolean = () => true) => flow.nodes.find((n) => n.type === t && pred(n));
+  const subjects = flow.nodes.filter((n) => n.type === "people" && n.fields.group !== "staff").map((n) => n.id);
+  let out: Flow = { ...flow, nodes: [...flow.nodes, node] };
+  const targets: FlowNode[] = [];
+  const system = first("system");
+  const purpose = first("purpose");
+  const data = first("data");
+  if (type === "data") {
+    node.fields.about = subjects;
+    if (system) targets.push(system);
+    else if (purpose) targets.push(purpose);
+  }
+  if (type === "people") {
+    node.title = "People";
+    if (purpose) targets.push(purpose);
+  }
+  if (type === "system") {
+    if (data) out = connect(out, data.id, node.id);
+    if (purpose) targets.push(purpose);
+  }
+  if (type === "purpose") {
+    if (system) out = connect(out, system.id, node.id);
+    else if (data) out = connect(out, data.id, node.id);
+    for (const id of subjects) out = connect(out, id, node.id);
+  }
+  if (type === "company") {
+    if (system) out = connect(out, system.id, node.id);
+    else if (data) out = connect(out, data.id, node.id);
+  }
+  for (const t of targets) out = connect(out, node.id, t.id);
+  const wiredTo = out.edges.filter((e) => e.from === node.id || e.to === node.id).map((e) => (e.from === node.id ? e.to : e.from));
+  return { flow: out, node, wiredTo: wiredTo.map((id) => flow.nodes.find((n) => n.id === id)?.title ?? id) };
+}
+
 export function companyFromCard(companyId: string, set: RuleSet, position: { x: number; y: number }, role = "processor"): FlowNode {
   const n = newNode("company", position);
   const company = set.products.companies[companyId];

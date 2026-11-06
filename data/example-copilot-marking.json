@@ -45,8 +45,8 @@
     { "id": "e1", "from": "n_students", "to": "n_purpose", "kind": "about", "data_id": null },
     { "id": "e2", "from": "n_teacher", "to": "n_purpose", "kind": "by", "data_id": null },
     { "id": "e3", "from": "n_work", "to": "n_copilot", "kind": "carries", "data_id": "n_work" },
-    { "id": "e4", "from": "n_copilot", "to": "n_microsoft", "kind": "carries", "data_id": "n_work" },
-    { "id": "e5", "from": "n_copilot", "to": "n_purpose", "kind": "feeds", "data_id": "n_work" },
+    { "id": "e4", "from": "n_copilot", "to": "n_microsoft", "kind": "carries", "data_id": null },
+    { "id": "e5", "from": "n_copilot", "to": "n_purpose", "kind": "feeds", "data_id": null },
     { "id": "e6", "from": "n_microsoft", "to": "n_openai", "kind": "sub_processor", "data_id": null }
   ],
   "pinned": null,

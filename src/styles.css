@@ -404,3 +404,11 @@ table.tbl code, code.x { font-family: var(--mono); font-size: 12px; background: 
 .cardbody { padding: 12px 14px 14px; font-size: 14px; line-height: 1.5; }
 .cardbody p { margin: 0 0 8px; }
 .code { font-family: var(--mono); font-size: 12px; background: var(--paper-2); border: 1px solid var(--rule); padding: 8px 10px; white-space: pre-wrap; word-break: break-all; margin: 6px 0 10px; }
+
+/* Add, connect, undo */
+.nx { position: absolute; top: -12px; left: -12px; width: 24px; height: 24px; border: 2px solid var(--ink); background: var(--paper); font-size: 16px; line-height: 1; cursor: pointer; opacity: 0; transition: opacity .12s; z-index: 3; padding: 0; }
+.n:hover .nx, .nx:focus { opacity: 1; }
+.nx:hover { background: var(--paperwork); color: var(--paper); border-color: var(--paperwork); }
+.conn li { display: flex; align-items: center; gap: 6px; }
+.conn .remove { font-size: 16px; margin-left: auto; }
+.palette button:disabled { color: var(--muted-2); cursor: default; text-decoration: none; }

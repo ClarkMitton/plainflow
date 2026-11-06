@@ -8,7 +8,7 @@ export type CardData = { node: FlowNode; reveal: number | null };
 
 export function NodeCard({ data }: NodeProps & { data: CardData }) {
   const { node, reveal } = data;
-  const { d, set, flow, selected, highlight, select, trace, setTrace, setCollapse, checked } = useFlow();
+  const { d, set, flow, selected, highlight, select, trace, setTrace, setCollapse, checked, remove } = useFlow();
   const facts = d.facts[node.id] ?? {};
   const locks = d.locks[node.id] ?? {};
   // Staff are adults; their age chips are noise.
@@ -59,6 +59,7 @@ export function NodeCard({ data }: NodeProps & { data: CardData }) {
           <Handle type="source" position={Position.Bottom} id="b" style={{ left: "50%" }} />
         </>
       )}
+      <button type="button" className="nx nodrag" aria-label={`Remove ${node.title}`} title="Remove (Undo brings it back)" onClick={(e) => { e.stopPropagation(); remove(node.id); }}>×</button>
       <div
         className={`h h-${node.type}`}
         onClick={() => select(node.id)}

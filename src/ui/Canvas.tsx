@@ -5,7 +5,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import type { Flow, NodeType } from "../engine/types";
 import { useFlow } from "./context";
-import { BOUNDARY_X, ZONE_WIDTH, connect, newNode, tidy } from "./flowOps";
+import { BOUNDARY_X, ZONE_WIDTH, addNode, connect, tidy } from "./flowOps";
 import { NodeCard, type CardData } from "./NodeCard";
 import { StoryStrip } from "./StoryStrip";
 import { Wire, WireMarkers, type WireData } from "./Wire";
@@ -23,9 +23,13 @@ interface Props {
   pin(): void;
   pinned: boolean;
   toggleTier(): void;
+  undo(): void;
+  redo(): void;
+  canUndo: boolean;
+  canRedo: boolean;
 }
 
-export function Canvas({ onChange, reveal = false, pin, pinned, toggleTier }: Props) {
+export function Canvas({ onChange, reveal = false, pin, pinned, toggleTier, undo, redo, canUndo, canRedo }: Props) {
   const { flow, d, select, trace, setTrace, checked } = useFlow();
   const { fitView } = useReactFlow();
   const [rfNodes, setRfNodes] = useState<Node<CardData>[]>([]);
@@ -103,11 +107,9 @@ export function Canvas({ onChange, reveal = false, pin, pinned, toggleTier }: Pr
   };
 
   const add = (type: NodeType) => {
-    const outside = type === "company";
-    const count = flow.nodes.filter((n) => n.type === type).length;
-    const n = newNode(type, { x: outside ? BOUNDARY_X + 60 : 40 + (count % 2) * 320, y: 40 + count * 60 }, flow);
-    onChange({ ...flow, nodes: [...flow.nodes, n] }, `added ${LABEL[type]}`);
-    select(n.id);
+    const { flow: next, node, wiredTo } = addNode(flow, type);
+    onChange(next, `added ${LABEL[type]}${wiredTo.length ? `, wired to ${wiredTo.join(" and ")}` : ""}`);
+    select(node.id);
   };
 
   const tidyUp = () => {
@@ -169,6 +171,9 @@ export function Canvas({ onChange, reveal = false, pin, pinned, toggleTier }: Pr
             {LABEL[t]}
           </button>
         ))}
+        <span className="sep" />
+        <button type="button" onClick={undo} disabled={!canUndo} title="Undo (Ctrl+Z)">Undo</button>
+        <button type="button" onClick={redo} disabled={!canRedo} title="Redo (Ctrl+Shift+Z)">Redo</button>
         <span className="sep" />
         <button type="button" onClick={tidyUp} title="Lay it out left to right, in the order the data travels">Tidy up</button>
         <button type="button" onClick={foldAll} title="Fold every node to its title, or open them all">{allFolded ? "Unfold all" : "Fold all"}</button>

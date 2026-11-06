@@ -120,3 +120,10 @@ Each one shows something the picture was missing: which way data moves, where it
 - **Pill.** Double-click a header to fold the node to its header (the collapse level "pill"). Ports move to the header's middle.
 - **Preview ring.** While the cheapest change is previewed, the lever it would flip gets a 3px amber ring.
 - **Zones.** Zone labels are ink with a one-line plain subtitle: "You decide what happens to the data" / "Companies that handle it for you".
+
+## Adding, connecting, undoing (v0.5)
+
+- **Add** wires the new box in (data into the tool and about the people; people about the purpose; a company receiving from the tool) and drops it below the lowest box in its column, so it changes the answer at once instead of floating.
+- **Connect by choosing**: the drawer lists what a box is connected to, with × to disconnect, and an "Also connect to…" list. Plainflow picks the direction from what the boxes are (`smartConnect`); dragging between ports still works for those who find it.
+- **Undo and Redo** in the tools strip and on Ctrl+Z / Ctrl+Shift+Z. Typing in a field within a second coalesces into one step. Each undo reports what it changed, like any other change.
+- **×** on a box's top-left corner on hover removes it; Undo brings it back.
