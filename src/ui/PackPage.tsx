@@ -142,6 +142,18 @@ function ForPerson({ p }: { p: PackData }) {
         </div>
       ))}
 
+      {f.check.length > 0 && (
+        <>
+          <h3>Check these first</h3>
+          <p className="mu small">The answer assumes these, because the person with the idea rarely knows. Each takes a minute to confirm.</p>
+          <ul className="plain check">
+            {f.check.map((c) => (
+              <li key={c.text}><strong>{c.text}</strong> <span className="mu">{c.who}</span> <span className="mu">If not: {c.ifWrong}</span></li>
+            ))}
+          </ul>
+        </>
+      )}
+
       <h3>What to do, in order</h3>
       {f.actions.length === 0 && <p className="mu">Nothing to do. Keep this page with the proposal.</p>}
       <ol className="actions">
@@ -258,6 +270,12 @@ function ForNext({ p }: { p: PackData }) {
       <ul className="plain">{n.agreed.map((a) => <li key={a}>{a}</li>)}</ul>
       <h3>Bring next time</h3>
       {n.bring.length === 0 ? <p className="mu">Nothing outstanding.</p> : <ul className="plain">{n.bring.map((b) => <li key={b}>{b}</li>)}</ul>}
+      {p.forPerson.check.length > 0 && (
+        <>
+          <h3>Check these first</h3>
+          <ul className="plain">{p.forPerson.check.map((c) => <li key={c.text}>{c.text} <span className="mu">{c.who}</span></li>)}</ul>
+        </>
+      )}
       <h3>Assumed, not asked ({n.assumed.length})</h3>
       {n.assumed.length === 0 ? <p className="mu">Every question was answered.</p> : <ul className="plain">{n.assumed.map((a) => <li key={a}>{a}</li>)}</ul>}
       <h3>What changed in this session</h3>

@@ -104,8 +104,8 @@ describe("five more people", () => {
 
   it("H. a sixth form display in Canva: photos are Level 2 for the right reason, and consent holds when saying no costs nothing", () => {
     const sentence = { role: "Head of department", data: [{ kind: "media", label: "photos or video" }], about: { kind: "students", label: "students (16 plus)" }, under18: "some_under_18" as const, product: "canva", purpose: { kind: null, label: "make an open evening display" } };
-    const coerced = answer(build(sentence), { lawful_basis: "Consent, but refusing is not a realistic option", told: "Yes, it is in our privacy notice" });
-    const free = answer(build(sentence), { lawful_basis: "Consent, and they can refuse with no consequences", told: "Yes, it is in our privacy notice" });
+    const coerced = answer(build(sentence), { lawful_basis: "Consent, but refusing is not a realistic option", told: "Yes, it is in our privacy notice", plan: "A paid business plan" });
+    const free = answer(build(sentence), { lawful_basis: "Consent, and they can refuse with no consequences", told: "Yes, it is in our privacy notice", plan: "A paid business plan" });
     const dc = derive(coerced, ruleSet);
     const df = derive(free, ruleSet);
     tell("H. Sixth form display in Canva, consent they can't refuse", coerced, dc);
@@ -114,7 +114,7 @@ describe("five more people", () => {
     expect(df.bright_lines).toEqual([]);
     expect(df.highest_tier).toBe(2);
     expect(df.tier_because[free.nodes.find((n) => n.type === "data")!.id]).toBe("it holds more than account basics about a named person");
-    expect(df.blocked[0].message).toMatch(/Canva is allowed up to Level 1/);
+    expect(df.blocked[0].message).toMatch(/Canva on the business plan is allowed up to Level 1/);
     expect(df.cheapest_change?.to).not.toBe("anonymised");
   });
 

@@ -21,7 +21,7 @@
   "version": 1,
   "nodes": [
     {
-      "id": "n_mw7yubnr2x",
+      "id": "n_mw7zgud12x",
       "type": "people",
       "title": "Volunteers",
       "position": {
@@ -40,7 +40,7 @@
       }
     },
     {
-      "id": "n_mw7yubnr31",
+      "id": "n_mw7zgud131",
       "type": "data",
       "title": "Names and contact details",
       "position": {
@@ -66,13 +66,13 @@
         "source_system": "",
         "lawful_basis": "legitimate_interests",
         "about": [
-          "n_mw7yubnr2x"
+          "n_mw7zgud12x"
         ],
         "kind": "contact"
       }
     },
     {
-      "id": "n_mw7yubnr32",
+      "id": "n_mw7zgud132",
       "type": "data",
       "title": "DBS or criminal record information",
       "position": {
@@ -97,13 +97,13 @@
         "source_system": "",
         "lawful_basis": "legitimate_interests",
         "about": [
-          "n_mw7yubnr2x"
+          "n_mw7zgud12x"
         ],
         "kind": "criminal"
       }
     },
     {
-      "id": "n_mw7yubnr2y",
+      "id": "n_mw7zgud12y",
       "type": "people",
       "title": "Manager",
       "position": {
@@ -122,7 +122,7 @@
       }
     },
     {
-      "id": "n_mw7yubnr30",
+      "id": "n_mw7zgud130",
       "type": "system",
       "title": "A spreadsheet sent by email",
       "position": {
@@ -153,7 +153,7 @@
       }
     },
     {
-      "id": "n_mw7yubnr2z",
+      "id": "n_mw7zgud12z",
       "type": "purpose",
       "title": "Share it with a partner organisation",
       "position": {
@@ -183,7 +183,7 @@
       }
     },
     {
-      "id": "n_mw7yubnr38",
+      "id": "n_mw7zgud138",
       "type": "company",
       "title": "Partner organisation",
       "position": {
@@ -220,44 +220,44 @@
   ],
   "edges": [
     {
-      "id": "e_mw7yubnr33",
-      "from": "n_mw7yubnr2x",
-      "to": "n_mw7yubnr2z",
+      "id": "e_mw7zgud133",
+      "from": "n_mw7zgud12x",
+      "to": "n_mw7zgud12z",
       "kind": "about",
       "data_id": null
     },
     {
-      "id": "e_mw7yubnr34",
-      "from": "n_mw7yubnr2y",
-      "to": "n_mw7yubnr2z",
+      "id": "e_mw7zgud134",
+      "from": "n_mw7zgud12y",
+      "to": "n_mw7zgud12z",
       "kind": "by",
       "data_id": null
     },
     {
-      "id": "e_mw7yubnr35",
-      "from": "n_mw7yubnr31",
-      "to": "n_mw7yubnr30",
+      "id": "e_mw7zgud135",
+      "from": "n_mw7zgud131",
+      "to": "n_mw7zgud130",
       "kind": "carries",
       "data_id": null
     },
     {
-      "id": "e_mw7yubnr36",
-      "from": "n_mw7yubnr32",
-      "to": "n_mw7yubnr30",
+      "id": "e_mw7zgud136",
+      "from": "n_mw7zgud132",
+      "to": "n_mw7zgud130",
       "kind": "carries",
       "data_id": null
     },
     {
-      "id": "e_mw7yubnr37",
-      "from": "n_mw7yubnr30",
-      "to": "n_mw7yubnr2z",
+      "id": "e_mw7zgud137",
+      "from": "n_mw7zgud130",
+      "to": "n_mw7zgud12z",
       "kind": "feeds",
       "data_id": null
     },
     {
-      "id": "e_mw7yubnr39",
-      "from": "n_mw7yubnr2z",
-      "to": "n_mw7yubnr38",
+      "id": "e_mw7zgud139",
+      "from": "n_mw7zgud12z",
+      "to": "n_mw7zgud138",
       "kind": "carries",
       "data_id": null
     }
@@ -290,9 +290,10 @@
   },
   "first_draw": true,
   "answers": {
-    "lawful_basis:n_mw7yubnr31": "Our legitimate interests",
-    "lawful_basis:n_mw7yubnr32": "Our legitimate interests",
-    "told:n_mw7yubnr2z": "No, or not sure"
+    "lawful_basis:n_mw7zgud131": "Our legitimate interests",
+    "lawful_basis:n_mw7zgud132": "Our legitimate interests",
+    "told:n_mw7zgud12z": "No, or not sure",
+    "risk_owner": "the chief executive"
   },
   "checked": true,
   "risk_owner": "the chief executive"

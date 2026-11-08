@@ -39,7 +39,7 @@ describe("a shorter Q&A", () => {
   });
 
   it("asks about a supplier we know nothing about", () => {
-    const { steps } = asked("canva");
+    const { steps } = asked("nearpod");
     expect(steps.map((s) => s.q.id)).toContain("vendor_terms");
   });
 });

@@ -73,6 +73,8 @@
     "list": {
       "microsoft": { "max_tier": 3, "ai": true },
       "power_platform": { "max_tier": 3, "ai": true },
+      "google_workspace": { "max_tier": 3, "ai": true },
+      "gemini_workspace": { "max_tier": 2, "ai": true },
       "canva": { "max_tier": 1, "ai": false },
       "lovable": { "max_tier": 1, "ai": false },
       "supabase": { "max_tier": 1, "ai": false },
@@ -199,6 +201,18 @@
     ]
   },
 
+  "assumptions": {
+    "note": "Standing assumptions the answer rests on but never asks about, because the person with the idea rarely knows. Printed in the pack as 'Check these first', each with who can confirm it and what changes if it is wrong. 'when' is checked against the whole flow.",
+    "rules": [
+      { "id": "dpo", "when": "outcome != 'not_required'", "text": "Your organisation has a data protection officer.", "who": "A public body such as a school or college must have one. A business or charity may not.", "if_wrong": "The risk owner decides alone, and appointing a DPO or an adviser goes on the list." },
+      { "id": "microsoft_terms", "when": "any(company, company_id == 'microsoft')", "text": "Microsoft's data protection terms cover your tenant.", "who": "True for any Microsoft 365 customer under Microsoft's Product Terms. Your IT lead can confirm it in a minute.", "if_wrong": "The Microsoft card should not be marked on file until a named person has confirmed it." },
+      { "id": "google_terms", "when": "any(company, company_id == 'google_workspace')", "text": "Google's Workspace for Education terms and Data Processing Addendum cover your tenant.", "who": "True for any Workspace for Education customer. Your IT lead can confirm it in a minute.", "if_wrong": "The Google card should not be marked on file until a named person has confirmed it." },
+      { "id": "canva_account", "when": "any(company, company_id == 'canva')", "text": "Canva is used under a Canva for Education or Canva Teams account, not personal logins.", "who": "Whoever set it up; the account type shows in Canva's admin settings.", "if_wrong": "Personal accounts have no agreement with the organisation. Set the plan on the Canva box to free or personal and the answer changes." },
+      { "id": "notice_and_register", "when": "highest_tier >= 1", "text": "A privacy notice and a record of processing already exist.", "who": "The DPO or governance lead.", "if_wrong": "'Add a paragraph' becomes 'write a notice', and 'check the register' becomes 'start one'." },
+      { "id": "policy_document", "when": "highest_tier >= 3", "text": "Special category data has an appropriate policy document behind it.", "who": "The DPO. It is required with most Schedule 1 conditions.", "if_wrong": "Write one before the Article 9 condition can be relied on." }
+    ]
+  },
+
   "notes": [
     { "when": "retrospective && outcome != 'not_required'", "say": "This is already in use, so the check is late. Do it now anyway: it is the only way to address what it finds." }
   ],
@@ -229,7 +243,7 @@
       { "type": "data", "lever": "free_text_or_audio", "to": false, "when": "free_text_or_audio", "cost": "Only structured fields go in; no open text or recordings.", "how": "Use a form with fixed answers instead of a comments box or recording." },
       { "type": "purpose", "lever": "decides_alone", "to": false, "when": "decides_alone", "cost": "A person must check each outcome.", "how": "Add a step where a named role reviews each result before it counts." },
       { "type": "purpose", "lever": "staff_can_override", "to": true, "when": "!staff_can_override", "cost": "Adds a review step.", "how": "Make sure staff can change any output before it is used." },
-      { "type": "company", "lever": "company_id", "to": "sanctioned_equivalent", "when": "blocked", "cost": "Switch tool to the approved one.", "how": "Use the sanctioned route for this tier instead." }
+      { "type": "company", "lever": "company_id", "to": "sanctioned_equivalent", "when": "blocked", "cost": "A different tool, so the way of working changes.", "how": "Use the route your organisation has approved for this level instead of this supplier." }
     ]
   },
 

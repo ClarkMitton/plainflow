@@ -1,0 +1,266 @@
+{
+  "id": "example_10_simplified_texts_gemini_workspace",
+  "title": "Simplified reading texts with Gemini in Google Workspace",
+  "story": "A teaching assistant puts student work about pupils (11 to 16) into Gemini in Google Workspace, run by Google (Workspace for Education), to simplify reading texts.",
+  "mode": "flow_first",
+  "tier_pinned": null,
+  "status": "draft",
+  "retrospective": false,
+  "owner": "governance lead",
+  "organisation": {
+    "name": "[organisation]",
+    "type": "college",
+    "default_lawful_basis": "public_task"
+  },
+  "dates": {
+    "created": "2026-11-08",
+    "launch": null,
+    "running_since": null,
+    "review": null
+  },
+  "version": 1,
+  "nodes": [
+    {
+      "id": "n_mw7zgud43b",
+      "type": "people",
+      "title": "Pupils (11 to 16)",
+      "position": {
+        "x": 40,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "under_16",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "learners",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7zgud43f",
+      "type": "data",
+      "title": "Student work",
+      "position": {
+        "x": 40,
+        "y": 258
+      },
+      "inside": true,
+      "levers": {
+        "identifiability": "named",
+        "about_performance": true,
+        "special_category": false,
+        "free_text_or_audio": true,
+        "new_purpose": false,
+        "new_collection": false,
+        "student_facing": false
+      },
+      "fields": {
+        "categories": [
+          "name",
+          "grades",
+          "free_text"
+        ],
+        "source_system": "",
+        "lawful_basis": "public_task",
+        "about": [
+          "n_mw7zgud43b"
+        ],
+        "kind": "work"
+      }
+    },
+    {
+      "id": "n_mw7zgud43c",
+      "type": "people",
+      "title": "Teaching assistant",
+      "position": {
+        "x": 40,
+        "y": 596
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "all_adults",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "staff",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7zgud43e",
+      "type": "system",
+      "title": "Gemini in Google Workspace",
+      "position": {
+        "x": 360,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "is_ai": true,
+        "output_type": "suggestion",
+        "validated_by_person": true,
+        "staff_can_override": true,
+        "plan": "free"
+      },
+      "fields": {
+        "product_id": "gemini_workspace",
+        "use_case": "identifiable_work",
+        "testing": {
+          "date": "",
+          "sample": "",
+          "result": ""
+        },
+        "fairness_check": {
+          "date": "",
+          "groups": [],
+          "result": ""
+        }
+      }
+    },
+    {
+      "id": "n_mw7zgud43d",
+      "type": "purpose",
+      "title": "Simplify reading texts",
+      "position": {
+        "x": 360,
+        "y": 338
+      },
+      "inside": true,
+      "levers": {
+        "scores": false,
+        "decides_alone": false,
+        "staff_can_override": true,
+        "ongoing": false,
+        "whole_cohort": false,
+        "tracks_behaviour": false,
+        "can_block": false,
+        "privacy_notice_linked": true
+      },
+      "fields": {
+        "value": "",
+        "alternatives": "",
+        "should_it_be_done": "",
+        "scale": null,
+        "privacy_notice_url": null,
+        "challenge_route": ""
+      }
+    },
+    {
+      "id": "n_mw7zgud43k",
+      "type": "company",
+      "title": "Google (Workspace for Education)",
+      "position": {
+        "x": 760,
+        "y": 40
+      },
+      "inside": false,
+      "levers": {
+        "role": "processor",
+        "decides_purpose": false,
+        "decides_means": false,
+        "own_purposes": false,
+        "trains_on_inputs": false,
+        "keeps_data": true
+      },
+      "fields": {
+        "company_id": "google_workspace",
+        "card_ref": "google_workspace",
+        "region": "US",
+        "transfer_mechanism": "addendum",
+        "retention": "per tenant retention",
+        "deletion_route": "Admin console",
+        "security_assessment": {
+          "status": "accepted",
+          "date": "[date]"
+        },
+        "art28": {
+          "instructions_only": "DPA [verify]",
+          "confidentiality": "DPA [verify]",
+          "security": "DPA [verify]",
+          "sub_processor_authorisation": "DPA [verify]",
+          "rights_assistance": "DPA [verify]",
+          "breach_assistance": "DPA [verify]",
+          "dpia_assistance": "DPA [verify]",
+          "deletion_or_return": "DPA [verify]",
+          "audit": null
+        },
+        "dpa_document": "[link to Google Workspace Data Processing Addendum]",
+        "prior_dpia": null,
+        "owner": "governance lead",
+        "review_date": "[date]"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_mw7zgud43g",
+      "from": "n_mw7zgud43b",
+      "to": "n_mw7zgud43d",
+      "kind": "about",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7zgud43h",
+      "from": "n_mw7zgud43c",
+      "to": "n_mw7zgud43d",
+      "kind": "by",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7zgud43i",
+      "from": "n_mw7zgud43f",
+      "to": "n_mw7zgud43e",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7zgud43j",
+      "from": "n_mw7zgud43e",
+      "to": "n_mw7zgud43d",
+      "kind": "feeds",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7zgud43l",
+      "from": "n_mw7zgud43e",
+      "to": "n_mw7zgud43k",
+      "kind": "carries",
+      "data_id": null
+    }
+  ],
+  "pinned": null,
+  "changelog": [],
+  "sentence_input": {
+    "role": "Teaching assistant",
+    "data": [
+      {
+        "kind": "work",
+        "label": "student work (essays, assignments)"
+      }
+    ],
+    "about": {
+      "kind": "pupils_secondary",
+      "label": "pupils (11 to 16)"
+    },
+    "under18": "under_16",
+    "product": "gemini_workspace",
+    "otherTool": null,
+    "purpose": {
+      "kind": null,
+      "label": "simplify reading texts"
+    }
+  },
+  "first_draw": true,
+  "answers": {
+    "lawful_basis:n_mw7zgud43f": "It is part of our public task",
+    "told:n_mw7zgud43d": "Yes, it is in our privacy notice",
+    "use_case:n_mw7zgud43e": "Work with things people can be identified from",
+    "risk_owner": "the SENCO"
+  },
+  "checked": true,
+  "risk_owner": "the SENCO"
+}

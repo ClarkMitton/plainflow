@@ -147,9 +147,9 @@ describe("people a contractor meets", () => {
   });
 
   it("marketing wants customer photos in Canva", () => {
-    const flow = build({ role: "Marketing", data: [choices.data("media")], product: "canva", purpose: choices.purpose("messages", "make social posts") });
+    const flow = answer(build({ role: "Marketing", data: [choices.data("media")], product: "canva", purpose: choices.purpose("messages", "make social posts") }), { plan: "A paid business plan" });
     const d = derive(flow, ruleSet);
-    tell("Marketing, customer photos, Canva", flow, d);
+    tell("Marketing, customer photos, Canva (Teams plan)", flow, d);
     expect(d.highest_tier).toBe(2);
     expect(d.verdict.id).toBe("not_like_this");
   });

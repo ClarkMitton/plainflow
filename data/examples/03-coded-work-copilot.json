@@ -21,7 +21,7 @@
   "version": 1,
   "nodes": [
     {
-      "id": "n_mw7yubl2p",
+      "id": "n_mw7zguchp",
       "type": "people",
       "title": "Students (16 plus)",
       "position": {
@@ -40,7 +40,7 @@
       }
     },
     {
-      "id": "n_mw7yubl3t",
+      "id": "n_mw7zgucht",
       "type": "data",
       "title": "Student work",
       "position": {
@@ -66,13 +66,13 @@
         "source_system": "",
         "lawful_basis": "public_task",
         "about": [
-          "n_mw7yubl2p"
+          "n_mw7zguchp"
         ],
         "kind": "work"
       }
     },
     {
-      "id": "n_mw7yubl3q",
+      "id": "n_mw7zguchq",
       "type": "people",
       "title": "Teacher",
       "position": {
@@ -91,7 +91,7 @@
       }
     },
     {
-      "id": "n_mw7yubl3s",
+      "id": "n_mw7zguchs",
       "type": "system",
       "title": "Copilot",
       "position": {
@@ -122,7 +122,7 @@
       }
     },
     {
-      "id": "n_mw7yubl3r",
+      "id": "n_mw7zguchr",
       "type": "purpose",
       "title": "Draft feedback",
       "position": {
@@ -152,7 +152,7 @@
       }
     },
     {
-      "id": "n_mw7yubl3y",
+      "id": "n_mw7zguchy",
       "type": "company",
       "title": "Microsoft",
       "position": {
@@ -197,7 +197,7 @@
       }
     },
     {
-      "id": "n_mw7yubl410",
+      "id": "n_mw7zguci10",
       "type": "company",
       "title": "OpenAI via Azure",
       "position": {
@@ -234,44 +234,44 @@
   ],
   "edges": [
     {
-      "id": "e_mw7yubl3u",
-      "from": "n_mw7yubl2p",
-      "to": "n_mw7yubl3r",
+      "id": "e_mw7zguchu",
+      "from": "n_mw7zguchp",
+      "to": "n_mw7zguchr",
       "kind": "about",
       "data_id": null
     },
     {
-      "id": "e_mw7yubl3v",
-      "from": "n_mw7yubl3q",
-      "to": "n_mw7yubl3r",
+      "id": "e_mw7zguchv",
+      "from": "n_mw7zguchq",
+      "to": "n_mw7zguchr",
       "kind": "by",
       "data_id": null
     },
     {
-      "id": "e_mw7yubl3w",
-      "from": "n_mw7yubl3t",
-      "to": "n_mw7yubl3s",
+      "id": "e_mw7zguchw",
+      "from": "n_mw7zgucht",
+      "to": "n_mw7zguchs",
       "kind": "carries",
       "data_id": null
     },
     {
-      "id": "e_mw7yubl3x",
-      "from": "n_mw7yubl3s",
-      "to": "n_mw7yubl3r",
+      "id": "e_mw7zguchx",
+      "from": "n_mw7zguchs",
+      "to": "n_mw7zguchr",
       "kind": "feeds",
       "data_id": null
     },
     {
-      "id": "e_mw7yubl4z",
-      "from": "n_mw7yubl3s",
-      "to": "n_mw7yubl3y",
+      "id": "e_mw7zguciz",
+      "from": "n_mw7zguchs",
+      "to": "n_mw7zguchy",
       "kind": "carries",
       "data_id": null
     },
     {
-      "id": "e_mw7yubl411",
-      "from": "n_mw7yubl3y",
-      "to": "n_mw7yubl410",
+      "id": "e_mw7zguci11",
+      "from": "n_mw7zguchy",
+      "to": "n_mw7zguci10",
       "kind": "sub_processor",
       "data_id": null
     }
@@ -300,10 +300,11 @@
   },
   "first_draw": true,
   "answers": {
-    "names:n_mw7yubl3t": "By a code we can look up",
-    "lawful_basis:n_mw7yubl3t": "It is part of our public task",
-    "told:n_mw7yubl3r": "Yes, it is in our privacy notice",
-    "use_case:n_mw7yubl3s": "Suggest a mark or feedback"
+    "names:n_mw7zgucht": "By a code we can look up",
+    "lawful_basis:n_mw7zgucht": "It is part of our public task",
+    "told:n_mw7zguchr": "Yes, it is in our privacy notice",
+    "use_case:n_mw7zguchs": "Suggest a mark or feedback",
+    "risk_owner": "the head of department"
   },
   "checked": true,
   "risk_owner": "the head of department"

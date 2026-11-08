@@ -89,6 +89,12 @@
       "region_default": "US",
       "dpa_url": "[verify]",
       "notes": ""
+    },
+    "google_workspace": {
+      "name": "Google (Workspace for Education)",
+      "region_default": "US",
+      "dpa_url": "https://workspace.google.com/terms/dpa_terms.html",
+      "notes": "The organisation's Google tenant: Classroom, Drive, Docs, Forms, Gmail. Covered by the Workspace for Education terms and Data Processing Addendum. Consumer Google accounts are a different company entry."
     }
   },
   "products": {
@@ -121,6 +127,23 @@
       "is_ai": false,
       "keeps_data_default": "per tenant retention",
       "trains_on_inputs_default": false
+    },
+    "google_workspace": {
+      "name": "Google Workspace for Education (Classroom, Drive, Forms)",
+      "company": "google_workspace",
+      "sub_processors": [],
+      "is_ai": false,
+      "keeps_data_default": "per tenant retention",
+      "trains_on_inputs_default": false
+    },
+    "gemini_workspace": {
+      "name": "Gemini in Google Workspace",
+      "company": "google_workspace",
+      "sub_processors": [],
+      "is_ai": true,
+      "keeps_data_default": "per tenant retention [verify]",
+      "trains_on_inputs_default": false,
+      "notes": "Gemini for Workspace runs under the Workspace terms: no training on your content, admin controls [verify]. Consumer Gemini is the separate entry."
     },
     "power_platform": {
       "name": "Power Automate / Power Apps / Power BI",
@@ -177,7 +200,33 @@
       ],
       "is_ai": true,
       "keeps_data_default": "[verify]",
-      "trains_on_inputs_default": "[verify]"
+      "trains_on_inputs_default": "[verify]",
+      "plans": {
+        "free": {
+          "max_tier": 0,
+          "ai": false,
+          "dpa": false,
+          "trains": true,
+          "cost": "free",
+          "note": "A personal Canva account: no agreement with the organisation, and content may be used to improve features unless opted out [verify]."
+        },
+        "business": {
+          "max_tier": 1,
+          "ai": false,
+          "dpa": true,
+          "trains": false,
+          "cost": "Canva for Education is free for schools; Canva Teams is paid [verify]",
+          "note": "Canva for Education or Canva Teams counts as the organisation's plan: admin controls, education terms and a data processing agreement. AI features (Magic Studio) are off for students unless the organisation approves them [verify]."
+        },
+        "enterprise": {
+          "max_tier": 1,
+          "ai": false,
+          "dpa": true,
+          "trains": false,
+          "cost": "on application",
+          "note": "Canva Enterprise: single sign-on and admin controls [verify]."
+        }
+      }
     },
     "lovable_app": {
       "name": "App built on Lovable",

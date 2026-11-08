@@ -356,6 +356,7 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
   scope.vars.stop_count = brightLines.filter((b) => b.kind === "stop").length;
   scope.vars.consult_count = brightLines.filter((b) => b.kind === "consult").length;
   const notes = rules.notes.filter((x) => test(x.when, global)).map((x) => fill(x.say, global));
+  const assumptions = (rules.assumptions?.rules ?? []).filter((x) => test(x.when, global)).map((x) => ({ id: x.id, text: x.text, who: x.who, if_wrong: x.if_wrong }));
   const v = rules.verdict.find((r) => test(r.when, global)) ?? rules.verdict[rules.verdict.length - 1];
 
   const needsPerson = [
@@ -399,6 +400,7 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
     verdict: { id: v.id, label: capitalise(fill(v.label, global)), say: capitalise(fill(v.say, global)) },
     bright_lines: brightLines,
     notes,
+    assumptions,
     needs_person: needsPerson,
     role_hints: roleHints,
     cheapest_change: null,

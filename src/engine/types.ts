@@ -112,6 +112,7 @@ export interface Rules {
   verdict: { id: string; label: string; when: string; say: string }[];
   bright_lines: { note: string; power_imbalance_groups: string[]; rules: { id: string; kind: "stop" | "consult"; type: NodeType | "flow"; when: string; title: string; say: string; ways_out: string[]; source: string; law?: string }[] };
   notes: { when: string; say: string }[];
+  assumptions: { note: string; rules: { id: string; when: string; text: string; who: string; if_wrong: string }[] };
   always_human: { note: string; always: string[]; when_full_dpia: string[] };
   cheapest_change: { note: string; candidates: { type: NodeType; lever: string; to: unknown; when: string; cost: string; how: string }[] };
   levers: Record<NodeType, LeverDef[]> & { note: string };
@@ -263,6 +264,8 @@ export interface Derivation {
   verdict: { id: string; label: string; say: string };
   bright_lines: { id: string; kind: "stop" | "consult"; node: string | null; title: string; say: string; ways_out: string[]; source: Source | null; law: Law | null }[];
   notes: string[];
+  /** Standing assumptions the answer rests on, for the pack to ask people to check. */
+  assumptions: { id: string; text: string; who: string; if_wrong: string }[];
   needs_person: string[];
   role_hints: Record<string, string[]>;
   cheapest_change: CheapestChange | null;

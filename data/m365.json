@@ -2,57 +2,302 @@
   "note": "What a Microsoft 365 customer already has, and which outside tool each part replaces. This is what lets Plainflow say 'you already pay for a route with less to sign'. Licence contents and prices are as understood in November 2026 and marked [verify]; they move. Plainflow never overrules the person's choice: it shows the lighter route beside theirs and lets them compare.",
   "checked": "November 2026",
   "licences": {
-    "unknown": { "label": "Don't know", "sector": "any", "includes": ["copilot_chat", "teams_transcription", "power_automate_standard", "power_apps_standard", "sharepoint_sharing", "forms"] },
-    "business_basic": { "label": "Business Basic", "sector": "business", "includes": ["copilot_chat", "teams_transcription", "power_automate_standard", "power_apps_standard", "sharepoint_sharing", "forms"] },
-    "business_standard": { "label": "Business Standard", "sector": "business", "includes": ["copilot_chat", "teams_transcription", "power_automate_standard", "power_apps_standard", "sharepoint_sharing", "forms", "desktop_apps"] },
-    "business_premium": { "label": "Business Premium", "sector": "business", "includes": ["copilot_chat", "teams_transcription", "power_automate_standard", "power_apps_standard", "sharepoint_sharing", "forms", "desktop_apps", "purview_basic"] },
-    "e3": { "label": "Microsoft 365 E3", "sector": "enterprise", "includes": ["copilot_chat", "teams_transcription", "power_automate_standard", "power_apps_standard", "sharepoint_sharing", "forms", "desktop_apps", "purview_basic"] },
-    "e5": { "label": "Microsoft 365 E5", "sector": "enterprise", "includes": ["copilot_chat", "teams_transcription", "power_automate_standard", "power_apps_standard", "sharepoint_sharing", "forms", "desktop_apps", "purview_basic", "purview_dlp"] },
-    "a1": { "label": "Microsoft 365 A1 (education)", "sector": "education", "includes": ["copilot_chat", "teams_transcription", "power_automate_standard", "power_apps_standard", "sharepoint_sharing", "forms"] },
-    "a3": { "label": "Microsoft 365 A3 (education)", "sector": "education", "includes": ["copilot_chat", "teams_transcription", "power_automate_standard", "power_apps_standard", "sharepoint_sharing", "forms", "desktop_apps", "purview_basic"] },
-    "a5": { "label": "Microsoft 365 A5 (education)", "sector": "education", "includes": ["copilot_chat", "teams_transcription", "power_automate_standard", "power_apps_standard", "sharepoint_sharing", "forms", "desktop_apps", "purview_basic", "purview_dlp"] }
+    "unknown": {
+      "label": "Don't know",
+      "sector": "any",
+      "includes": [
+        "copilot_chat",
+        "teams_transcription",
+        "power_automate_standard",
+        "power_apps_standard",
+        "sharepoint_sharing",
+        "forms"
+      ]
+    },
+    "business_basic": {
+      "label": "Business Basic",
+      "sector": "business",
+      "includes": [
+        "copilot_chat",
+        "teams_transcription",
+        "power_automate_standard",
+        "power_apps_standard",
+        "sharepoint_sharing",
+        "forms"
+      ]
+    },
+    "business_standard": {
+      "label": "Business Standard",
+      "sector": "business",
+      "includes": [
+        "copilot_chat",
+        "teams_transcription",
+        "power_automate_standard",
+        "power_apps_standard",
+        "sharepoint_sharing",
+        "forms",
+        "desktop_apps"
+      ]
+    },
+    "business_premium": {
+      "label": "Business Premium",
+      "sector": "business",
+      "includes": [
+        "copilot_chat",
+        "teams_transcription",
+        "power_automate_standard",
+        "power_apps_standard",
+        "sharepoint_sharing",
+        "forms",
+        "desktop_apps",
+        "purview_basic"
+      ]
+    },
+    "e3": {
+      "label": "Microsoft 365 E3",
+      "sector": "enterprise",
+      "includes": [
+        "copilot_chat",
+        "teams_transcription",
+        "power_automate_standard",
+        "power_apps_standard",
+        "sharepoint_sharing",
+        "forms",
+        "desktop_apps",
+        "purview_basic"
+      ]
+    },
+    "e5": {
+      "label": "Microsoft 365 E5",
+      "sector": "enterprise",
+      "includes": [
+        "copilot_chat",
+        "teams_transcription",
+        "power_automate_standard",
+        "power_apps_standard",
+        "sharepoint_sharing",
+        "forms",
+        "desktop_apps",
+        "purview_basic",
+        "purview_dlp"
+      ]
+    },
+    "a1": {
+      "label": "Microsoft 365 A1 (education)",
+      "sector": "education",
+      "includes": [
+        "copilot_chat",
+        "teams_transcription",
+        "power_automate_standard",
+        "power_apps_standard",
+        "sharepoint_sharing",
+        "forms"
+      ]
+    },
+    "a3": {
+      "label": "Microsoft 365 A3 (education)",
+      "sector": "education",
+      "includes": [
+        "copilot_chat",
+        "teams_transcription",
+        "power_automate_standard",
+        "power_apps_standard",
+        "sharepoint_sharing",
+        "forms",
+        "desktop_apps",
+        "purview_basic"
+      ]
+    },
+    "a5": {
+      "label": "Microsoft 365 A5 (education)",
+      "sector": "education",
+      "includes": [
+        "copilot_chat",
+        "teams_transcription",
+        "power_automate_standard",
+        "power_apps_standard",
+        "sharepoint_sharing",
+        "forms",
+        "desktop_apps",
+        "purview_basic",
+        "purview_dlp"
+      ]
+    }
   },
   "features": {
-    "copilot_chat": { "label": "Microsoft 365 Copilot Chat", "product": "m365_copilot_chat", "does": "Chat, drafting and summarising from a prompt, signed in with a work account, under Microsoft's enterprise data protection: prompts aren't used to train and stay in the Microsoft contract you already have.", "caveat": "It only sees what you paste or upload; it doesn't read your emails or files unless you have the full Copilot licence. Make sure people use the work sign-in, not a personal one.", "addon_cost": null, "included_note": "included with every work or school Microsoft 365 licence [verify]" },
-    "copilot": { "label": "Microsoft 365 Copilot in Word, Outlook, Teams and Excel", "product": "m365_copilot", "does": "The same drafting and summarising inside the apps, drawing on your own emails, files and meetings, inside the tenant.", "caveat": "The Anthropic models offered inside Copilot sit outside the EU Data Boundary; an admin can switch them off. Copilot sees whatever the person can already open, so file permissions need to be right first.", "addon_cost": "about £24 a seat a month, annual [verify]", "included_note": null },
-    "teams_transcription": { "label": "Teams meeting transcription and recording", "product": "m365", "does": "A transcript and recording of a Teams meeting, kept in the tenant, with Copilot recap if the full licence is there.", "caveat": "People must be told the meeting is recorded. Transcripts are personal data: set who can see them and how long they're kept.", "addon_cost": null, "included_note": "included with Business Basic, A1 and above [verify]" },
-    "power_automate_standard": { "label": "Power Automate with standard connectors", "product": "power_platform", "does": "Automations across Outlook, Teams, SharePoint, Forms and Excel, inside the tenant.", "caveat": "Connectors to outside systems (Xero, SQL, HTTP) are premium: about £12 a seat a month [verify].", "addon_cost": null, "included_note": "included with Microsoft 365 [verify]" },
-    "power_apps_standard": { "label": "Power Apps over a SharePoint list", "product": "custom_app_m365", "does": "A simple app for forms, trackers and lookups, with the data in a SharePoint list inside the tenant and Microsoft sign-in built in.", "caveat": "Dataverse and premium connectors need Power Apps Premium: about £16 a seat a month, or about £4 per app [verify]. SharePoint lists can't do row-level security.", "addon_cost": null, "included_note": "included with Microsoft 365 [verify]" },
-    "sharepoint_sharing": { "label": "SharePoint and OneDrive sharing", "product": "m365", "does": "Sharing a file or folder with a named outside person as a guest, with access that can be taken back, instead of emailing a copy.", "caveat": "Guest access has to be allowed by the admin, and you still need a sharing agreement if the other organisation decides things with you.", "addon_cost": null, "included_note": "included with Microsoft 365 [verify]" },
-    "forms": { "label": "Microsoft Forms", "product": "m365", "does": "Surveys and sign-up forms with answers kept in the tenant.", "caveat": "", "addon_cost": null, "included_note": "included with Microsoft 365 [verify]" },
-    "desktop_apps": { "label": "Word, Excel, PowerPoint on the desktop", "product": "m365", "does": "Templates and design in PowerPoint and Word.", "caveat": "", "addon_cost": null, "included_note": "included with Business Standard, E3, A3 and above [verify]" },
-    "purview_basic": { "label": "Purview information protection (basic)", "product": "m365", "does": "Sensitivity labels and retention policies.", "caveat": "", "addon_cost": null, "included_note": "included with Business Premium, E3, A3 and above [verify]" },
-    "purview_dlp": { "label": "Purview data loss prevention", "product": "m365", "does": "Rules that stop sensitive data being shared or pasted into the wrong place, including into Copilot.", "caveat": "", "addon_cost": null, "included_note": "included with E5 and A5 [verify]" },
-    "azure_openai": { "label": "Azure OpenAI in your own tenant", "product": "azure_openai", "does": "The same models as ChatGPT, run in your own Azure subscription and region, under the Microsoft contract, for an app you build.", "caveat": "Needs an Azure subscription and someone to set it up; pay per use.", "addon_cost": "pay per use, through an Azure subscription [verify]", "included_note": null }
+    "copilot_chat": {
+      "label": "Microsoft 365 Copilot Chat",
+      "product": "m365_copilot_chat",
+      "does": "Chat, drafting and summarising from a prompt, signed in with a work account, under Microsoft's enterprise data protection: prompts aren't used to train and stay in the Microsoft contract you already have.",
+      "caveat": "It only sees what you paste or upload; it doesn't read your emails or files unless you have the full Copilot licence. Make sure people use the work sign-in, not a personal one.",
+      "addon_cost": null,
+      "included_note": "included with every work or school Microsoft 365 licence [verify]"
+    },
+    "copilot": {
+      "label": "Microsoft 365 Copilot in Word, Outlook, Teams and Excel",
+      "product": "m365_copilot",
+      "does": "The same drafting and summarising inside the apps, drawing on your own emails, files and meetings, inside the tenant.",
+      "caveat": "The Anthropic models offered inside Copilot sit outside the EU Data Boundary; an admin can switch them off. Copilot sees whatever the person can already open, so file permissions need to be right first.",
+      "addon_cost": "about £24 a seat a month, annual [verify]",
+      "included_note": null
+    },
+    "teams_transcription": {
+      "label": "Teams meeting transcription and recording",
+      "product": "m365",
+      "does": "A transcript and recording of a Teams meeting, kept in the tenant, with Copilot recap if the full licence is there.",
+      "caveat": "People must be told the meeting is recorded. Transcripts are personal data: set who can see them and how long they're kept.",
+      "addon_cost": null,
+      "included_note": "included with Business Basic, A1 and above [verify]"
+    },
+    "power_automate_standard": {
+      "label": "Power Automate with standard connectors",
+      "product": "power_platform",
+      "does": "Automations across Outlook, Teams, SharePoint, Forms and Excel, inside the tenant.",
+      "caveat": "Connectors to outside systems (Xero, SQL, HTTP) are premium: about £12 a seat a month [verify].",
+      "addon_cost": null,
+      "included_note": "included with Microsoft 365 [verify]"
+    },
+    "power_apps_standard": {
+      "label": "Power Apps over a SharePoint list",
+      "product": "custom_app_m365",
+      "does": "A simple app for forms, trackers and lookups, with the data in a SharePoint list inside the tenant and Microsoft sign-in built in.",
+      "caveat": "Dataverse and premium connectors need Power Apps Premium: about £16 a seat a month, or about £4 per app [verify]. SharePoint lists can't do row-level security.",
+      "addon_cost": null,
+      "included_note": "included with Microsoft 365 [verify]"
+    },
+    "sharepoint_sharing": {
+      "label": "SharePoint and OneDrive sharing",
+      "product": "m365",
+      "does": "Sharing a file or folder with a named outside person as a guest, with access that can be taken back, instead of emailing a copy.",
+      "caveat": "Guest access has to be allowed by the admin, and you still need a sharing agreement if the other organisation decides things with you.",
+      "addon_cost": null,
+      "included_note": "included with Microsoft 365 [verify]"
+    },
+    "forms": {
+      "label": "Microsoft Forms",
+      "product": "m365",
+      "does": "Surveys and sign-up forms with answers kept in the tenant.",
+      "caveat": "",
+      "addon_cost": null,
+      "included_note": "included with Microsoft 365 [verify]"
+    },
+    "desktop_apps": {
+      "label": "Word, Excel, PowerPoint on the desktop",
+      "product": "m365",
+      "does": "Templates and design in PowerPoint and Word.",
+      "caveat": "",
+      "addon_cost": null,
+      "included_note": "included with Business Standard, E3, A3 and above [verify]"
+    },
+    "purview_basic": {
+      "label": "Purview information protection (basic)",
+      "product": "m365",
+      "does": "Sensitivity labels and retention policies.",
+      "caveat": "",
+      "addon_cost": null,
+      "included_note": "included with Business Premium, E3, A3 and above [verify]"
+    },
+    "purview_dlp": {
+      "label": "Purview data loss prevention",
+      "product": "m365",
+      "does": "Rules that stop sensitive data being shared or pasted into the wrong place, including into Copilot.",
+      "caveat": "",
+      "addon_cost": null,
+      "included_note": "included with E5 and A5 [verify]"
+    },
+    "azure_openai": {
+      "label": "Azure OpenAI in your own tenant",
+      "product": "azure_openai",
+      "does": "The same models as ChatGPT, run in your own Azure subscription and region, under the Microsoft contract, for an app you build.",
+      "caveat": "Needs an Azure subscription and someone to set it up; pay per use.",
+      "addon_cost": "pay per use, through an Azure subscription [verify]",
+      "included_note": null
+    }
   },
   "equivalents": {
     "note": "Outside tool (product id) to the Microsoft features that do the same job, best first. 'by_purpose' and 'by_data' cover tools Plainflow doesn't know ('Something else').",
     "by_product": {
-      "chatgpt": ["copilot_chat", "copilot"],
-      "claude": ["copilot_chat", "copilot"],
-      "grok": ["copilot_chat", "copilot"],
-      "gemini_consumer": ["copilot_chat", "copilot"],
-      "lovable_app": ["power_apps_standard"],
-      "lovable_ai_gateway": ["azure_openai", "copilot"],
-      "replit_app": ["power_apps_standard"],
-      "base44_app": ["power_apps_standard"],
-      "canva": ["desktop_apps"],
-      "spreadsheet_email": ["sharepoint_sharing"]
+      "chatgpt": [
+        "copilot_chat",
+        "copilot"
+      ],
+      "claude": [
+        "copilot_chat",
+        "copilot"
+      ],
+      "grok": [
+        "copilot_chat",
+        "copilot"
+      ],
+      "gemini_consumer": [
+        "copilot_chat",
+        "copilot"
+      ],
+      "lovable_app": [
+        "power_apps_standard"
+      ],
+      "lovable_ai_gateway": [
+        "azure_openai",
+        "copilot"
+      ],
+      "replit_app": [
+        "power_apps_standard"
+      ],
+      "base44_app": [
+        "power_apps_standard"
+      ],
+      "canva": [
+        "desktop_apps"
+      ],
+      "spreadsheet_email": [
+        "sharepoint_sharing"
+      ],
+      "edpuzzle": [
+        "forms"
+      ],
+      "nearpod": [
+        "forms"
+      ]
     },
     "by_purpose": {
-      "messages": ["copilot_chat", "copilot"],
-      "feedback": ["copilot_chat", "copilot"],
-      "reports": ["copilot_chat", "copilot"],
-      "plan": ["copilot_chat"],
-      "mark": ["copilot"],
-      "analyse": ["power_automate_standard"],
-      "predict": ["power_automate_standard"],
-      "attendance": ["power_automate_standard"],
-      "share": ["sharepoint_sharing"]
+      "messages": [
+        "copilot_chat",
+        "copilot"
+      ],
+      "feedback": [
+        "copilot_chat",
+        "copilot"
+      ],
+      "reports": [
+        "copilot_chat",
+        "copilot"
+      ],
+      "plan": [
+        "copilot_chat"
+      ],
+      "mark": [
+        "copilot"
+      ],
+      "analyse": [
+        "power_automate_standard"
+      ],
+      "predict": [
+        "power_automate_standard"
+      ],
+      "attendance": [
+        "power_automate_standard"
+      ],
+      "share": [
+        "sharepoint_sharing"
+      ]
     },
     "by_data": {
-      "recordings": ["teams_transcription"],
-      "survey": ["forms"]
+      "recordings": [
+        "teams_transcription"
+      ],
+      "survey": [
+        "forms"
+      ]
     }
   }
 }

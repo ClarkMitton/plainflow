@@ -336,7 +336,7 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
           </div>
           <div style={{ padding: "12px 14px 14px" }}>
             <div>
-              {cc.lever === "company_id" ? "Switch" : "Change"} <strong>{cc.node_title}</strong>: {ccLever?.label ?? cc.lever.replace(/_/g, " ")} to <strong>{ccTo}</strong>.{" "}
+              {cc.lever === "company_id" ? <>Switch <strong>{cc.node_title}</strong> for <strong>{ccTo}</strong>.</> : <>Change <strong>{cc.node_title}</strong>: {ccLever?.label ?? cc.lever.replace(/_/g, " ")} to <strong>{ccTo}</strong>.</>}{" "}
               {cc.unblocks > 0 ? clearsText(cc.unblocks, d) : `That lifts ${cc.removes.length} thing${cc.removes.length === 1 ? "" : "s"} to do.`}
             </div>
             <div style={{ marginTop: 6, color: "var(--muted)", fontSize: 13 }}>Trade-off: {cc.cost}</div>

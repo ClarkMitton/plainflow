@@ -14,6 +14,7 @@ interface Example {
   sentence: Sentence;
   answers: Record<string, string>;
   riskOwner?: string;
+  retrospective?: boolean;
 }
 
 const data = (kind: string, label: string) => ({ kind, label });
@@ -54,7 +55,7 @@ const EXAMPLES: Example[] = [
     file: "05-photos-canva",
     title: "Photos in Canva for a display",
     sentence: { role: "Head of department", data: [data("media", "photos or video")], about: { kind: "students", label: "students (16 plus)" }, under18: "some_under_18", product: "canva", otherTool: null, purpose: { kind: null, label: "make an open evening display" } },
-    answers: { lawful_basis: "Consent, and they can refuse with no consequences", told: "Yes, it is in our privacy notice" },
+    answers: { lawful_basis: "Consent, and they can refuse with no consequences", told: "Yes, it is in our privacy notice", plan: "A paid business plan" },
   },
   {
     file: "06-wellbeing-notes-unknown-ai",
@@ -82,6 +83,34 @@ const EXAMPLES: Example[] = [
     answers: { lawful_basis: "Our legitimate interests", told: "No, or not sure" },
     riskOwner: "the chief executive",
   },
+  {
+    file: "10-simplified-texts-gemini-workspace",
+    title: "Simplified reading texts with Gemini in Google Workspace",
+    sentence: { role: "Teaching assistant", data: [data("work", "student work (essays, assignments)")], about: { kind: "pupils_secondary", label: "pupils (11 to 16)" }, under18: "under_16", product: "gemini_workspace", otherTool: null, purpose: { kind: null, label: "simplify reading texts" } },
+    answers: { lawful_basis: "It is part of our public task", told: "Yes, it is in our privacy notice", use_case: "Work with things people can be identified from" },
+    riskOwner: "the SENCO",
+  },
+  {
+    file: "11-parents-evening-transcripts-teams",
+    title: "Parents' evening notes from Teams transcripts",
+    sentence: { role: "Head of department", data: [data("recordings", "meeting or lesson recordings")], about: { kind: "parents", label: "parents" }, under18: "all_adults", product: "m365", otherTool: null, purpose: { kind: "reports", label: "write reports" } },
+    answers: { lawful_basis: "It is part of our public task", told: "No, or not sure" },
+    riskOwner: "the deputy headteacher",
+  },
+  {
+    file: "12-leave-requests-power-apps",
+    title: "Staff leave requests in a Power Apps form",
+    sentence: { role: "IT", data: [data("contact", "names and contact details"), data("sensitive", "health, SEND or safeguarding information")], about: { kind: "staff", label: "staff" }, under18: "all_adults", product: "power_platform", otherTool: null, purpose: { kind: null, label: "manage leave requests" } },
+    answers: { lawful_basis: "It is needed for a contract with them", told: "Yes, it is in our privacy notice" },
+    riskOwner: "the HR director",
+  },
+  {
+    file: "13-edpuzzle-quizzes-already-in-use",
+    title: "Edpuzzle video quizzes, pupils logging in",
+    sentence: { role: "Teacher", data: [data("grades", "marks and grades"), data("usage", "login and usage records")], about: { kind: "pupils_secondary", label: "pupils (11 to 16)" }, under18: "under_16", product: "edpuzzle", otherTool: null, purpose: { kind: "analyse", label: "analyse results" } },
+    answers: { data_facts: "It describes how a person is doing|Under-18s will use the tool themselves", lawful_basis: "It is part of our public task", told: "No, or not sure" },
+    retrospective: true,
+  },
 ];
 
 /** Answer the questions as the person would: anything not named keeps the guess. */
@@ -108,9 +137,12 @@ function answer(flow: Flow, answers: Record<string, string>): Flow {
 const dir = join(process.cwd(), "data", "examples");
 mkdirSync(dir, { recursive: true });
 for (const ex of EXAMPLES) {
-  let flow = answer(flowFromSentence(ex.sentence, ruleSet, false), ex.answers);
+  let flow = answer(flowFromSentence(ex.sentence, ruleSet, !!ex.retrospective), ex.answers);
   flow = tidy(flow, () => undefined);
   flow = { ...flow, id: `example_${ex.file.replace(/\W+/g, "_")}`, title: ex.title, checked: true, risk_owner: ex.riskOwner ?? null, changelog: [] };
+  // The risk owner was named, so the question that asks for one counts as answered.
+  const ownerStep = ex.riskOwner ? stepsFor(flow, derive(flow, ruleSet, { cheapest: false })).find((st) => st.q.id === "risk_owner") : null;
+  if (ownerStep) flow = { ...flow, answers: { ...(flow.answers ?? {}), [ownerStep.key]: ex.riskOwner! } };
   const d = derive(flow, ruleSet);
   writeFileSync(join(dir, `${ex.file}.json`), JSON.stringify(flow, null, 2) + "\n");
   console.log(`${ex.file}: Level ${d.highest_tier} · ${d.verdict.label} · ${d.outcome} · ${d.open_count} to do`);

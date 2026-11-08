@@ -21,7 +21,7 @@
   "version": 1,
   "nodes": [
     {
-      "id": "n_mw7yubmq27",
+      "id": "n_mw7zgucu27",
       "type": "people",
       "title": "Primary pupils (under 13)",
       "position": {
@@ -40,7 +40,7 @@
       }
     },
     {
-      "id": "n_mw7yubmq2b",
+      "id": "n_mw7zgucu2b",
       "type": "data",
       "title": "Health, SEND or safeguarding information",
       "position": {
@@ -67,13 +67,13 @@
         "source_system": "",
         "lawful_basis": "public_task",
         "about": [
-          "n_mw7yubmq27"
+          "n_mw7zgucu27"
         ],
         "kind": "sensitive"
       }
     },
     {
-      "id": "n_mw7yubmq28",
+      "id": "n_mw7zgucu28",
       "type": "people",
       "title": "SENCO",
       "position": {
@@ -92,7 +92,7 @@
       }
     },
     {
-      "id": "n_mw7yubmq2a",
+      "id": "n_mw7zgucu2a",
       "type": "system",
       "title": "Copilot",
       "position": {
@@ -123,7 +123,7 @@
       }
     },
     {
-      "id": "n_mw7yubmq29",
+      "id": "n_mw7zgucu29",
       "type": "purpose",
       "title": "Write reports",
       "position": {
@@ -152,7 +152,7 @@
       }
     },
     {
-      "id": "n_mw7yubmq2g",
+      "id": "n_mw7zgucu2g",
       "type": "company",
       "title": "Microsoft",
       "position": {
@@ -197,7 +197,7 @@
       }
     },
     {
-      "id": "n_mw7yubmr2i",
+      "id": "n_mw7zgucu2i",
       "type": "company",
       "title": "OpenAI via Azure",
       "position": {
@@ -234,44 +234,44 @@
   ],
   "edges": [
     {
-      "id": "e_mw7yubmq2c",
-      "from": "n_mw7yubmq27",
-      "to": "n_mw7yubmq29",
+      "id": "e_mw7zgucu2c",
+      "from": "n_mw7zgucu27",
+      "to": "n_mw7zgucu29",
       "kind": "about",
       "data_id": null
     },
     {
-      "id": "e_mw7yubmq2d",
-      "from": "n_mw7yubmq28",
-      "to": "n_mw7yubmq29",
+      "id": "e_mw7zgucu2d",
+      "from": "n_mw7zgucu28",
+      "to": "n_mw7zgucu29",
       "kind": "by",
       "data_id": null
     },
     {
-      "id": "e_mw7yubmq2e",
-      "from": "n_mw7yubmq2b",
-      "to": "n_mw7yubmq2a",
+      "id": "e_mw7zgucu2e",
+      "from": "n_mw7zgucu2b",
+      "to": "n_mw7zgucu2a",
       "kind": "carries",
       "data_id": null
     },
     {
-      "id": "e_mw7yubmq2f",
-      "from": "n_mw7yubmq2a",
-      "to": "n_mw7yubmq29",
+      "id": "e_mw7zgucu2f",
+      "from": "n_mw7zgucu2a",
+      "to": "n_mw7zgucu29",
       "kind": "feeds",
       "data_id": null
     },
     {
-      "id": "e_mw7yubmr2h",
-      "from": "n_mw7yubmq2a",
-      "to": "n_mw7yubmq2g",
+      "id": "e_mw7zgucu2h",
+      "from": "n_mw7zgucu2a",
+      "to": "n_mw7zgucu2g",
       "kind": "carries",
       "data_id": null
     },
     {
-      "id": "e_mw7yubmr2j",
-      "from": "n_mw7yubmq2g",
-      "to": "n_mw7yubmr2i",
+      "id": "e_mw7zgucu2j",
+      "from": "n_mw7zgucu2g",
+      "to": "n_mw7zgucu2i",
       "kind": "sub_processor",
       "data_id": null
     }
@@ -300,9 +300,10 @@
   },
   "first_draw": true,
   "answers": {
-    "lawful_basis:n_mw7yubmq2b": "It is part of our public task",
-    "told:n_mw7yubmq29": "Yes, it is in our privacy notice",
-    "use_case:n_mw7yubmq2a": "Work with things people can be identified from"
+    "lawful_basis:n_mw7zgucu2b": "It is part of our public task",
+    "told:n_mw7zgucu29": "Yes, it is in our privacy notice",
+    "use_case:n_mw7zgucu2a": "Work with things people can be identified from",
+    "risk_owner": "the headteacher"
   },
   "checked": true,
   "risk_owner": "the headteacher"

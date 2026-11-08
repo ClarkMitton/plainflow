@@ -413,6 +413,8 @@ table.tbl code, code.x { font-family: var(--mono); font-size: 12px; background: 
 .cards { display: flex; flex-direction: column; gap: 10px; }
 /* The example gallery on the front door. */
 .examples { margin-top: 40px; }
+.check li { margin: 6px 0; line-height: 1.45; }
+.check li strong { display: block; }
 .example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
 .example-card { text-align: left; border: 2px solid var(--ink); background: var(--paper); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
 .example-card:hover { background: var(--paper-2); box-shadow: 5px 5px 0 var(--data); }

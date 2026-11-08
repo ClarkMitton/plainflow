@@ -1,6 +1,6 @@
 {
   "note": "The document catalogue. Each requirement is a document or action the pack can produce. 'when' is checked against the derivation result (or, with 'per', against each node of that type). 'status' rules are checked top to bottom; the first match sets the status, otherwise it is to do. 'cause' says which lever or edge produced it: a list of screening answers, or a node type and condition. 'rail: false' means it is always in the pack but not shown as a to-do in the rail.",
-  "owner_labels": { "tool": "the canvas", "idea_owner": "you", "governance_lead": "governance lead", "dpo": "DPO", "dpo_and_owner": "DPO and you" },
+  "owner_labels": { "tool": "the canvas", "idea_owner": "you", "governance_lead": "governance lead (the DPO's office)", "dpo": "DPO", "dpo_and_owner": "DPO and you" },
   "effort_labels": { "none": "none", "ten_minutes": "10 minutes", "same_day": "same day", "one_meeting": "one meeting", "days": "days", "days_if_new": "days if new", "weeks": "weeks" },
   "status_labels": { "to_do": "to do", "on_file": "on file", "covered": "covered", "partial": "partial" },
   "requirements": [

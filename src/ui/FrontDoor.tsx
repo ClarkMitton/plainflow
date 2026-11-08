@@ -116,7 +116,7 @@ export function FrontDoor({ set, onOpen, onRules, initial, onCancel }: Props) {
   );
 }
 
-const EXAMPLE_FILES = import.meta.glob<{ default: Flow }>("../../data/examples/0*.json", { eager: true });
+const EXAMPLE_FILES = import.meta.glob<{ default: Flow }>("../../data/examples/[01][0-9]-*.json", { eager: true });
 
 /** Nine canvases across the levels and verdicts, each with the reason and the law behind it, to browse before building. */
 function Examples({ set, onOpen }: { set: RuleSet; onOpen(flow: Flow, to: "questions" | "canvas"): void }) {

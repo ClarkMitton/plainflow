@@ -4,7 +4,7 @@ import { derive } from "../engine/derive";
 import { ruleSet } from "../engine/ruleset";
 import type { Flow } from "../engine/types";
 
-const files = import.meta.glob<{ default: Flow }>("../../data/examples/0*.json", { eager: true });
+const files = import.meta.glob<{ default: Flow }>("../../data/examples/[01][0-9]-*.json", { eager: true });
 const examples = Object.entries(files).sort(([a], [b]) => a.localeCompare(b)).map(([path, m]) => ({ path, flow: m.default }));
 
 const expected: [string, number, string][] = [
@@ -17,11 +17,15 @@ const expected: [string, number, string][] = [
   ["07-send-notes-copilot", 3, "owner_decides"],
   ["08-health-information-free-chatgpt", 3, "stop"],
   ["09-volunteer-dbs-list-partner", 3, "owner_decides"],
+  ["10-simplified-texts-gemini-workspace", 2, "owner_decides"],
+  ["11-parents-evening-transcripts-teams", 2, "owner_decides"],
+  ["12-leave-requests-power-apps", 3, "owner_decides"],
+  ["13-edpuzzle-quizzes-already-in-use", 2, "not_like_this"],
 ];
 
 describe("the example gallery", () => {
-  it("has nine examples that cover every level and every kind of answer", () => {
-    expect(examples).toHaveLength(9);
+  it("has thirteen examples that cover every level and every kind of answer", () => {
+    expect(examples).toHaveLength(13);
     for (const [name, tier, verdict] of expected) {
       const ex = examples.find((e) => e.path.includes(name))!;
       expect(ex, name).toBeTruthy();

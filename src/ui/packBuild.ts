@@ -53,6 +53,8 @@ export interface Pack {
     lighter: { instead: string; feature: string; does: string; caveat: string; theirs: LighterRoute["theirs"]; ours: LighterRoute["ours"] }[];
     actions: ActionItem[];
     needsPerson: string[];
+    /** Standing assumptions to confirm with the DPO or IT in a minute each. */
+    check: { text: string; who: string; ifWrong: string }[];
     laws: Law[];
     effort: string;
     signoff: string;
@@ -187,9 +189,11 @@ export function buildPack(flow: Flow, d: Derivation, set: RuleSet): Pack {
       ],
       hardLines: groupLines(d.bright_lines, flow).map(({ b, others }) => ({ title: b.title, say: b.say + (others.length ? ` The same goes for ${others.join(" and ")}.` : ""), waysOut: b.ways_out, law: b.law })),
       lighter: lighterRoutes(flow, d, set).map((r) => ({ instead: r.systemTitle, feature: r.feature.label, does: r.feature.does, caveat: r.feature.caveat, theirs: r.theirs, ours: r.ours })),
-      easier: cc ? { change: `${cc.lever === "company_id" ? "Switch" : "Change"} ${cc.node_title}: ${ccLever?.label ?? cc.lever} to ${ccTo}. ${cc.unblocks ? clearsText(cc.unblocks, d) : `That lifts ${cc.removes.length} thing${cc.removes.length === 1 ? "" : "s"} to do.`}`, cost: cc.cost, how: cc.how } : null,
+      easier: cc ? { change: `${cc.lever === "company_id" ? `Switch ${cc.node_title} for ${ccTo}.` : `Change ${cc.node_title}: ${ccLever?.label ?? cc.lever} to ${ccTo}.`} ${cc.unblocks ? clearsText(cc.unblocks, d) : `That lifts ${cc.removes.length} thing${cc.removes.length === 1 ? "" : "s"} to do.`}`, cost: cc.cost, how: cc.how } : null,
       actions,
-      needsPerson: d.needs_person,
+      // Each action already says what a person still does, so the list below keeps only the standing items.
+      needsPerson: d.needs_person.filter((x) => !actions.some((a) => x.startsWith(`${a.what}:`))),
+      check: d.assumptions.map((a) => ({ text: a.text, who: a.who, ifWrong: a.if_wrong })),
       laws: [...new Map([...lawsOf(tier.law ?? []), ...lawsOf(["art28", "art35"]), ...d.bright_lines.map((b) => b.law), ...actions.map((a) => a.law)].filter((l): l is Law => !!l).map((l) => [l.id, l] as const)).values()],
       effort: rules.effort.time_labels[d.effort.time],
       signoff: rules.effort.signoff_labels[d.effort.signoff],
@@ -199,7 +203,10 @@ export function buildPack(flow: Flow, d: Derivation, set: RuleSet): Pack {
       tierNotes: [...new Set(flow.nodes.filter((n) => n.type === "data").map((n) => d.tiers[n.id]))].sort().map((t) => {
         const x = rules.tiers[String(t)];
         const b = x?.basis;
-        return { tier: t, label: x?.label ?? "", plain: x?.plain ?? "", policy: b?.policy ?? "", harm: b?.harm ?? "", crosswalk: b?.crosswalk ?? "", laws: lawsOf(b?.law ?? []), guidance: (b?.guidance ?? []).map((id) => rules.sources[id]).filter(Boolean) };
+        // Children's law and safeguarding guidance belong on the note only when children are in the flow.
+        const minors = flow.nodes.some((n) => n.type === "people" && n.levers.age_mix !== "all_adults");
+        const forAdults = (id: string) => minors || !["children", "pofa26", "kcsie"].includes(id);
+        return { tier: t, label: x?.label ?? "", plain: x?.plain ?? "", policy: b?.policy ?? "", harm: b?.harm ?? "", crosswalk: b?.crosswalk ?? "", laws: lawsOf((b?.law ?? []).filter(forAdults)), guidance: (b?.guidance ?? []).filter(forAdults).map((id) => rules.sources[id]).filter(Boolean) };
       }),
       screening: Object.values(d.screening).map((a) => ({ id: a.id, text: a.text, yes: a.yes, because: a.because.join("; "), law: a.law?.ref ?? null })),
       outcome: rules.outcome.labels[d.outcome],
@@ -232,6 +239,7 @@ export function packText(p: Pack): string {
   for (const a of p.forPerson.actions) L.push(`${a.n}. ${a.what} (${a.who}, ${a.howLong}): ${a.meaning}${a.why ? ` Because ${a.why}.` : ""}${a.law ? ` [${a.law.ref}]` : ""}`);
   if (!p.forPerson.actions.length) L.push("Nothing to do.");
   L.push("", "STILL NEEDS A PERSON", ...p.forPerson.needsPerson.map((x) => `- ${x}`), "");
+  if (p.forPerson.check.length) L.push("CHECK THESE FIRST (assumed, not asked)", ...p.forPerson.check.map((c) => `- ${c.text} ${c.who} If not: ${c.ifWrong}`), "");
   L.push("FOR THE DPO", `Screening outcome: ${p.forDpo.outcome}`);
   for (const t of p.forDpo.tiers) L.push(`${t.title}: Level ${t.tier}, because ${t.because}.`);
   for (const t of p.forDpo.tierNotes) L.push(`Why Level ${t.tier} (${t.label}): ${t.policy} Law: ${t.laws.map((l) => l.ref).join(", ")}. Guidance: ${t.guidance.map((g) => g.label).join(", ")}.`);

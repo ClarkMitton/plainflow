@@ -21,7 +21,7 @@
   "version": 1,
   "nodes": [
     {
-      "id": "n_mw7yubld13",
+      "id": "n_mw7zguck13",
       "type": "people",
       "title": "Pupils (11 to 16)",
       "position": {
@@ -40,7 +40,7 @@
       }
     },
     {
-      "id": "n_mw7yubld17",
+      "id": "n_mw7zguck17",
       "type": "data",
       "title": "Attendance records",
       "position": {
@@ -65,13 +65,13 @@
         "source_system": "",
         "lawful_basis": "public_task",
         "about": [
-          "n_mw7yubld13"
+          "n_mw7zguck13"
         ],
         "kind": "attendance"
       }
     },
     {
-      "id": "n_mw7yubld14",
+      "id": "n_mw7zguck14",
       "type": "people",
       "title": "IT",
       "position": {
@@ -90,7 +90,7 @@
       }
     },
     {
-      "id": "n_mw7yubld16",
+      "id": "n_mw7zguck16",
       "type": "system",
       "title": "Power Automate / Power Apps / Power BI",
       "position": {
@@ -121,7 +121,7 @@
       }
     },
     {
-      "id": "n_mw7yubld15",
+      "id": "n_mw7zguck15",
       "type": "purpose",
       "title": "Predict who might struggle",
       "position": {
@@ -150,7 +150,7 @@
       }
     },
     {
-      "id": "n_mw7yuble1c",
+      "id": "n_mw7zguck1c",
       "type": "company",
       "title": "Microsoft",
       "position": {
@@ -197,37 +197,37 @@
   ],
   "edges": [
     {
-      "id": "e_mw7yubld18",
-      "from": "n_mw7yubld13",
-      "to": "n_mw7yubld15",
+      "id": "e_mw7zguck18",
+      "from": "n_mw7zguck13",
+      "to": "n_mw7zguck15",
       "kind": "about",
       "data_id": null
     },
     {
-      "id": "e_mw7yubld19",
-      "from": "n_mw7yubld14",
-      "to": "n_mw7yubld15",
+      "id": "e_mw7zguck19",
+      "from": "n_mw7zguck14",
+      "to": "n_mw7zguck15",
       "kind": "by",
       "data_id": null
     },
     {
-      "id": "e_mw7yubld1a",
-      "from": "n_mw7yubld17",
-      "to": "n_mw7yubld16",
+      "id": "e_mw7zguck1a",
+      "from": "n_mw7zguck17",
+      "to": "n_mw7zguck16",
       "kind": "carries",
       "data_id": null
     },
     {
-      "id": "e_mw7yubld1b",
-      "from": "n_mw7yubld16",
-      "to": "n_mw7yubld15",
+      "id": "e_mw7zguck1b",
+      "from": "n_mw7zguck16",
+      "to": "n_mw7zguck15",
       "kind": "feeds",
       "data_id": null
     },
     {
-      "id": "e_mw7yuble1d",
-      "from": "n_mw7yubld16",
-      "to": "n_mw7yuble1c",
+      "id": "e_mw7zgucl1d",
+      "from": "n_mw7zguck16",
+      "to": "n_mw7zguck1c",
       "kind": "carries",
       "data_id": null
     }
@@ -256,10 +256,11 @@
   },
   "first_draw": true,
   "answers": {
-    "data_facts:n_mw7yubld17": "It describes how a person is doing|We already hold it, collected for a different purpose",
-    "lawful_basis:n_mw7yubld17": "It is part of our public task",
-    "purpose_facts:n_mw7yubld15": "It produces a mark, grade, score or prediction about a person|It covers a whole cohort, or more than a thousand people|It runs continuously rather than once",
-    "told:n_mw7yubld15": "Yes, it is in our privacy notice"
+    "data_facts:n_mw7zguck17": "It describes how a person is doing|We already hold it, collected for a different purpose",
+    "lawful_basis:n_mw7zguck17": "It is part of our public task",
+    "purpose_facts:n_mw7zguck15": "It produces a mark, grade, score or prediction about a person|It covers a whole cohort, or more than a thousand people|It runs continuously rather than once",
+    "told:n_mw7zguck15": "Yes, it is in our privacy notice",
+    "risk_owner": "a deputy headteacher"
   },
   "checked": true,
   "risk_owner": "a deputy headteacher"

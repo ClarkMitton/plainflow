@@ -21,7 +21,7 @@
   "version": 1,
   "nodes": [
     {
-      "id": "n_mw7yubnk2l",
+      "id": "n_mw7zgucz2l",
       "type": "people",
       "title": "Staff",
       "position": {
@@ -40,7 +40,7 @@
       }
     },
     {
-      "id": "n_mw7yubnk2p",
+      "id": "n_mw7zgucz2p",
       "type": "data",
       "title": "Health, SEND or safeguarding information",
       "position": {
@@ -67,13 +67,13 @@
         "source_system": "",
         "lawful_basis": "legitimate_interests",
         "about": [
-          "n_mw7yubnk2l"
+          "n_mw7zgucz2l"
         ],
         "kind": "sensitive"
       }
     },
     {
-      "id": "n_mw7yubnk2m",
+      "id": "n_mw7zgucz2m",
       "type": "people",
       "title": "HR",
       "position": {
@@ -92,7 +92,7 @@
       }
     },
     {
-      "id": "n_mw7yubnk2o",
+      "id": "n_mw7zgucz2o",
       "type": "system",
       "title": "ChatGPT",
       "position": {
@@ -123,7 +123,7 @@
       }
     },
     {
-      "id": "n_mw7yubnk2n",
+      "id": "n_mw7zgucz2n",
       "type": "purpose",
       "title": "Draft absence letters",
       "position": {
@@ -151,7 +151,7 @@
       }
     },
     {
-      "id": "n_mw7yubnk2u",
+      "id": "n_mw7zgucz2u",
       "type": "company",
       "title": "OpenAI (ChatGPT)",
       "position": {
@@ -188,37 +188,37 @@
   ],
   "edges": [
     {
-      "id": "e_mw7yubnk2q",
-      "from": "n_mw7yubnk2l",
-      "to": "n_mw7yubnk2n",
+      "id": "e_mw7zgucz2q",
+      "from": "n_mw7zgucz2l",
+      "to": "n_mw7zgucz2n",
       "kind": "by",
       "data_id": null
     },
     {
-      "id": "e_mw7yubnk2r",
-      "from": "n_mw7yubnk2m",
-      "to": "n_mw7yubnk2n",
+      "id": "e_mw7zgucz2r",
+      "from": "n_mw7zgucz2m",
+      "to": "n_mw7zgucz2n",
       "kind": "by",
       "data_id": null
     },
     {
-      "id": "e_mw7yubnk2s",
-      "from": "n_mw7yubnk2p",
-      "to": "n_mw7yubnk2o",
+      "id": "e_mw7zgucz2s",
+      "from": "n_mw7zgucz2p",
+      "to": "n_mw7zgucz2o",
       "kind": "carries",
       "data_id": null
     },
     {
-      "id": "e_mw7yubnk2t",
-      "from": "n_mw7yubnk2o",
-      "to": "n_mw7yubnk2n",
+      "id": "e_mw7zgucz2t",
+      "from": "n_mw7zgucz2o",
+      "to": "n_mw7zgucz2n",
       "kind": "feeds",
       "data_id": null
     },
     {
-      "id": "e_mw7yubnk2v",
-      "from": "n_mw7yubnk2o",
-      "to": "n_mw7yubnk2u",
+      "id": "e_mw7zgucz2v",
+      "from": "n_mw7zgucz2o",
+      "to": "n_mw7zgucz2u",
       "kind": "carries",
       "data_id": null
     }
@@ -247,9 +247,9 @@
   },
   "first_draw": true,
   "answers": {
-    "lawful_basis:n_mw7yubnk2p": "Our legitimate interests",
-    "told:n_mw7yubnk2n": "Yes, it is in our privacy notice",
-    "plan:n_mw7yubnk2o": "Free or personal accounts"
+    "lawful_basis:n_mw7zgucz2p": "Our legitimate interests",
+    "told:n_mw7zgucz2n": "Yes, it is in our privacy notice",
+    "plan:n_mw7zgucz2o": "Free or personal accounts"
   },
   "checked": true,
   "risk_owner": null

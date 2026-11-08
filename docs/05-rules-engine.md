@@ -195,3 +195,10 @@ Three runs with a facilitator in mind: changing their mind mid-way, comparing tw
 - The sentence is kept on the flow (`sentence_input`) and can be changed from the Questions screen; the builder opens filled in, with a way back.
 - The first draw folds every box to its title (`first_draw`); the first Check it unfolds them.
 - Close keeps the flow as "your last proposal" on the front door until another is started.
+
+## Check these first, Google tenants, Canva plans, four more examples (v0.11)
+
+- `assumptions` in `rules.json`: standing assumptions the answer rests on but never asks about (a DPO exists; Microsoft's or Google's tenant terms cover you; Canva is on an Education or Teams account; a privacy notice and register exist; a policy document backs special category data). Each has a condition, who can confirm it, and what changes if it is wrong. The pack prints them as "Check these first" on the proposer's page and the next-time page.
+- Google Workspace for Education is a tenant in the directory (`google_workspace` company and products, with a card like Microsoft's), approved up to Level 3; Gemini in Workspace up to Level 2. Consumer Gemini stays a separate company. The lighter route still only knows Microsoft 365.
+- Canva has plans: a personal account is Level 0 and trains unless opted out; Canva for Education or Teams is the organisation's plan at Level 1 with AI off for students unless approved. All marked [verify].
+- Four more examples (10 to 13): Gemini in Workspace for a teaching assistant, Teams transcripts of parents' evenings, a Power Apps leave form with sickness reasons, and Edpuzzle already in use with pupils logging in. Reading their packs as four different people fixed: children's law cited on all-adult flows, "switch company_id to Microsoft", quiz tools offered Power Automate instead of Forms, and the "still needs a person" list repeating every action.
