@@ -1,0 +1,57 @@
+{
+  "note": "What a Google Workspace customer already has, and which outside tool each part replaces: the Google counterpart of m365.json, so a Google school or college also hears 'you already pay for a route with less to sign'. Edition contents and prices are as understood in November 2026 and marked [verify]; they move, and Google renames editions often. Plainflow never overrules the person's choice: it shows the lighter route beside theirs and lets them compare.",
+  "checked": "November 2026",
+  "licences": {
+    "unknown": { "label": "Don't know", "sector": "any", "includes": ["gemini_app", "forms", "drive_sharing", "slides", "appsheet", "looker_studio"] },
+    "education_fundamentals": { "label": "Workspace for Education Fundamentals (free)", "sector": "education", "includes": ["gemini_app", "forms", "drive_sharing", "slides", "appsheet", "looker_studio"] },
+    "education_standard": { "label": "Workspace for Education Standard", "sector": "education", "includes": ["gemini_app", "forms", "drive_sharing", "slides", "appsheet", "looker_studio", "vault"] },
+    "teaching_learning": { "label": "Teaching and Learning Upgrade", "sector": "education", "includes": ["gemini_app", "gemini_in_apps", "forms", "drive_sharing", "slides", "appsheet", "looker_studio", "meet_transcription"] },
+    "education_plus": { "label": "Workspace for Education Plus", "sector": "education", "includes": ["gemini_app", "gemini_in_apps", "forms", "drive_sharing", "slides", "appsheet", "looker_studio", "meet_transcription", "vault"] },
+    "business_starter": { "label": "Workspace Business Starter", "sector": "business", "includes": ["gemini_app", "forms", "drive_sharing", "slides", "looker_studio"] },
+    "business_standard": { "label": "Workspace Business Standard", "sector": "business", "includes": ["gemini_app", "gemini_in_apps", "forms", "drive_sharing", "slides", "appsheet", "looker_studio", "meet_transcription"] },
+    "business_plus": { "label": "Workspace Business Plus", "sector": "business", "includes": ["gemini_app", "gemini_in_apps", "forms", "drive_sharing", "slides", "appsheet", "looker_studio", "meet_transcription", "vault"] }
+  },
+  "features": {
+    "gemini_app": { "label": "Gemini app in Google Workspace", "product": "gemini_workspace", "does": "Chat, drafting and summarising from a prompt, signed in with a school or work account, under the Workspace terms: prompts are not used to train models and stay inside the agreement you already have.", "caveat": "Admins must turn it on, and on for under-18s separately. It sees what you paste or upload, not your Drive, unless Gemini is also on in Docs and Gmail. Make sure people use the school sign-in, not a personal Google account.", "addon_cost": null, "included_note": "included with Workspace for Education and Business editions once an admin turns it on [verify]" },
+    "gemini_in_apps": { "label": "Gemini in Docs, Gmail and Sheets", "product": "gemini_workspace", "does": "Drafting and summarising inside Docs, Gmail, Sheets and Slides, over the files and mail the person already has access to, under the Workspace terms.", "caveat": "It can reach anything the person can reach, so sharing settings on Drive matter more than before.", "addon_cost": "Gemini Education add-on, per user per month, or included in Teaching and Learning Upgrade and Education Plus [verify]", "included_note": null },
+    "forms": { "label": "Google Forms", "product": "google_workspace", "does": "Surveys, sign-ups and quizzes with answers kept in the tenant, marked automatically if you want.", "caveat": "Turn off 'collect email addresses' when you do not need to know who answered.", "addon_cost": null, "included_note": "included with every Workspace edition [verify]" },
+    "drive_sharing": { "label": "A shared drive, with sharing to the partner's account", "product": "google_workspace", "does": "Put the file in a shared drive and share it with named accounts, instead of emailing a copy. Access can be withdrawn and every view is logged.", "caveat": "Check link sharing is set to specific people, not anyone with the link.", "addon_cost": null, "included_note": "included with every Workspace edition [verify]" },
+    "slides": { "label": "Google Slides, Docs and Drawings", "product": "google_workspace", "does": "Posters, displays and newsletters made inside the tenant, with photos staying in Drive under the Workspace terms.", "caveat": "Fewer templates and effects than a design tool.", "addon_cost": null, "included_note": "included with every Workspace edition [verify]" },
+    "appsheet": { "label": "AppSheet over a Google Sheet", "product": "google_appsheet", "does": "A simple app for forms, trackers and lookups, with the data in a Google Sheet inside the tenant and Google sign-in built in.", "caveat": "AppSheet Core comes with most editions; advanced security and automation need a paid AppSheet plan [verify]. A Sheet cannot do row-level security.", "addon_cost": null, "included_note": "AppSheet Core included with Workspace editions [verify]" },
+    "looker_studio": { "label": "Looker Studio over a Google Sheet", "product": "google_looker", "does": "Dashboards and charts over a Sheet or BigQuery, shared to named accounts inside the tenant.", "caveat": "Looker Studio reports can be shared beyond the tenant; check who each report is shared with.", "addon_cost": null, "included_note": "Looker Studio is free with a Google account; Looker Studio Pro is paid [verify]" },
+    "meet_transcription": { "label": "Google Meet transcripts", "product": "google_workspace", "does": "Meet writes a transcript to Drive for the organiser, so a meeting can be summarised without a third-party note-taker.", "caveat": "Everyone in the meeting is told it is being transcribed; you still need a reason to keep it, and a retention period.", "addon_cost": null, "included_note": "included with Teaching and Learning Upgrade, Education Plus and Business Standard and above [verify]" },
+    "vault": { "label": "Google Vault", "product": "google_workspace", "does": "Retention rules and legal hold across Gmail and Drive, so 'how long it's kept' can be enforced rather than promised.", "caveat": "Vault retains; it does not classify. Someone still decides the rule.", "addon_cost": null, "included_note": "included with Education Standard, Education Plus and Business Plus [verify]" }
+  },
+  "equivalents": {
+    "note": "Outside tool (product id) to the Google Workspace features that do the same job, best first. 'by_purpose' and 'by_data' cover tools Plainflow doesn't know ('Something else').",
+    "by_product": {
+      "chatgpt": ["gemini_app", "gemini_in_apps"],
+      "claude": ["gemini_app", "gemini_in_apps"],
+      "grok": ["gemini_app", "gemini_in_apps"],
+      "gemini_consumer": ["gemini_app"],
+      "lovable_app": ["appsheet"],
+      "lovable_ai_gateway": ["gemini_app"],
+      "replit_app": ["appsheet"],
+      "base44_app": ["appsheet"],
+      "canva": ["slides"],
+      "spreadsheet_email": ["drive_sharing"],
+      "edpuzzle": ["forms"],
+      "nearpod": ["forms"]
+    },
+    "by_purpose": {
+      "messages": ["gemini_app", "gemini_in_apps"],
+      "feedback": ["gemini_app", "gemini_in_apps"],
+      "reports": ["gemini_app", "gemini_in_apps"],
+      "plan": ["gemini_app"],
+      "mark": ["gemini_in_apps"],
+      "analyse": ["looker_studio"],
+      "predict": ["looker_studio"],
+      "attendance": ["looker_studio"],
+      "share": ["drive_sharing"]
+    },
+    "by_data": {
+      "recordings": ["meet_transcription"],
+      "survey": ["forms"]
+    }
+  }
+}

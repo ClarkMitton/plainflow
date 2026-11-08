@@ -145,6 +145,24 @@
       "trains_on_inputs_default": false,
       "notes": "Gemini for Workspace runs under the Workspace terms: no training on your content, admin controls [verify]. Consumer Gemini is the separate entry."
     },
+    "google_appsheet": {
+      "name": "An app we build in AppSheet, in our Google tenant",
+      "company": "google_workspace",
+      "sub_processors": [],
+      "is_ai": false,
+      "keeps_data_default": "per tenant retention",
+      "trains_on_inputs_default": false,
+      "notes": "AppSheet over a Google Sheet, with Google sign-in. Inside the Workspace agreement, so Level 2 is allowed as long as no outside AI provider is wired in."
+    },
+    "google_looker": {
+      "name": "Looker Studio, in our Google tenant",
+      "company": "google_workspace",
+      "sub_processors": [],
+      "is_ai": false,
+      "keeps_data_default": "per tenant retention",
+      "trains_on_inputs_default": false,
+      "notes": "Dashboards over a Sheet or BigQuery, inside the Workspace agreement."
+    },
     "power_platform": {
       "name": "Power Automate / Power Apps / Power BI",
       "company": "microsoft",

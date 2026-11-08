@@ -168,3 +168,22 @@ describe("why each level", () => {
     expect(three.crosswalk).toBe("restricted");
   });
 });
+
+describe("a Google college", () => {
+  it("hears about the Gemini app in Workspace instead of free ChatGPT, and AppSheet instead of Lovable", () => {
+    const chat = answer(build({ role: "Teacher", data: [{ kind: "work", label: "student work (essays, assignments)" }], about: { kind: "students", label: "students (16 plus)" }, under18: "some_under_18", product: "chatgpt", purpose: choices.purpose("feedback", "draft feedback") }), { plan: "Free or personal accounts" });
+    const asGoogle: Flow = { ...chat, organisation: { ...chat.organisation, tenant: "google" } };
+    const routes = lighterRoutes(asGoogle, derive(asGoogle, ruleSet), ruleSet);
+    expect(routes.map((r) => r.feature.id)).toEqual(["gemini_app", "gemini_in_apps"]);
+    expect(routes[0].ours.blocked).toBe(0);
+    expect(routes[0].ours.hardLines).toBe(0);
+    expect(routes[0].altFlow.nodes.some((n) => n.type === "company" && n.fields.company_id === "google_workspace")).toBe(true);
+    expect(routes[0].altFlow.nodes.some((n) => n.type === "company" && n.fields.company_id === "openai_consumer")).toBe(false);
+
+    const app = build({ role: "Admin staff", data: [{ kind: "contact", label: "names and contact details" }], about: { kind: "parents", label: "parents" }, under18: "all_adults", product: "lovable_app", purpose: choices.purpose("messages", "send messages") });
+    const appGoogle: Flow = { ...app, organisation: { ...app.organisation, tenant: "google" } };
+    expect(lighterRoutes(appGoogle, derive(appGoogle, ruleSet), ruleSet).map((r) => r.feature.id)).toEqual(["appsheet"]);
+    // Without saying, a canvas already on Google Workspace is read as a Google tenant; otherwise Microsoft.
+    expect(lighterRoutes(chat, derive(chat, ruleSet), ruleSet)[0].feature.id).toBe("copilot_chat");
+  });
+});

@@ -3,7 +3,7 @@ import type { Law, Requirement } from "../engine/types";
 import { leverDef, useFlow } from "./context";
 import { nameWarning } from "./names";
 import { Glossed, policyAnswer, Term, type Change, groupLines, clearsText, stillNo } from "./plain";
-import { licences, lighterRoutes, m365Checked, type LighterRoute } from "./lighter";
+import { checkedFor, licencesFor, lighterRoutes, tenantFor, tenants, type LighterRoute, type TenantId } from "./lighter";
 
 /** Where this comes from in law, and why it matters. */
 export function LawLine({ law, laws, compact }: { law?: Law | null; laws?: (Law | null | undefined)[]; compact?: boolean }) {
@@ -47,13 +47,14 @@ interface Props {
   finish(): void;
   tryLighter(route: LighterRoute): void;
   setLicence(id: string): void;
+  setTenant(id: TenantId): void;
 }
 
 /**
  * The answer, in order of what matters: can I do it; what just changed; three facts behind the answer
  * (each one line, open for more); what to do; the one change that helps. Everything else is folded away.
  */
-export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner, checkIt, checking, pending, finish, tryLighter, setLicence }: Props) {
+export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner, checkIt, checking, pending, finish, tryLighter, setLicence, setTenant }: Props) {
   const { d, set, flow, checked } = useFlow();
   const [open, setOpen] = useState<string | null>(null);
   const [fact, setFact] = useState<string | null>(null);
@@ -75,7 +76,10 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
   const covered = d.requirements.filter((r) => r.rail && r.status !== "to_do" && r.status !== "partial");
   const needsOwner = d.outcome !== "not_required";
   const routes = lighterRoutes(flow, d, set);
+  const tenant = tenantFor(flow);
   const licence = String(flow.organisation.m365_licence ?? "unknown");
+  const licences = licencesFor(tenant);
+  const m365Checked = checkedFor(tenant);
 
   const row = (r: Requirement) => (
     <div key={r.key} className={`req${struck.has(r.key) ? " struck" : ""}`} onMouseEnter={() => setHighlight(r.cause.nodes)} onMouseLeave={() => setHighlight([])}>
@@ -293,12 +297,20 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
             <p className="k">You may already pay for one</p>
           </div>
           <div style={{ padding: "12px 14px 14px" }}>
-            <label className="field" style={{ marginBottom: 10 }}>
-              <span>Your Microsoft 365 licence</span>
-              <select value={licence} onChange={(e) => setLicence(e.target.value)}>
-                {Object.entries(licences).map(([id, l]) => <option key={id} value={id}>{l.label}</option>)}
-              </select>
-            </label>
+            <div style={{ display: "flex", gap: 10, marginBottom: 10 }}>
+              <label className="field" style={{ flex: 1 }}>
+                <span>Your tenant</span>
+                <select value={tenant} onChange={(e) => setTenant(e.target.value as TenantId)}>
+                  {Object.entries(tenants).map(([id, t]) => <option key={id} value={id}>{t.label}</option>)}
+                </select>
+              </label>
+              <label className="field" style={{ flex: 1.4 }}>
+                <span>{tenants[tenant].licenceLabel}</span>
+                <select value={licences[licence] ? licence : "unknown"} onChange={(e) => setLicence(e.target.value)}>
+                  {Object.entries(licences).map(([id, l]) => <option key={id} value={id}>{l.label}</option>)}
+                </select>
+              </label>
+            </div>
             {routes.map((r) => (
               <div key={r.systemId + r.feature.id} className="route-cmp">
                 <div style={{ fontSize: 13, lineHeight: 1.45 }}>

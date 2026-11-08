@@ -367,6 +367,7 @@ export function App() {
                   )
                 }
                 setLicence={(id) => update({ ...flow, organisation: { ...flow.organisation, m365_licence: id } }, null)}
+                setTenant={(id) => update({ ...flow, organisation: { ...flow.organisation, tenant: id, m365_licence: "unknown" } }, `tenant set to ${id === "google" ? "Google Workspace" : "Microsoft 365"}`)}
                 finish={() => { setPackOpen(true); setReplay(0); }}
                 checkIt={checkIt}
                 checking={checking}

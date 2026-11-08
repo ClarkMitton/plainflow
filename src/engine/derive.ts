@@ -137,7 +137,8 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
     const list = rules.sanctioned.list;
     const cid = company.fields.company_id as string | undefined;
     const pid = from?.fields.product_id as string | undefined;
-    return (cid && list[cid]) || (pid && list[pid]) || null;
+    // A product's own entry on the approved list wins over its company's.
+    return (pid && list[pid]) || (cid && list[cid]) || null;
   };
   const edgeInfo: Record<string, EdgeInfo> = {};
   const crossings: Derivation["crossings"] = [];

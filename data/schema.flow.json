@@ -89,9 +89,13 @@
             "vital_interests"
           ]
         },
+        "tenant": {
+          "enum": ["m365", "google"],
+          "description": "Which platform is the organisation's tenant: Microsoft 365 or Google Workspace. Inferred from the canvas when not set."
+        },
         "m365_licence": {
           "type": "string",
-          "description": "Which Microsoft 365 licence the organisation has (ids in data/m365.json), so the lighter route can say what's included."
+          "description": "Which licence or edition of that tenant the organisation has (ids in data/m365.json or data/google.json), so the lighter route can say what is included. The field name predates Google support."
         }
       }
     },
