@@ -2,6 +2,7 @@
 import cardsJson from "../../data/cards.json";
 import sentenceJson from "../../data/sentence.json";
 import { tierOfData } from "../engine/derive";
+import type { SentenceInput } from "../engine/types";
 import type { EdgeKind, Flow, FlowEdge, FlowNode, NodeType, RuleSet } from "../engine/types";
 
 export const BOUNDARY_X = 700;
@@ -221,17 +222,7 @@ export function applyProduct(flow: Flow, systemId: string, productId: string | n
   return { ...flow, nodes, edges };
 }
 
-export interface Sentence {
-  role: string;
-  /** Each kind of data: a choice from sentence.json, or typed in. */
-  data: { kind: string | null; label: string }[];
-  about: { kind: string | null; label: string };
-  under18: "all_adults" | "some_under_18" | "under_16" | "under_13";
-  /** A product from the directory, or a tool typed in. */
-  product: string | null;
-  otherTool: { name: string; ai: boolean } | null;
-  purpose: { kind: string | null; label: string };
-}
+export type Sentence = SentenceInput;
 
 type SentenceChoices = typeof sentenceJson;
 export const sentenceChoices = sentenceJson as SentenceChoices;
@@ -306,6 +297,8 @@ export function flowFromSentence(s: Sentence, set: RuleSet, retrospective: boole
   const dataTitles = s.data.map((d) => short(d.label).trim()).filter(Boolean);
   const purposeLabel = s.purpose.label.trim();
   flow.title = `${toolName} ${purposeLabel ? "for " + purposeLabel.toLowerCase() : ""}`.trim();
+  flow.sentence_input = structuredClone(s);
+  flow.first_draw = true;
   const aboutLabel = keepAcronyms(s.about.label.trim());
   const who = subject(s.role);
   const verb = retrospective ? (who.plural ? "have been putting" : "has been putting") : who.plural ? "put" : "puts";

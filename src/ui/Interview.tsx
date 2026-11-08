@@ -10,13 +10,15 @@ interface Props {
   set: RuleSet;
   onChange(next: Flow, what: string): void;
   onDone(): void;
+  /** Back to the front door with the sentence filled in, to change it. */
+  onEditSentence?(): void;
 }
 
 /**
  * Plain questions, as few as possible. Tick lists replace runs of yes/no questions, and any question
  * where no answer would change the result is skipped and recorded as assumed. Every answer shows what it changed.
  */
-export function Interview({ flow, d, set, onChange, onDone }: Props) {
+export function Interview({ flow, d, set, onChange, onDone, onEditSentence }: Props) {
   const steps = useMemo(() => stepsFor(flow, d), [flow, d]);
   const answered = flow.answers ?? {};
   const decisive = useMemo(() => {
@@ -102,6 +104,7 @@ export function Interview({ flow, d, set, onChange, onDone }: Props) {
         <div>
           <p className="lab">{flow.source?.kind === "scan" ? "Checking an app from its code" : flow.retrospective ? "Checking something already in use" : "A new proposal"}</p>
           <p className="story">{flow.story}</p>
+          {onEditSentence && <button type="button" className="linkish" style={{ marginBottom: 8 }} onClick={onEditSentence}>Change the sentence</button>}
 
           <div className="progress-row">
             <div className="progress" aria-label={`Question ${Math.min(idx + 1, visible.length)} of ${visible.length}`}>

@@ -36,11 +36,11 @@
   "tier_rules": {
     "note": "Checked top to bottom for each data node. The first one that matches sets the tier.",
     "rules": [
-      { "tier": 3, "when": "special_category || overlaps(categories, tier3_categories)", "because": "it contains special category or safety-critical data" },
-      { "tier": 0, "when": "identifiability in ['anonymised', 'aggregated']", "because": "nobody can be picked out from it" },
-      { "tier": 2, "when": "about_performance", "because": "it says something about how a named person is doing" },
+      { "tier": 3, "when": "special_category || overlaps(categories, tier3_categories)", "because": "it contains special category or criminal data" },
+      { "tier": 0, "when": "identifiability in ['anonymised', 'aggregated']", "because": "no individual can be identified from it" },
+      { "tier": 2, "when": "about_performance", "because": "it describes how a named person is doing" },
       { "tier": 2, "when": "!subset(categories, tier1_categories)", "because": "it holds more than account basics about a named person" },
-      { "tier": 1, "when": "true", "because": "it holds account basics only" }
+      { "tier": 1, "when": "true", "because": "it holds identifiers only" }
     ]
   },
 

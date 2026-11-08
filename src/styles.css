@@ -411,6 +411,19 @@ table.tbl code, code.x { font-family: var(--mono); font-size: 12px; background: 
 .report .dot:not(.ok):not(.rq) { background: var(--data); }
 .tagline { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .04em; border: 1.5px solid currentColor; padding: 1px 6px; margin-right: 8px; white-space: nowrap; }
 .cards { display: flex; flex-direction: column; gap: 10px; }
+/* The example gallery on the front door. */
+.examples { margin-top: 40px; }
+.example-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.example-card { text-align: left; border: 2px solid var(--ink); background: var(--paper); padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
+.example-card:hover { background: var(--paper-2); box-shadow: 5px 5px 0 var(--data); }
+.example-card .lvl { font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.example-card strong { font-size: 17px; letter-spacing: -.01em; }
+.example-card .story { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.example-card .verdict { font-weight: 700; margin-top: 4px; }
+.example-card.v-stop .verdict, .example-card.v-not_like_this .verdict, .example-card.v-consult .verdict { color: var(--rq); }
+.example-card .why { font-size: 13px; line-height: 1.4; }
+.example-card .refs { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+@media (max-width: 980px) { .example-grid { grid-template-columns: 1fr; } }
 .card { border: 2px solid var(--ink); background: var(--paper); }
 .card summary { display: flex; align-items: center; gap: 10px; padding: 10px 14px; cursor: pointer; list-style: none; flex-wrap: wrap; }
 .card summary::-webkit-details-marker { display: none; }

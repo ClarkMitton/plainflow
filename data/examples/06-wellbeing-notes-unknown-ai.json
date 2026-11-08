@@ -1,0 +1,305 @@
+{
+  "id": "example_06_wellbeing_notes_unknown_ai",
+  "title": "Wellbeing meeting notes in an AI note-taker",
+  "story": "Admin staff put meeting or lesson recordings and health, SEND or safeguarding information about students (16 plus) into Otter, to write reports.",
+  "mode": "flow_first",
+  "tier_pinned": null,
+  "status": "draft",
+  "retrospective": false,
+  "owner": "governance lead",
+  "organisation": {
+    "name": "[organisation]",
+    "type": "college",
+    "default_lawful_basis": "public_task"
+  },
+  "dates": {
+    "created": "2026-11-08",
+    "launch": null,
+    "running_since": null,
+    "review": null
+  },
+  "version": 1,
+  "nodes": [
+    {
+      "id": "n_mw7yublt1t",
+      "type": "people",
+      "title": "Students (16 plus)",
+      "position": {
+        "x": 40,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "some_under_18",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "learners",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yublu1x",
+      "type": "data",
+      "title": "Meeting or lesson recordings",
+      "position": {
+        "x": 40,
+        "y": 258
+      },
+      "inside": true,
+      "levers": {
+        "identifiability": "named",
+        "about_performance": false,
+        "special_category": false,
+        "free_text_or_audio": true,
+        "new_purpose": false,
+        "new_collection": false,
+        "student_facing": false
+      },
+      "fields": {
+        "categories": [
+          "name",
+          "audio",
+          "video"
+        ],
+        "source_system": "",
+        "lawful_basis": "consent",
+        "about": [
+          "n_mw7yublt1t"
+        ],
+        "kind": "recordings",
+        "consent_free": false
+      }
+    },
+    {
+      "id": "n_mw7yublu1y",
+      "type": "data",
+      "title": "Health, SEND or safeguarding information",
+      "position": {
+        "x": 40,
+        "y": 596
+      },
+      "inside": true,
+      "levers": {
+        "identifiability": "named",
+        "about_performance": true,
+        "special_category": true,
+        "free_text_or_audio": false,
+        "new_purpose": false,
+        "new_collection": false,
+        "student_facing": false
+      },
+      "fields": {
+        "categories": [
+          "name",
+          "health",
+          "send",
+          "safeguarding"
+        ],
+        "source_system": "",
+        "lawful_basis": "consent",
+        "about": [
+          "n_mw7yublt1t"
+        ],
+        "kind": "sensitive",
+        "consent_free": false
+      }
+    },
+    {
+      "id": "n_mw7yublt1u",
+      "type": "people",
+      "title": "Admin staff",
+      "position": {
+        "x": 40,
+        "y": 934
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "all_adults",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "staff",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yublu1w",
+      "type": "system",
+      "title": "Otter",
+      "position": {
+        "x": 360,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "is_ai": true,
+        "output_type": "suggestion",
+        "validated_by_person": true,
+        "staff_can_override": true,
+        "plan": "free"
+      },
+      "fields": {
+        "product_id": null,
+        "use_case": null,
+        "testing": {
+          "date": "",
+          "sample": "",
+          "result": ""
+        },
+        "fairness_check": {
+          "date": "",
+          "groups": [],
+          "result": ""
+        }
+      }
+    },
+    {
+      "id": "n_mw7yublu1v",
+      "type": "purpose",
+      "title": "Write reports",
+      "position": {
+        "x": 360,
+        "y": 338
+      },
+      "inside": true,
+      "levers": {
+        "scores": false,
+        "decides_alone": false,
+        "staff_can_override": true,
+        "ongoing": false,
+        "whole_cohort": false,
+        "tracks_behaviour": false,
+        "can_block": false,
+        "privacy_notice_linked": false
+      },
+      "fields": {
+        "value": "",
+        "alternatives": "",
+        "should_it_be_done": "",
+        "scale": null,
+        "privacy_notice_url": null,
+        "challenge_route": "",
+        "kind": "reports"
+      }
+    },
+    {
+      "id": "n_mw7yublu24",
+      "type": "company",
+      "title": "Otter",
+      "position": {
+        "x": 760,
+        "y": 40
+      },
+      "inside": false,
+      "levers": {
+        "role": "processor",
+        "decides_purpose": false,
+        "decides_means": false,
+        "own_purposes": false,
+        "trains_on_inputs": null,
+        "keeps_data": false
+      },
+      "fields": {
+        "company_id": null,
+        "card_ref": null,
+        "region": "unknown",
+        "transfer_mechanism": "unknown",
+        "retention": "",
+        "deletion_route": "",
+        "security_assessment": {
+          "status": "none",
+          "date": null
+        },
+        "art28": {},
+        "dpa_document": null,
+        "prior_dpia": null,
+        "owner": "",
+        "review_date": null
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_mw7yublu1z",
+      "from": "n_mw7yublt1t",
+      "to": "n_mw7yublu1v",
+      "kind": "about",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yublu20",
+      "from": "n_mw7yublt1u",
+      "to": "n_mw7yublu1v",
+      "kind": "by",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yublu21",
+      "from": "n_mw7yublu1x",
+      "to": "n_mw7yublu1w",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yublu22",
+      "from": "n_mw7yublu1y",
+      "to": "n_mw7yublu1w",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yublu23",
+      "from": "n_mw7yublu1w",
+      "to": "n_mw7yublu1v",
+      "kind": "feeds",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yublu25",
+      "from": "n_mw7yublu1w",
+      "to": "n_mw7yublu24",
+      "kind": "carries",
+      "data_id": null
+    }
+  ],
+  "pinned": null,
+  "changelog": [],
+  "sentence_input": {
+    "role": "Admin staff",
+    "data": [
+      {
+        "kind": "recordings",
+        "label": "meeting or lesson recordings"
+      },
+      {
+        "kind": "sensitive",
+        "label": "health, SEND or safeguarding information"
+      }
+    ],
+    "about": {
+      "kind": "students",
+      "label": "students (16 plus)"
+    },
+    "under18": "some_under_18",
+    "product": null,
+    "otherTool": {
+      "name": "Otter",
+      "ai": true
+    },
+    "purpose": {
+      "kind": "reports",
+      "label": "write reports"
+    }
+  },
+  "first_draw": true,
+  "answers": {
+    "lawful_basis:n_mw7yublu1x": "Consent, but refusing is not a realistic option",
+    "lawful_basis:n_mw7yublu1y": "Consent, but refusing is not a realistic option",
+    "told:n_mw7yublu1v": "No, or not sure"
+  },
+  "checked": true,
+  "risk_owner": null
+}

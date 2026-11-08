@@ -1,0 +1,256 @@
+{
+  "id": "example_08_health_information_free_chatgpt",
+  "title": "Health information in free ChatGPT",
+  "story": "HR puts health, SEND or safeguarding information about staff into ChatGPT, run by OpenAI (ChatGPT), to draft absence letters.",
+  "mode": "flow_first",
+  "tier_pinned": null,
+  "status": "draft",
+  "retrospective": false,
+  "owner": "governance lead",
+  "organisation": {
+    "name": "[organisation]",
+    "type": "college",
+    "default_lawful_basis": "public_task"
+  },
+  "dates": {
+    "created": "2026-11-08",
+    "launch": null,
+    "running_since": null,
+    "review": null
+  },
+  "version": 1,
+  "nodes": [
+    {
+      "id": "n_mw7yubnk2l",
+      "type": "people",
+      "title": "Staff",
+      "position": {
+        "x": 40,
+        "y": 378
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "all_adults",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "staff",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubnk2p",
+      "type": "data",
+      "title": "Health, SEND or safeguarding information",
+      "position": {
+        "x": 40,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "identifiability": "named",
+        "about_performance": true,
+        "special_category": true,
+        "free_text_or_audio": false,
+        "new_purpose": false,
+        "new_collection": false,
+        "student_facing": false
+      },
+      "fields": {
+        "categories": [
+          "name",
+          "health",
+          "send",
+          "safeguarding"
+        ],
+        "source_system": "",
+        "lawful_basis": "legitimate_interests",
+        "about": [
+          "n_mw7yubnk2l"
+        ],
+        "kind": "sensitive"
+      }
+    },
+    {
+      "id": "n_mw7yubnk2m",
+      "type": "people",
+      "title": "HR",
+      "position": {
+        "x": 40,
+        "y": 596
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "all_adults",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "staff",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubnk2o",
+      "type": "system",
+      "title": "ChatGPT",
+      "position": {
+        "x": 360,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "is_ai": true,
+        "output_type": "suggestion",
+        "validated_by_person": true,
+        "staff_can_override": true,
+        "plan": "free"
+      },
+      "fields": {
+        "product_id": "chatgpt",
+        "use_case": null,
+        "testing": {
+          "date": "",
+          "sample": "",
+          "result": ""
+        },
+        "fairness_check": {
+          "date": "",
+          "groups": [],
+          "result": ""
+        }
+      }
+    },
+    {
+      "id": "n_mw7yubnk2n",
+      "type": "purpose",
+      "title": "Draft absence letters",
+      "position": {
+        "x": 360,
+        "y": 338
+      },
+      "inside": true,
+      "levers": {
+        "scores": false,
+        "decides_alone": false,
+        "staff_can_override": true,
+        "ongoing": false,
+        "whole_cohort": false,
+        "tracks_behaviour": false,
+        "can_block": false,
+        "privacy_notice_linked": true
+      },
+      "fields": {
+        "value": "",
+        "alternatives": "",
+        "should_it_be_done": "",
+        "scale": null,
+        "privacy_notice_url": null,
+        "challenge_route": ""
+      }
+    },
+    {
+      "id": "n_mw7yubnk2u",
+      "type": "company",
+      "title": "OpenAI (ChatGPT)",
+      "position": {
+        "x": 760,
+        "y": 40
+      },
+      "inside": false,
+      "levers": {
+        "role": "processor",
+        "decides_purpose": false,
+        "decides_means": false,
+        "own_purposes": false,
+        "trains_on_inputs": true,
+        "keeps_data": true
+      },
+      "fields": {
+        "company_id": "openai_consumer",
+        "card_ref": null,
+        "region": "US",
+        "transfer_mechanism": "unknown",
+        "retention": "",
+        "deletion_route": "",
+        "security_assessment": {
+          "status": "none",
+          "date": null
+        },
+        "art28": {},
+        "dpa_document": null,
+        "prior_dpia": null,
+        "owner": "",
+        "review_date": null
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_mw7yubnk2q",
+      "from": "n_mw7yubnk2l",
+      "to": "n_mw7yubnk2n",
+      "kind": "by",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubnk2r",
+      "from": "n_mw7yubnk2m",
+      "to": "n_mw7yubnk2n",
+      "kind": "by",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubnk2s",
+      "from": "n_mw7yubnk2p",
+      "to": "n_mw7yubnk2o",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubnk2t",
+      "from": "n_mw7yubnk2o",
+      "to": "n_mw7yubnk2n",
+      "kind": "feeds",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubnk2v",
+      "from": "n_mw7yubnk2o",
+      "to": "n_mw7yubnk2u",
+      "kind": "carries",
+      "data_id": null
+    }
+  ],
+  "pinned": null,
+  "changelog": [],
+  "sentence_input": {
+    "role": "HR",
+    "data": [
+      {
+        "kind": "sensitive",
+        "label": "health, SEND or safeguarding information"
+      }
+    ],
+    "about": {
+      "kind": "staff",
+      "label": "staff"
+    },
+    "under18": "all_adults",
+    "product": "chatgpt",
+    "otherTool": null,
+    "purpose": {
+      "kind": null,
+      "label": "draft absence letters"
+    }
+  },
+  "first_draw": true,
+  "answers": {
+    "lawful_basis:n_mw7yubnk2p": "Our legitimate interests",
+    "told:n_mw7yubnk2n": "Yes, it is in our privacy notice",
+    "plan:n_mw7yubnk2o": "Free or personal accounts"
+  },
+  "checked": true,
+  "risk_owner": null
+}

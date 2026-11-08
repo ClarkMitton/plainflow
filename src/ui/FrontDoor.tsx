@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import example from "../../data/example-copilot-marking.json";
+import { useMemo, useRef, useState } from "react";
+import { derive } from "../engine/derive";
 import type { Flow, RuleSet } from "../engine/types";
 import { APP_NAME } from "./brand";
 import { emptySentence, exampleSentence, flowFromSentence, sentenceChoices, sentenceComplete, type Sentence } from "./flowOps";
@@ -15,11 +15,22 @@ interface Props {
   /** "questions" goes to the Q&A first; "canvas" opens straight onto the canvas. */
   onOpen(flow: Flow, to: "questions" | "canvas"): void;
   onRules(): void;
+  /** Editing the sentence of a flow that already exists: the builder starts filled in, and there is a way back. */
+  initial?: { sentence: Sentence; retrospective: boolean } | null;
+  onCancel?(): void;
 }
 
 /** One question, three answers, then one sentence. Everything else is a small link. */
-export function FrontDoor({ set, onOpen, onRules }: Props) {
-  const [route, setRoute] = useState<Route>(null);
+export function FrontDoor({ set, onOpen, onRules, initial, onCancel }: Props) {
+  const [route, setRoute] = useState<Route>(initial ? (initial.retrospective ? "existing" : "new") : null);
+  const last = useMemo(() => {
+    try {
+      const raw = localStorage.getItem("plainflow.last");
+      return raw ? (JSON.parse(raw) as Flow) : null;
+    } catch {
+      return null;
+    }
+  }, []);
   const [tier, setTier] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const file = useRef<HTMLInputElement>(null);
@@ -77,19 +88,64 @@ export function FrontDoor({ set, onOpen, onRules }: Props) {
         {route === "scan" && <ScanPage set={set} onOpen={onOpen} onOpenFile={() => file.current?.click()} />}
 
         {showSentence && (
-          <SentenceBuilder key={`${route}${tier}`} set={set} retrospective={route === "existing"} tier={route === "tier" ? tier : null} onBuild={(f) => onOpen(f, "questions")} />
+          <SentenceBuilder key={`${route}${tier}`} set={set} retrospective={route === "existing"} tier={route === "tier" ? tier : null} initial={initial?.sentence} onBuild={(f) => onOpen(f, "questions")} />
         )}
 
         <p className="links">
-          <button type="button" className="linkish" onClick={() => onOpen(structuredClone(example) as unknown as Flow, "canvas")}>See a finished example</button>
-          <span className="mu"> · </span>
+          {onCancel && (
+            <>
+              <button type="button" className="linkish" onClick={onCancel}>Back to the questions without changing the sentence</button>
+              <span className="mu"> · </span>
+            </>
+          )}
+          {last && !initial && (
+            <>
+              <button type="button" className="linkish" onClick={() => onOpen(last, "canvas")}>Continue your last proposal: {last.title}</button>
+              <span className="mu"> · </span>
+            </>
+          )}
           <button type="button" className="linkish" onClick={() => file.current?.click()}>Open something you saved</button>
           <span className="mu"> · </span>
           <button type="button" className="linkish" onClick={onRules}>Where the rules come from</button>
         </p>
         <input ref={file} type="file" accept="application/json,.json" hidden onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])} />
+
+        {!initial && <Examples set={set} onOpen={onOpen} />}
       </div>
     </div>
+  );
+}
+
+const EXAMPLE_FILES = import.meta.glob<{ default: Flow }>("../../data/examples/0*.json", { eager: true });
+
+/** Nine canvases across the levels and verdicts, each with the reason and the law behind it, to browse before building. */
+function Examples({ set, onOpen }: { set: RuleSet; onOpen(flow: Flow, to: "questions" | "canvas"): void }) {
+  const items = Object.entries(EXAMPLE_FILES).sort(([a], [b]) => a.localeCompare(b)).map(([, m]) => m.default);
+  return (
+    <section className="examples">
+      <p className="lab">Examples · how different decisions change the answer</p>
+      <p className="mu" style={{ margin: "0 0 14px", fontSize: 14 }}>Open one, change a switch, and see the answer and the paperwork move. Each shows the law its level rests on.</p>
+      <div className="example-grid">
+        {items.map((flow) => {
+          const d = derive(flow, set);
+          const top = flow.nodes.filter((n) => n.type === "data").sort((a, b) => (d.tiers[b.id] ?? 0) - (d.tiers[a.id] ?? 0))[0];
+          const tier = set.rules.tiers[String(d.highest_tier)];
+          const why = d.bright_lines[0]?.title ?? d.blocked[0]?.message ?? (top ? `${top.title}: ${d.tier_because[top.id]}.` : tier?.plain ?? "");
+          const minors = flow.nodes.some((n) => n.type === "people" && n.levers.age_mix !== "all_adults");
+          const refs = (tier?.basis?.law ?? []).filter((id) => minors || (id !== "children" && id !== "pofa26")).map((id) => set.laws[id]?.ref).filter(Boolean).join(" · ");
+          return (
+            <button key={flow.id} type="button" className={`example-card v-${d.verdict.id}`} onClick={() => onOpen(structuredClone(flow), "canvas")}>
+              <span className="lvl">Level {d.highest_tier} · {tier?.label}</span>
+              <strong>{flow.title}</strong>
+              <span className="story">{flow.story}</span>
+              <span className="verdict">{d.verdict.label}</span>
+              <span className="why">{why}</span>
+              <span className="refs">{refs}</span>
+            </button>
+          );
+        })}
+      </div>
+    </section>
   );
 }
 
@@ -163,8 +219,8 @@ function Slot({ value, kind, options, placeholder, onPick, onType, label }: {
   );
 }
 
-function SentenceBuilder({ set, retrospective, tier, onBuild }: { set: RuleSet; retrospective: boolean; tier: number | null; onBuild(f: Flow): void }) {
-  const [s, setS] = useState<Sentence>(emptySentence);
+function SentenceBuilder({ set, retrospective, tier, initial, onBuild }: { set: RuleSet; retrospective: boolean; tier: number | null; initial?: Sentence; onBuild(f: Flow): void }) {
+  const [s, setS] = useState<Sentence>(() => (initial ? structuredClone(initial) : emptySentence()));
   const [since, setSince] = useState("");
   const [hosting, setHosting] = useState<string>("");
   const up = (p: Partial<Sentence>) => setS({ ...s, ...p });

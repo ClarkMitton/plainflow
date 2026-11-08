@@ -1,0 +1,297 @@
+{
+  "id": "example_05_photos_canva",
+  "title": "Photos in Canva for a display",
+  "story": "A head of department puts photos or video about students (16 plus) into Canva, run by Canva, to make an open evening display.",
+  "mode": "flow_first",
+  "tier_pinned": null,
+  "status": "draft",
+  "retrospective": false,
+  "owner": "governance lead",
+  "organisation": {
+    "name": "[organisation]",
+    "type": "college",
+    "default_lawful_basis": "public_task"
+  },
+  "dates": {
+    "created": "2026-11-08",
+    "launch": null,
+    "running_since": null,
+    "review": null
+  },
+  "version": 1,
+  "nodes": [
+    {
+      "id": "n_mw7yubln1f",
+      "type": "people",
+      "title": "Students (16 plus)",
+      "position": {
+        "x": 40,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "some_under_18",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "learners",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubln1j",
+      "type": "data",
+      "title": "Photos or video",
+      "position": {
+        "x": 40,
+        "y": 258
+      },
+      "inside": true,
+      "levers": {
+        "identifiability": "named",
+        "about_performance": false,
+        "special_category": false,
+        "free_text_or_audio": false,
+        "new_purpose": false,
+        "new_collection": false,
+        "student_facing": false
+      },
+      "fields": {
+        "categories": [
+          "name",
+          "images",
+          "video"
+        ],
+        "source_system": "",
+        "lawful_basis": "consent",
+        "about": [
+          "n_mw7yubln1f"
+        ],
+        "kind": "media",
+        "consent_free": true
+      }
+    },
+    {
+      "id": "n_mw7yubln1g",
+      "type": "people",
+      "title": "Head of department",
+      "position": {
+        "x": 40,
+        "y": 596
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "all_adults",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "staff",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubln1i",
+      "type": "system",
+      "title": "Canva",
+      "position": {
+        "x": 360,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "is_ai": true,
+        "output_type": "suggestion",
+        "validated_by_person": true,
+        "staff_can_override": true,
+        "plan": "free"
+      },
+      "fields": {
+        "product_id": "canva",
+        "use_case": null,
+        "testing": {
+          "date": "",
+          "sample": "",
+          "result": ""
+        },
+        "fairness_check": {
+          "date": "",
+          "groups": [],
+          "result": ""
+        }
+      }
+    },
+    {
+      "id": "n_mw7yubln1h",
+      "type": "purpose",
+      "title": "Make an open evening display",
+      "position": {
+        "x": 360,
+        "y": 338
+      },
+      "inside": true,
+      "levers": {
+        "scores": false,
+        "decides_alone": false,
+        "staff_can_override": true,
+        "ongoing": false,
+        "whole_cohort": false,
+        "tracks_behaviour": false,
+        "can_block": false,
+        "privacy_notice_linked": true
+      },
+      "fields": {
+        "value": "",
+        "alternatives": "",
+        "should_it_be_done": "",
+        "scale": null,
+        "privacy_notice_url": null,
+        "challenge_route": ""
+      }
+    },
+    {
+      "id": "n_mw7yublo1o",
+      "type": "company",
+      "title": "Canva",
+      "position": {
+        "x": 760,
+        "y": 40
+      },
+      "inside": false,
+      "levers": {
+        "role": "processor",
+        "decides_purpose": false,
+        "decides_means": false,
+        "own_purposes": false,
+        "trains_on_inputs": false,
+        "keeps_data": true
+      },
+      "fields": {
+        "company_id": "canva",
+        "card_ref": null,
+        "region": "US",
+        "transfer_mechanism": "unknown",
+        "retention": "",
+        "deletion_route": "",
+        "security_assessment": {
+          "status": "none",
+          "date": null
+        },
+        "art28": {},
+        "dpa_document": null,
+        "prior_dpia": null,
+        "owner": "",
+        "review_date": null
+      }
+    },
+    {
+      "id": "n_mw7yublo1q",
+      "type": "company",
+      "title": "Amazon Web Services",
+      "position": {
+        "x": 760,
+        "y": 318
+      },
+      "inside": false,
+      "levers": {
+        "role": "sub_processor",
+        "decides_purpose": false,
+        "decides_means": false,
+        "own_purposes": false,
+        "trains_on_inputs": false,
+        "keeps_data": false
+      },
+      "fields": {
+        "company_id": "aws",
+        "card_ref": null,
+        "region": "UK",
+        "transfer_mechanism": "unknown",
+        "retention": "",
+        "deletion_route": "",
+        "security_assessment": {
+          "status": "none",
+          "date": null
+        },
+        "art28": {},
+        "dpa_document": null,
+        "prior_dpia": null,
+        "owner": "",
+        "review_date": null
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_mw7yubln1k",
+      "from": "n_mw7yubln1f",
+      "to": "n_mw7yubln1h",
+      "kind": "about",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubln1l",
+      "from": "n_mw7yubln1g",
+      "to": "n_mw7yubln1h",
+      "kind": "by",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubln1m",
+      "from": "n_mw7yubln1j",
+      "to": "n_mw7yubln1i",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubln1n",
+      "from": "n_mw7yubln1i",
+      "to": "n_mw7yubln1h",
+      "kind": "feeds",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yublo1p",
+      "from": "n_mw7yubln1i",
+      "to": "n_mw7yublo1o",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yublo1r",
+      "from": "n_mw7yublo1o",
+      "to": "n_mw7yublo1q",
+      "kind": "sub_processor",
+      "data_id": null
+    }
+  ],
+  "pinned": null,
+  "changelog": [],
+  "sentence_input": {
+    "role": "Head of department",
+    "data": [
+      {
+        "kind": "media",
+        "label": "photos or video"
+      }
+    ],
+    "about": {
+      "kind": "students",
+      "label": "students (16 plus)"
+    },
+    "under18": "some_under_18",
+    "product": "canva",
+    "otherTool": null,
+    "purpose": {
+      "kind": null,
+      "label": "make an open evening display"
+    }
+  },
+  "first_draw": true,
+  "answers": {
+    "lawful_basis:n_mw7yubln1j": "Consent, and they can refuse with no consequences",
+    "told:n_mw7yubln1h": "Yes, it is in our privacy notice"
+  },
+  "checked": true,
+  "risk_owner": null
+}

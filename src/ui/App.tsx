@@ -25,6 +25,16 @@ import { type LighterRoute } from "./lighter";
 type View = "questions" | "canvas" | "screening" | "report" | "rules" | "compare";
 const STORE = "plainflow.current";
 
+/** What the answer depends on: boxes, their switches and fields, and the connections. Not titles or positions. */
+function shapeOf(flow: Flow): string {
+  return JSON.stringify({
+    n: [...flow.nodes].sort((a, b) => a.id.localeCompare(b.id)).map((n) => [n.id, n.type, n.inside, n.levers, n.fields]),
+    e: [...flow.edges].sort((a, b) => a.id.localeCompare(b.id)).map((e) => [e.from, e.to, e.kind, e.data_id]),
+    o: flow.risk_owner ?? null,
+    t: flow.tier_pinned ?? null,
+  });
+}
+
 function loadSaved(): Flow | null {
   try {
     const raw = localStorage.getItem(STORE);
@@ -46,8 +56,10 @@ export function App() {
   const [checking, setChecking] = useState(false);
   /** The answer as it stood at the last Check it. A change after that makes the rail stale until it is checked again. */
   const baseline = useRef<Derivation | null>(null);
+  const baseShape = useRef<string | null>(null);
   const [pending, setPending] = useState<string[]>([]);
   const [packOpen, setPackOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
   const [replay, setReplay] = useState(0);
   const [rulesOnly, setRulesOnly] = useState(false);
   const flowRef = useRef(flow);
@@ -90,12 +102,13 @@ export function App() {
       setLastChange({ what: what[0].toUpperCase() + what.slice(1), changes: describeChange(before, after, next, ruleSet) });
     }
     // After the first answer, a change that would alter it waits for Check it again; reverting clears the wait.
-    if (prev && prev.checked !== false && next.checked !== false && what !== "asked for the answer" && what !== "moved") {
+    if (prev && prev.checked !== false && next.checked !== false && what !== "asked for the answer") {
       // A flow opened already checked (an example, a saved file) takes its first state as the baseline.
       baseline.current ??= derive(prev, ruleSet, { cheapest: false });
-      const after = derive(next, ruleSet, { cheapest: false });
-      const differs = describeChange(baseline.current, after, next, ruleSet).length > 0;
-      setPending((p) => (differs ? [...p.slice(-5), what ?? "a detail changed"] : []));
+      baseShape.current ??= shapeOf(prev);
+      // Any material change (a switch, a field, a box, a connection) makes the answer wait; a rename or a move does not.
+      const differs = shapeOf(next) !== baseShape.current;
+      setPending((p) => (differs ? (what && p[p.length - 1] !== what ? [...p.slice(-5), what] : p.length ? p : ["a detail changed"]) : []));
     }
     flowRef.current = out;
     setFlow(out);
@@ -148,11 +161,14 @@ export function App() {
     // The engine is instant; the pause shows what was read, line by line, before the answer lands.
     setChecking(true);
     window.setTimeout(() => {
-      const now = flowRef.current!;
+      const drawn = flowRef.current!;
+      // The first answer unfolds the boxes: the detail matters now.
+      const now = drawn.first_draw !== false ? { ...drawn, first_draw: false, nodes: drawn.nodes.map((n) => ({ ...n, collapse: "standard" as const })) } : drawn;
       const after = derive(now, ruleSet, { cheapest: false });
       const before = baseline.current;
       update({ ...now, checked: true }, "asked for the answer");
       baseline.current = after;
+      baseShape.current = shapeOf(now);
       setPending([]);
       if (before) setLastChange({ what: "Checked again", changes: describeChange(before, after, now, ruleSet) });
       setChecking(false);
@@ -161,6 +177,13 @@ export function App() {
   };
 
   const finishQuestions = () => {
+    // The first draw shows the shape before the detail: boxes folded to their titles until Check it.
+    const f = flowRef.current;
+    if (f && f.first_draw !== false && f.checked === false) {
+      const folded = { ...f, nodes: f.nodes.map((n) => ({ ...n, collapse: "pill" as const })) };
+      flowRef.current = folded;
+      setFlow(folded);
+    }
     setView("canvas");
     setLastChange(null);
     setReveal(true);
@@ -235,6 +258,20 @@ export function App() {
     );
   }
 
+  if (editing && flow.sentence_input) {
+    return (
+      <div className="app">
+        <FrontDoor
+          set={ruleSet}
+          onOpen={(f, to) => { setEditing(false); open(f, to); }}
+          onRules={() => { setEditing(false); setRulesOnly(true); }}
+          initial={{ sentence: flow.sentence_input, retrospective: !!flow.retrospective }}
+          onCancel={() => setEditing(false)}
+        />
+      </div>
+    );
+  }
+
   const selNode = flow.nodes.find((n) => n.id === selected) ?? null;
   const titleWarn = nameWarning(flow.title);
   const pinnedTier = flow.tier_pinned ?? 2;
@@ -259,7 +296,7 @@ export function App() {
           <button type="button" className="btn dk" style={{ boxShadow: "4px 4px 0 var(--paperwork)" }} onClick={() => downloadJson(`${flow.title.replace(/[^\w-]+/g, "-").toLowerCase()}.plainflow.json`, flow)}>
             Save
           </button>
-          <button type="button" className="btn" onClick={() => { if (confirm("Close this? Save it first if you want to keep it.")) { setFlow(null); setSelected(null); } }}>Close</button>
+          <button type="button" className="btn" onClick={() => { if (confirm("Close this? It stays on the front door as your last proposal until you start another.")) { try { localStorage.setItem("plainflow.last", JSON.stringify(flow)); } catch { /* a convenience only */ } setFlow(null); setSelected(null); } }}>Close</button>
         </div>
 
         {flow.mode === "tier_first" && view === "canvas" && (
@@ -346,7 +383,7 @@ export function App() {
               />
             </ReactFlowProvider>
           )}
-          {view === "questions" && <Interview flow={flow} d={d} set={ruleSet} onChange={update} onDone={finishQuestions} />}
+          {view === "questions" && <Interview flow={flow} d={d} set={ruleSet} onChange={update} onDone={finishQuestions} onEditSentence={flow.sentence_input ? () => setEditing(true) : undefined} />}
           {view === "screening" && <ScreeningPage flow={flow} d={d} set={ruleSet} />}
           <Coach
             key={packOpen ? "pack" : view === "canvas" ? (flow.checked === false ? "canvas" : "answer") : view}

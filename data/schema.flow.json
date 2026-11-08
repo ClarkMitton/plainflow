@@ -236,6 +236,14 @@
     "checked": {
       "type": "boolean",
       "description": "False until the person has looked at the picture and clicked Check it. The answer is only shown after that."
+    },
+    "sentence_input": {
+      "type": "object",
+      "description": "The front-door sentence this flow was built from, kept so it can be edited after the questions. Roles and groups only, never names."
+    },
+    "first_draw": {
+      "type": "boolean",
+      "description": "True until the first Check it: boxes are folded to their titles so the shape shows before the detail."
     }
   },
   "$defs": {
@@ -494,7 +502,10 @@
           ]
         },
         "consent_free": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "description": "When the basis is consent: can the person say no, or change their mind later, with nothing lost? Consent from students or staff only holds when they can."
         },
         "about": {
@@ -685,7 +696,10 @@
           "type": "boolean"
         },
         "trains_on_inputs": {
-          "type": ["boolean", "null"],
+          "type": [
+            "boolean",
+            "null"
+          ],
           "description": "null means not known yet: no hard line, but the supplier questions ask it."
         },
         "keeps_data": {

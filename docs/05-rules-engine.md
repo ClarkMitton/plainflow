@@ -187,3 +187,11 @@ Three runs with a facilitator in mind: changing their mind mid-way, comparing tw
 
 - After the first Check it, any change that would alter the answer blurs the rail and shows "The diagram has changed", with the changes since and a Check it again button. Reverting the change clears it. Check it again runs the reading pause and then says what changed since the last answer. The engine still runs live underneath; only the display waits.
 - Finish is no longer a separate view. The pack slides out over the right of the diagram and pushes back to a tab on the right edge, so the diagram stays in view while the documents are read.
+
+## Examples, a stale answer on any change, and three loose ends (v0.10)
+
+- `data/examples/0*.json` holds nine canvases across the four levels and every kind of answer, built by `scripts/make-examples.ts` from a sentence and answers, the same way a person builds one. The front door lists them with level, answer, the reason and the law the level rests on; `examples.test.ts` pins each one's level and answer so a rule change that moves an example fails a test.
+- The answer goes stale on any material change to the diagram (a switch, a field, a box, a connection, the risk owner), not only when the answer text would move. Renaming or moving a box does not count. Reverting to the checked state clears it.
+- The sentence is kept on the flow (`sentence_input`) and can be changed from the Questions screen; the builder opens filled in, with a way back.
+- The first draw folds every box to its title (`first_draw`); the first Check it unfolds them.
+- Close keeps the flow as "your last proposal" on the front door until another is started.

@@ -49,6 +49,10 @@ export interface Flow {
   risk_owner?: string | null;
   /** What was asked in the Q&A and how it was answered, keyed by question and node. Anything not here was assumed. */
   answers?: Record<string, string>;
+  /** The front-door sentence this flow was built from, kept so it can be changed after the questions. */
+  sentence_input?: SentenceInput | null;
+  /** True until the first Check it: boxes are folded to their titles so the shape shows before the detail. */
+  first_draw?: boolean;
   /** False until the person has looked at the picture and asked for the answer. The rail stays quiet until then. */
   checked?: boolean;
   /** Where the flow came from when it wasn't drawn by hand: a code scan. */
@@ -57,6 +61,17 @@ export interface Flow {
 }
 
 export interface Source { label: string; url: string }
+
+/** The front-door sentence: who puts which data about whom into which tool, to do what. Roles and groups, never names. */
+export interface SentenceInput {
+  role: string;
+  data: { kind: string | null; label: string }[];
+  about: { kind: string | null; label: string };
+  under18: "all_adults" | "some_under_18" | "under_16" | "under_13";
+  product: string | null;
+  otherTool: { name: string; ai: boolean } | null;
+  purpose: { kind: string | null; label: string };
+}
 
 export interface Law { id: string; ref: string; name: string; says: string; why: string; url: string }
 

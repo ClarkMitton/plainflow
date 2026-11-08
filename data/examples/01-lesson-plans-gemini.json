@@ -1,0 +1,252 @@
+{
+  "id": "example_01_lesson_plans_gemini",
+  "title": "Lesson plans in Gemini",
+  "story": "A teacher puts lesson plans about nobody in particular into Gemini, run by Google, to plan lessons.",
+  "mode": "flow_first",
+  "tier_pinned": null,
+  "status": "draft",
+  "retrospective": false,
+  "owner": "governance lead",
+  "organisation": {
+    "name": "[organisation]",
+    "type": "college",
+    "default_lawful_basis": "public_task"
+  },
+  "dates": {
+    "created": "2026-11-08",
+    "launch": null,
+    "running_since": null,
+    "review": null
+  },
+  "version": 1,
+  "nodes": [
+    {
+      "id": "n_mw7yubjv1",
+      "type": "people",
+      "title": "Nobody in particular",
+      "position": {
+        "x": 40,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "all_adults",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "other",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubjw5",
+      "type": "data",
+      "title": "Lesson plans",
+      "position": {
+        "x": 40,
+        "y": 258
+      },
+      "inside": true,
+      "levers": {
+        "identifiability": "anonymised",
+        "about_performance": false,
+        "special_category": false,
+        "free_text_or_audio": false,
+        "new_purpose": false,
+        "new_collection": false,
+        "student_facing": false
+      },
+      "fields": {
+        "categories": [
+          "name"
+        ],
+        "source_system": "",
+        "lawful_basis": "public_task",
+        "about": [
+          "n_mw7yubjv1"
+        ]
+      }
+    },
+    {
+      "id": "n_mw7yubjv2",
+      "type": "people",
+      "title": "Teacher",
+      "position": {
+        "x": 40,
+        "y": 596
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "all_adults",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "staff",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubjv4",
+      "type": "system",
+      "title": "Gemini",
+      "position": {
+        "x": 360,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "is_ai": true,
+        "output_type": "suggestion",
+        "validated_by_person": true,
+        "staff_can_override": true,
+        "plan": "free"
+      },
+      "fields": {
+        "product_id": "gemini_consumer",
+        "use_case": null,
+        "testing": {
+          "date": "",
+          "sample": "",
+          "result": ""
+        },
+        "fairness_check": {
+          "date": "",
+          "groups": [],
+          "result": ""
+        }
+      }
+    },
+    {
+      "id": "n_mw7yubjv3",
+      "type": "purpose",
+      "title": "Plan lessons",
+      "position": {
+        "x": 360,
+        "y": 338
+      },
+      "inside": true,
+      "levers": {
+        "scores": false,
+        "decides_alone": false,
+        "staff_can_override": true,
+        "ongoing": false,
+        "whole_cohort": false,
+        "tracks_behaviour": false,
+        "can_block": false,
+        "privacy_notice_linked": false
+      },
+      "fields": {
+        "value": "",
+        "alternatives": "",
+        "should_it_be_done": "",
+        "scale": null,
+        "privacy_notice_url": null,
+        "challenge_route": "",
+        "kind": "plan"
+      }
+    },
+    {
+      "id": "n_mw7yubjxa",
+      "type": "company",
+      "title": "Google",
+      "position": {
+        "x": 760,
+        "y": 40
+      },
+      "inside": false,
+      "levers": {
+        "role": "processor",
+        "decides_purpose": false,
+        "decides_means": false,
+        "own_purposes": false,
+        "trains_on_inputs": true,
+        "keeps_data": true
+      },
+      "fields": {
+        "company_id": "google",
+        "card_ref": null,
+        "region": "EU",
+        "transfer_mechanism": "unknown",
+        "retention": "",
+        "deletion_route": "",
+        "security_assessment": {
+          "status": "none",
+          "date": null
+        },
+        "art28": {},
+        "dpa_document": null,
+        "prior_dpia": null,
+        "owner": "",
+        "review_date": null
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_mw7yubjw6",
+      "from": "n_mw7yubjv1",
+      "to": "n_mw7yubjv3",
+      "kind": "about",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubjw7",
+      "from": "n_mw7yubjv2",
+      "to": "n_mw7yubjv3",
+      "kind": "by",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubjw8",
+      "from": "n_mw7yubjw5",
+      "to": "n_mw7yubjv4",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubjw9",
+      "from": "n_mw7yubjv4",
+      "to": "n_mw7yubjv3",
+      "kind": "feeds",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubjxb",
+      "from": "n_mw7yubjv4",
+      "to": "n_mw7yubjxa",
+      "kind": "carries",
+      "data_id": null
+    }
+  ],
+  "pinned": null,
+  "changelog": [],
+  "sentence_input": {
+    "role": "Teacher",
+    "data": [
+      {
+        "kind": null,
+        "label": "lesson plans"
+      }
+    ],
+    "about": {
+      "kind": null,
+      "label": "nobody in particular"
+    },
+    "under18": "all_adults",
+    "product": "gemini_consumer",
+    "otherTool": null,
+    "purpose": {
+      "kind": "plan",
+      "label": "plan lessons"
+    }
+  },
+  "first_draw": true,
+  "answers": {
+    "names:n_mw7yubjw5": "No, nobody can be identified",
+    "plan:n_mw7yubjv4": "Free or personal accounts"
+  },
+  "checked": true,
+  "risk_owner": null
+}

@@ -1,0 +1,310 @@
+{
+  "id": "example_03_coded_work_copilot",
+  "title": "Coded student work in Copilot",
+  "story": "A teacher puts student work about students (16 plus) into Microsoft 365 Copilot, run by Microsoft, to draft feedback.",
+  "mode": "flow_first",
+  "tier_pinned": null,
+  "status": "draft",
+  "retrospective": false,
+  "owner": "governance lead",
+  "organisation": {
+    "name": "[organisation]",
+    "type": "college",
+    "default_lawful_basis": "public_task"
+  },
+  "dates": {
+    "created": "2026-11-08",
+    "launch": null,
+    "running_since": null,
+    "review": null
+  },
+  "version": 1,
+  "nodes": [
+    {
+      "id": "n_mw7yubl2p",
+      "type": "people",
+      "title": "Students (16 plus)",
+      "position": {
+        "x": 40,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "some_under_18",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "learners",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubl3t",
+      "type": "data",
+      "title": "Student work",
+      "position": {
+        "x": 40,
+        "y": 258
+      },
+      "inside": true,
+      "levers": {
+        "identifiability": "pseudonymised",
+        "about_performance": true,
+        "special_category": false,
+        "free_text_or_audio": true,
+        "new_purpose": false,
+        "new_collection": false,
+        "student_facing": false
+      },
+      "fields": {
+        "categories": [
+          "name",
+          "grades",
+          "free_text"
+        ],
+        "source_system": "",
+        "lawful_basis": "public_task",
+        "about": [
+          "n_mw7yubl2p"
+        ],
+        "kind": "work"
+      }
+    },
+    {
+      "id": "n_mw7yubl3q",
+      "type": "people",
+      "title": "Teacher",
+      "position": {
+        "x": 40,
+        "y": 596
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "all_adults",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "staff",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubl3s",
+      "type": "system",
+      "title": "Copilot",
+      "position": {
+        "x": 360,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "is_ai": true,
+        "output_type": "suggestion",
+        "validated_by_person": true,
+        "staff_can_override": true,
+        "plan": "free"
+      },
+      "fields": {
+        "product_id": "m365_copilot",
+        "use_case": "formative_mark",
+        "testing": {
+          "date": "",
+          "sample": "",
+          "result": ""
+        },
+        "fairness_check": {
+          "date": "",
+          "groups": [],
+          "result": ""
+        }
+      }
+    },
+    {
+      "id": "n_mw7yubl3r",
+      "type": "purpose",
+      "title": "Draft feedback",
+      "position": {
+        "x": 360,
+        "y": 338
+      },
+      "inside": true,
+      "levers": {
+        "scores": false,
+        "decides_alone": false,
+        "staff_can_override": true,
+        "ongoing": false,
+        "whole_cohort": false,
+        "tracks_behaviour": false,
+        "can_block": false,
+        "privacy_notice_linked": true
+      },
+      "fields": {
+        "value": "",
+        "alternatives": "",
+        "should_it_be_done": "",
+        "scale": null,
+        "privacy_notice_url": null,
+        "challenge_route": "",
+        "kind": "feedback",
+        "reaches_people": true
+      }
+    },
+    {
+      "id": "n_mw7yubl3y",
+      "type": "company",
+      "title": "Microsoft",
+      "position": {
+        "x": 760,
+        "y": 40
+      },
+      "inside": false,
+      "levers": {
+        "role": "processor",
+        "decides_purpose": false,
+        "decides_means": false,
+        "own_purposes": false,
+        "trains_on_inputs": false,
+        "keeps_data": true
+      },
+      "fields": {
+        "company_id": "microsoft",
+        "card_ref": "card_microsoft_m365",
+        "region": "EU",
+        "transfer_mechanism": "adequacy",
+        "retention": "30 days",
+        "deletion_route": "Admin centre",
+        "security_assessment": {
+          "status": "accepted",
+          "date": "[date]"
+        },
+        "art28": {
+          "instructions_only": "cl. 2.1",
+          "confidentiality": "cl. 2.4",
+          "security": "cl. 3",
+          "sub_processor_authorisation": "cl. 6",
+          "rights_assistance": "cl. 7",
+          "breach_assistance": "cl. 8",
+          "dpia_assistance": "cl. 9",
+          "deletion_or_return": "cl. 10",
+          "audit": null
+        },
+        "dpa_document": "[link to Microsoft Products and Services DPA]",
+        "prior_dpia": null,
+        "owner": "governance lead",
+        "review_date": "[date]"
+      }
+    },
+    {
+      "id": "n_mw7yubl410",
+      "type": "company",
+      "title": "OpenAI via Azure",
+      "position": {
+        "x": 760,
+        "y": 318
+      },
+      "inside": false,
+      "levers": {
+        "role": "sub_processor",
+        "decides_purpose": false,
+        "decides_means": false,
+        "own_purposes": false,
+        "trains_on_inputs": false,
+        "keeps_data": false
+      },
+      "fields": {
+        "company_id": "openai_azure",
+        "card_ref": null,
+        "region": "EU",
+        "transfer_mechanism": "unknown",
+        "retention": "none",
+        "deletion_route": "via Microsoft",
+        "security_assessment": {
+          "status": "none",
+          "date": null
+        },
+        "art28": {},
+        "dpa_document": "covered by Microsoft DPA",
+        "prior_dpia": null,
+        "owner": "",
+        "review_date": null
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_mw7yubl3u",
+      "from": "n_mw7yubl2p",
+      "to": "n_mw7yubl3r",
+      "kind": "about",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubl3v",
+      "from": "n_mw7yubl3q",
+      "to": "n_mw7yubl3r",
+      "kind": "by",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubl3w",
+      "from": "n_mw7yubl3t",
+      "to": "n_mw7yubl3s",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubl3x",
+      "from": "n_mw7yubl3s",
+      "to": "n_mw7yubl3r",
+      "kind": "feeds",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubl4z",
+      "from": "n_mw7yubl3s",
+      "to": "n_mw7yubl3y",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubl411",
+      "from": "n_mw7yubl3y",
+      "to": "n_mw7yubl410",
+      "kind": "sub_processor",
+      "data_id": null
+    }
+  ],
+  "pinned": null,
+  "changelog": [],
+  "sentence_input": {
+    "role": "Teacher",
+    "data": [
+      {
+        "kind": "work",
+        "label": "student work (essays, assignments)"
+      }
+    ],
+    "about": {
+      "kind": "students",
+      "label": "students (16 plus)"
+    },
+    "under18": "some_under_18",
+    "product": "m365_copilot",
+    "otherTool": null,
+    "purpose": {
+      "kind": "feedback",
+      "label": "draft feedback"
+    }
+  },
+  "first_draw": true,
+  "answers": {
+    "names:n_mw7yubl3t": "By a code we can look up",
+    "lawful_basis:n_mw7yubl3t": "It is part of our public task",
+    "told:n_mw7yubl3r": "Yes, it is in our privacy notice",
+    "use_case:n_mw7yubl3s": "Suggest a mark or feedback"
+  },
+  "checked": true,
+  "risk_owner": "the head of department"
+}

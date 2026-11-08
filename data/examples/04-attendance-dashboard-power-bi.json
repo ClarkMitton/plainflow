@@ -1,0 +1,266 @@
+{
+  "id": "example_04_attendance_dashboard_power_bi",
+  "title": "Attendance dashboard in Power BI",
+  "story": "IT puts attendance records about pupils (11 to 16) into Power Automate / Power Apps / Power BI, run by Microsoft, to predict who might struggle.",
+  "mode": "flow_first",
+  "tier_pinned": null,
+  "status": "draft",
+  "retrospective": false,
+  "owner": "governance lead",
+  "organisation": {
+    "name": "[organisation]",
+    "type": "college",
+    "default_lawful_basis": "public_task"
+  },
+  "dates": {
+    "created": "2026-11-08",
+    "launch": null,
+    "running_since": null,
+    "review": null
+  },
+  "version": 1,
+  "nodes": [
+    {
+      "id": "n_mw7yubld13",
+      "type": "people",
+      "title": "Pupils (11 to 16)",
+      "position": {
+        "x": 40,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "under_16",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "learners",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubld17",
+      "type": "data",
+      "title": "Attendance records",
+      "position": {
+        "x": 40,
+        "y": 258
+      },
+      "inside": true,
+      "levers": {
+        "identifiability": "named",
+        "about_performance": true,
+        "special_category": false,
+        "free_text_or_audio": false,
+        "new_purpose": true,
+        "new_collection": false,
+        "student_facing": false
+      },
+      "fields": {
+        "categories": [
+          "name",
+          "attendance"
+        ],
+        "source_system": "",
+        "lawful_basis": "public_task",
+        "about": [
+          "n_mw7yubld13"
+        ],
+        "kind": "attendance"
+      }
+    },
+    {
+      "id": "n_mw7yubld14",
+      "type": "people",
+      "title": "IT",
+      "position": {
+        "x": 40,
+        "y": 596
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "all_adults",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "staff",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubld16",
+      "type": "system",
+      "title": "Power Automate / Power Apps / Power BI",
+      "position": {
+        "x": 360,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "is_ai": false,
+        "output_type": "suggestion",
+        "validated_by_person": true,
+        "staff_can_override": true,
+        "plan": "free"
+      },
+      "fields": {
+        "product_id": "power_platform",
+        "use_case": null,
+        "testing": {
+          "date": "",
+          "sample": "",
+          "result": ""
+        },
+        "fairness_check": {
+          "date": "",
+          "groups": [],
+          "result": ""
+        }
+      }
+    },
+    {
+      "id": "n_mw7yubld15",
+      "type": "purpose",
+      "title": "Predict who might struggle",
+      "position": {
+        "x": 360,
+        "y": 338
+      },
+      "inside": true,
+      "levers": {
+        "scores": true,
+        "decides_alone": false,
+        "staff_can_override": true,
+        "ongoing": true,
+        "whole_cohort": true,
+        "tracks_behaviour": false,
+        "can_block": false,
+        "privacy_notice_linked": true
+      },
+      "fields": {
+        "value": "",
+        "alternatives": "",
+        "should_it_be_done": "",
+        "scale": 1000,
+        "privacy_notice_url": null,
+        "challenge_route": "",
+        "kind": "predict"
+      }
+    },
+    {
+      "id": "n_mw7yuble1c",
+      "type": "company",
+      "title": "Microsoft",
+      "position": {
+        "x": 760,
+        "y": 40
+      },
+      "inside": false,
+      "levers": {
+        "role": "processor",
+        "decides_purpose": false,
+        "decides_means": false,
+        "own_purposes": false,
+        "trains_on_inputs": false,
+        "keeps_data": true
+      },
+      "fields": {
+        "company_id": "microsoft",
+        "card_ref": "card_microsoft_m365",
+        "region": "EU",
+        "transfer_mechanism": "adequacy",
+        "retention": "30 days",
+        "deletion_route": "Admin centre",
+        "security_assessment": {
+          "status": "accepted",
+          "date": "[date]"
+        },
+        "art28": {
+          "instructions_only": "cl. 2.1",
+          "confidentiality": "cl. 2.4",
+          "security": "cl. 3",
+          "sub_processor_authorisation": "cl. 6",
+          "rights_assistance": "cl. 7",
+          "breach_assistance": "cl. 8",
+          "dpia_assistance": "cl. 9",
+          "deletion_or_return": "cl. 10",
+          "audit": null
+        },
+        "dpa_document": "[link to Microsoft Products and Services DPA]",
+        "prior_dpia": null,
+        "owner": "governance lead",
+        "review_date": "[date]"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_mw7yubld18",
+      "from": "n_mw7yubld13",
+      "to": "n_mw7yubld15",
+      "kind": "about",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubld19",
+      "from": "n_mw7yubld14",
+      "to": "n_mw7yubld15",
+      "kind": "by",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubld1a",
+      "from": "n_mw7yubld17",
+      "to": "n_mw7yubld16",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubld1b",
+      "from": "n_mw7yubld16",
+      "to": "n_mw7yubld15",
+      "kind": "feeds",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yuble1d",
+      "from": "n_mw7yubld16",
+      "to": "n_mw7yuble1c",
+      "kind": "carries",
+      "data_id": null
+    }
+  ],
+  "pinned": null,
+  "changelog": [],
+  "sentence_input": {
+    "role": "IT",
+    "data": [
+      {
+        "kind": "attendance",
+        "label": "attendance records"
+      }
+    ],
+    "about": {
+      "kind": "pupils_secondary",
+      "label": "pupils (11 to 16)"
+    },
+    "under18": "under_16",
+    "product": "power_platform",
+    "otherTool": null,
+    "purpose": {
+      "kind": "predict",
+      "label": "predict who might struggle"
+    }
+  },
+  "first_draw": true,
+  "answers": {
+    "data_facts:n_mw7yubld17": "It describes how a person is doing|We already hold it, collected for a different purpose",
+    "lawful_basis:n_mw7yubld17": "It is part of our public task",
+    "purpose_facts:n_mw7yubld15": "It produces a mark, grade, score or prediction about a person|It covers a whole cohort, or more than a thousand people|It runs continuously rather than once",
+    "told:n_mw7yubld15": "Yes, it is in our privacy notice"
+  },
+  "checked": true,
+  "risk_owner": "a deputy headteacher"
+}

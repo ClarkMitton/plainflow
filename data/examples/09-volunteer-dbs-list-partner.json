@@ -1,0 +1,299 @@
+{
+  "id": "example_09_volunteer_dbs_list_partner",
+  "title": "Volunteer DBS list shared with a partner",
+  "story": "A manager puts names and contact details and DBS or criminal record information about volunteers into a spreadsheet sent by email, to share it with a partner organisation.",
+  "mode": "flow_first",
+  "tier_pinned": null,
+  "status": "draft",
+  "retrospective": false,
+  "owner": "governance lead",
+  "organisation": {
+    "name": "[organisation]",
+    "type": "college",
+    "default_lawful_basis": "public_task"
+  },
+  "dates": {
+    "created": "2026-11-08",
+    "launch": null,
+    "running_since": null,
+    "review": null
+  },
+  "version": 1,
+  "nodes": [
+    {
+      "id": "n_mw7yubnr2x",
+      "type": "people",
+      "title": "Volunteers",
+      "position": {
+        "x": 40,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "all_adults",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "other",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubnr31",
+      "type": "data",
+      "title": "Names and contact details",
+      "position": {
+        "x": 40,
+        "y": 258
+      },
+      "inside": true,
+      "levers": {
+        "identifiability": "named",
+        "about_performance": false,
+        "special_category": false,
+        "free_text_or_audio": false,
+        "new_purpose": false,
+        "new_collection": false,
+        "student_facing": false
+      },
+      "fields": {
+        "categories": [
+          "name",
+          "email",
+          "phone"
+        ],
+        "source_system": "",
+        "lawful_basis": "legitimate_interests",
+        "about": [
+          "n_mw7yubnr2x"
+        ],
+        "kind": "contact"
+      }
+    },
+    {
+      "id": "n_mw7yubnr32",
+      "type": "data",
+      "title": "DBS or criminal record information",
+      "position": {
+        "x": 40,
+        "y": 596
+      },
+      "inside": true,
+      "levers": {
+        "identifiability": "named",
+        "about_performance": false,
+        "special_category": true,
+        "free_text_or_audio": false,
+        "new_purpose": false,
+        "new_collection": false,
+        "student_facing": false
+      },
+      "fields": {
+        "categories": [
+          "name",
+          "criminal"
+        ],
+        "source_system": "",
+        "lawful_basis": "legitimate_interests",
+        "about": [
+          "n_mw7yubnr2x"
+        ],
+        "kind": "criminal"
+      }
+    },
+    {
+      "id": "n_mw7yubnr2y",
+      "type": "people",
+      "title": "Manager",
+      "position": {
+        "x": 40,
+        "y": 934
+      },
+      "inside": true,
+      "levers": {
+        "age_mix": "all_adults",
+        "vulnerable": false
+      },
+      "fields": {
+        "group": "staff",
+        "description": "",
+        "size": null
+      }
+    },
+    {
+      "id": "n_mw7yubnr30",
+      "type": "system",
+      "title": "A spreadsheet sent by email",
+      "position": {
+        "x": 360,
+        "y": 40
+      },
+      "inside": true,
+      "levers": {
+        "is_ai": false,
+        "output_type": "suggestion",
+        "validated_by_person": true,
+        "staff_can_override": true,
+        "plan": "free"
+      },
+      "fields": {
+        "product_id": "spreadsheet_email",
+        "use_case": null,
+        "testing": {
+          "date": "",
+          "sample": "",
+          "result": ""
+        },
+        "fairness_check": {
+          "date": "",
+          "groups": [],
+          "result": ""
+        }
+      }
+    },
+    {
+      "id": "n_mw7yubnr2z",
+      "type": "purpose",
+      "title": "Share it with a partner organisation",
+      "position": {
+        "x": 360,
+        "y": 338
+      },
+      "inside": true,
+      "levers": {
+        "scores": false,
+        "decides_alone": false,
+        "staff_can_override": true,
+        "ongoing": false,
+        "whole_cohort": false,
+        "tracks_behaviour": false,
+        "can_block": false,
+        "privacy_notice_linked": false
+      },
+      "fields": {
+        "value": "",
+        "alternatives": "",
+        "should_it_be_done": "",
+        "scale": null,
+        "privacy_notice_url": null,
+        "challenge_route": "",
+        "kind": "share",
+        "reaches_people": true
+      }
+    },
+    {
+      "id": "n_mw7yubnr38",
+      "type": "company",
+      "title": "Partner organisation",
+      "position": {
+        "x": 760,
+        "y": 40
+      },
+      "inside": false,
+      "levers": {
+        "role": "joint_controller",
+        "decides_purpose": true,
+        "decides_means": false,
+        "own_purposes": false,
+        "trains_on_inputs": false,
+        "keeps_data": false
+      },
+      "fields": {
+        "company_id": null,
+        "card_ref": null,
+        "region": "UK",
+        "transfer_mechanism": "none_needed",
+        "retention": "",
+        "deletion_route": "",
+        "security_assessment": {
+          "status": "none",
+          "date": null
+        },
+        "art28": {},
+        "dpa_document": null,
+        "prior_dpia": null,
+        "owner": "",
+        "review_date": null
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_mw7yubnr33",
+      "from": "n_mw7yubnr2x",
+      "to": "n_mw7yubnr2z",
+      "kind": "about",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubnr34",
+      "from": "n_mw7yubnr2y",
+      "to": "n_mw7yubnr2z",
+      "kind": "by",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubnr35",
+      "from": "n_mw7yubnr31",
+      "to": "n_mw7yubnr30",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubnr36",
+      "from": "n_mw7yubnr32",
+      "to": "n_mw7yubnr30",
+      "kind": "carries",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubnr37",
+      "from": "n_mw7yubnr30",
+      "to": "n_mw7yubnr2z",
+      "kind": "feeds",
+      "data_id": null
+    },
+    {
+      "id": "e_mw7yubnr39",
+      "from": "n_mw7yubnr2z",
+      "to": "n_mw7yubnr38",
+      "kind": "carries",
+      "data_id": null
+    }
+  ],
+  "pinned": null,
+  "changelog": [],
+  "sentence_input": {
+    "role": "Manager",
+    "data": [
+      {
+        "kind": "contact",
+        "label": "names and contact details"
+      },
+      {
+        "kind": "criminal",
+        "label": "DBS or criminal record information"
+      }
+    ],
+    "about": {
+      "kind": null,
+      "label": "volunteers"
+    },
+    "under18": "all_adults",
+    "product": "spreadsheet_email",
+    "otherTool": null,
+    "purpose": {
+      "kind": "share",
+      "label": "share it with a partner organisation"
+    }
+  },
+  "first_draw": true,
+  "answers": {
+    "lawful_basis:n_mw7yubnr31": "Our legitimate interests",
+    "lawful_basis:n_mw7yubnr32": "Our legitimate interests",
+    "told:n_mw7yubnr2z": "No, or not sure"
+  },
+  "checked": true,
+  "risk_owner": "the chief executive"
+}
