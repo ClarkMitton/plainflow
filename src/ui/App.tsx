@@ -2,7 +2,7 @@ import { ReactFlowProvider } from "@xyflow/react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { applyLever, derive, openKeys, tierOfData } from "../engine/derive";
 import { ruleSet } from "../engine/ruleset";
-import type { Flow } from "../engine/types";
+import type { Derivation, Flow } from "../engine/types";
 import { APP_NAME } from "./brand";
 import { Canvas } from "./Canvas";
 import { Coach } from "./Coach";
@@ -22,7 +22,7 @@ import { PackPage } from "./PackPage";
 import { cardFor } from "./cardLibrary";
 import { type LighterRoute } from "./lighter";
 
-type View = "questions" | "canvas" | "screening" | "report" | "rules" | "compare" | "pack";
+type View = "questions" | "canvas" | "screening" | "report" | "rules" | "compare";
 const STORE = "plainflow.current";
 
 function loadSaved(): Flow | null {
@@ -44,6 +44,10 @@ export function App() {
   const [lastChange, setLastChange] = useState<LastChange | null>(null);
   const [reveal, setReveal] = useState(false);
   const [checking, setChecking] = useState(false);
+  /** The answer as it stood at the last Check it. A change after that makes the rail stale until it is checked again. */
+  const baseline = useRef<Derivation | null>(null);
+  const [pending, setPending] = useState<string[]>([]);
+  const [packOpen, setPackOpen] = useState(false);
   const [replay, setReplay] = useState(0);
   const [rulesOnly, setRulesOnly] = useState(false);
   const flowRef = useRef(flow);
@@ -84,6 +88,14 @@ export function App() {
       const reopened = openKeys(after).filter((k) => !was.has(k));
       out = { ...next, changelog: [...(next.changelog ?? []), { at: new Date().toISOString(), who: next.owner ?? "", what, reopened }] };
       setLastChange({ what: what[0].toUpperCase() + what.slice(1), changes: describeChange(before, after, next, ruleSet) });
+    }
+    // After the first answer, a change that would alter it waits for Check it again; reverting clears the wait.
+    if (prev && prev.checked !== false && next.checked !== false && what !== "asked for the answer" && what !== "moved") {
+      // A flow opened already checked (an example, a saved file) takes its first state as the baseline.
+      baseline.current ??= derive(prev, ruleSet, { cheapest: false });
+      const after = derive(next, ruleSet, { cheapest: false });
+      const differs = describeChange(baseline.current, after, next, ruleSet).length > 0;
+      setPending((p) => (differs ? [...p.slice(-5), what ?? "a detail changed"] : []));
     }
     flowRef.current = out;
     setFlow(out);
@@ -136,7 +148,13 @@ export function App() {
     // The engine is instant; the pause shows what was read, line by line, before the answer lands.
     setChecking(true);
     window.setTimeout(() => {
-      update({ ...flowRef.current!, checked: true }, "asked for the answer");
+      const now = flowRef.current!;
+      const after = derive(now, ruleSet, { cheapest: false });
+      const before = baseline.current;
+      update({ ...now, checked: true }, "asked for the answer");
+      baseline.current = after;
+      setPending([]);
+      if (before) setLastChange({ what: "Checked again", changes: describeChange(before, after, now, ruleSet) });
       setChecking(false);
       setReplay(0);
     }, 1700);
@@ -229,9 +247,10 @@ export function App() {
           <span className="meta">{flow.status.replace("_", " ")} · {d.open_count} to do</span>
           <span className="spacer" />
           <div className="seg" role="tablist" aria-label="View">
-            {([["questions", "Questions"], ["canvas", "Canvas"], ["pack", "Finish"], ["screening", "Record"], ["rules", "Rules"]] as [View, string][]).map(([v, label]) => (
-              <button key={v} type="button" className={view === v ? "on" : ""} onClick={() => { setView(v); setReplay(0); }}>{label}</button>
+            {([["questions", "Questions"], ["canvas", "Canvas"], ["screening", "Record"], ["rules", "Rules"]] as [View, string][]).map(([v, label]) => (
+              <button key={v} type="button" className={view === v && !packOpen ? "on" : ""} onClick={() => { setView(v); setPackOpen(false); setReplay(0); }}>{label}</button>
             ))}
+            <button type="button" className={packOpen ? "on" : ""} onClick={() => { setView("canvas"); setPackOpen((o) => !o); setReplay(0); }}>Finish</button>
             {flow.source?.kind === "scan" && flow.source.report != null && <button type="button" className={view === "report" ? "on" : ""} onClick={() => { setView("report"); setReplay(0); }}>Report</button>}
             {flow.pinned && <button type="button" className={view === "compare" ? "on" : ""} onClick={() => setView("compare")}>Compare</button>}
           </div>
@@ -311,9 +330,10 @@ export function App() {
                   )
                 }
                 setLicence={(id) => update({ ...flow, organisation: { ...flow.organisation, m365_licence: id } }, null)}
-                finish={() => { setView("pack"); setReplay(0); }}
+                finish={() => { setPackOpen(true); setReplay(0); }}
                 checkIt={checkIt}
                 checking={checking}
+                pending={pending}
                 setRiskOwner={(role) => update({ ...flow, risk_owner: role || null }, null)}
                 lastChange={lastChange}
                 preview={preview}
@@ -329,14 +349,27 @@ export function App() {
           {view === "questions" && <Interview flow={flow} d={d} set={ruleSet} onChange={update} onDone={finishQuestions} />}
           {view === "screening" && <ScreeningPage flow={flow} d={d} set={ruleSet} />}
           <Coach
-            key={view === "canvas" ? (flow.checked === false ? "canvas" : "answer") : view}
-            screen={view === "canvas" ? (flow.checked === false ? "canvas" : "answer") : view}
+            key={packOpen ? "pack" : view === "canvas" ? (flow.checked === false ? "canvas" : "answer") : view}
+            screen={packOpen ? "pack" : view === "canvas" ? (flow.checked === false ? "canvas" : "answer") : view}
             replay={replay}
             delayMs={view === "canvas" && reveal ? (flow.nodes.length * 0.18 + 1.6) * 1000 : 400}
           />
           {view === "rules" && <RulesPage set={ruleSet} />}
           {view === "report" && <ScanReport flow={flow} />}
-          {view === "pack" && <PackPage flow={flow} d={d} set={ruleSet} />}
+          {view === "canvas" && (
+            <>
+              {!packOpen && flow.checked !== false && (
+                <button type="button" className="pack-tab" onClick={() => { setPackOpen(true); setReplay(0); }}>Finish: what you leave with</button>
+              )}
+              <aside className={`pack-panel${packOpen ? " open" : ""}`} aria-label="What you leave with" aria-hidden={!packOpen}>
+                <div className="pack-panel-bar">
+                  <span className="lab">What you leave with</span>
+                  <button type="button" className="btn" onClick={() => setPackOpen(false)}>Back to the diagram</button>
+                </div>
+                {packOpen && <PackPage flow={flow} d={d} set={ruleSet} />}
+              </aside>
+            </>
+          )}
           {view === "compare" && flow.pinned && (
             <Compare
               flow={flow}

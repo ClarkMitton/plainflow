@@ -182,3 +182,8 @@ Three runs with a facilitator in mind: changing their mind mid-way, comparing tw
 - A new data box offers the sentence's kinds as a one-click pick, which names it and sets its switches.
 - "T2" reads as "Level 2" on wires and cards; asking for the answer no longer produces a "What that changed" box.
 - Check it pauses for under two seconds and narrates what was read, with real counts, before the answer lands.
+
+## A stale answer, and the pack beside the diagram (v0.9, continued)
+
+- After the first Check it, any change that would alter the answer blurs the rail and shows "The diagram has changed", with the changes since and a Check it again button. Reverting the change clears it. Check it again runs the reading pause and then says what changed since the last answer. The engine still runs live underneath; only the display waits.
+- Finish is no longer a separate view. The pack slides out over the right of the diagram and pushes back to a tab on the right edge, so the diagram stays in view while the documents are read.

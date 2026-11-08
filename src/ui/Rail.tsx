@@ -42,6 +42,8 @@ interface Props {
   checkIt(): void;
   /** True for the moment between Check it and the answer: the rail narrates what it is reading. */
   checking: boolean;
+  /** Changes made since the last answer. When there are any, the answer is stale and waits for Check it again. */
+  pending: string[];
   finish(): void;
   tryLighter(route: LighterRoute): void;
   setLicence(id: string): void;
@@ -51,7 +53,7 @@ interface Props {
  * The answer, in order of what matters: can I do it; what just changed; three facts behind the answer
  * (each one line, open for more); what to do; the one change that helps. Everything else is folded away.
  */
-export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner, checkIt, checking, finish, tryLighter, setLicence }: Props) {
+export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastChange, setRiskOwner, checkIt, checking, pending, finish, tryLighter, setLicence }: Props) {
   const { d, set, flow, checked } = useFlow();
   const [open, setOpen] = useState<string | null>(null);
   const [fact, setFact] = useState<string | null>(null);
@@ -150,8 +152,17 @@ export function Rail({ preview, setPreview, setHighlight, applyCheapest, lastCha
     );
   }
 
+  const stale = pending.length > 0;
   return (
-    <aside className="rail reveal-rail" aria-label="Your answer">
+    <aside className={`rail reveal-rail${stale ? " is-stale" : ""}`} aria-label="Your answer">
+      {stale && (
+        <div className="stale-card" role="status">
+          <p className="lab">The diagram has changed</p>
+          <div className="say">{pending.length === 1 ? "One change" : `${pending.length} changes`} since this answer. It may no longer hold.</div>
+          <ul className="plain mu" style={{ fontSize: 12, margin: "6px 0 10px" }}>{pending.slice(-4).map((p, i) => <li key={i}>{p[0].toUpperCase() + p.slice(1)}</li>)}</ul>
+          <button type="button" className="btn dk checkit" onClick={checkIt}>Check it again</button>
+        </div>
+      )}
       <div className="qa">
         <p className="lab">Can this go ahead?</p>
         <div className="verdict" style={{ color: bad ? "var(--rq)" : undefined }}>{d.verdict.label}</div>
