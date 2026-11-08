@@ -95,6 +95,36 @@
       "region_default": "US",
       "dpa_url": "https://workspace.google.com/terms/dpa_terms.html",
       "notes": "The organisation's Google tenant: Classroom, Drive, Docs, Forms, Gmail. Covered by the Workspace for Education terms and Data Processing Addendum. Consumer Google accounts are a different company entry."
+    },
+    "openai_api": {
+      "name": "OpenAI (API)",
+      "region_default": "US",
+      "dpa_url": "https://openai.com/policies/data-processing-addendum",
+      "notes": "The OpenAI platform reached through a connector or an API key. Not the consumer ChatGPT app: API data is not used for training by default, and a DPA is available [verify]."
+    },
+    "twilio": {
+      "name": "Twilio",
+      "region_default": "US",
+      "dpa_url": "[verify]",
+      "notes": "SMS and voice through a connector. Phone numbers and message content leave the tenant."
+    },
+    "mailchimp": {
+      "name": "Mailchimp (Intuit)",
+      "region_default": "US",
+      "dpa_url": "[verify]",
+      "notes": "Mailing lists and campaigns through a connector. Names, emails and open or click tracking leave the tenant."
+    },
+    "zapier": {
+      "name": "Zapier",
+      "region_default": "US",
+      "dpa_url": "[verify]",
+      "notes": "An automation hub that passes data between other services. Every app on the other side of a Zap is a supplier too."
+    },
+    "dropbox": {
+      "name": "Dropbox",
+      "region_default": "US",
+      "dpa_url": "[verify]",
+      "notes": "File storage outside the tenant through a connector."
     }
   },
   "products": {
@@ -145,6 +175,15 @@
       "trains_on_inputs_default": false,
       "notes": "Gemini for Workspace runs under the Workspace terms: no training on your content, admin controls [verify]. Consumer Gemini is the separate entry."
     },
+    "gemini_gems": {
+      "name": "Gemini Gems in Google Workspace",
+      "company": "google_workspace",
+      "sub_processors": [],
+      "is_ai": true,
+      "keeps_data_default": "per tenant retention [verify]",
+      "trains_on_inputs_default": false,
+      "notes": "A custom Gemini assistant under the Workspace terms. Gems that read Drive files or call outside services send data where those point."
+    },
     "google_appsheet": {
       "name": "An app we build in AppSheet, in our Google tenant",
       "company": "google_workspace",
@@ -180,6 +219,17 @@
       "is_ai": true,
       "keeps_data_default": "[verify]",
       "trains_on_inputs_default": false
+    },
+    "copilot_studio": {
+      "name": "Copilot Studio agent",
+      "company": "microsoft",
+      "sub_processors": [
+        "openai_azure"
+      ],
+      "is_ai": true,
+      "keeps_data_default": "per tenant retention [verify]",
+      "trains_on_inputs_default": false,
+      "notes": "An agent built in Copilot Studio, Microsoft-hosted under the Microsoft agreement. Agents are routinely wired to outside knowledge sources and actions through connectors; each of those is a supplier of its own."
     },
     "azure_openai": {
       "name": "Azure OpenAI (own tenant)",
@@ -590,5 +640,42 @@
     "Can you provide evidence of your security measures (certification or audit)?",
     "Have you published a DPIA or a data protection summary for this product?"
   ],
-  "research_checked": "November 2026"
+  "research_checked": "November 2026",
+  "connectors": {
+    "note": "Products that can pass data on to another company through a connector. For these the Q&A asks which outside services are wired in; each ticked one becomes a company on the canvas with its own card, agreement and plan.",
+    "products": [
+      "power_platform",
+      "ai_builder",
+      "copilot_studio",
+      "custom_app_m365",
+      "google_appsheet",
+      "gemini_gems",
+      "custom_app",
+      "lovable_app",
+      "replit_app",
+      "base44_app"
+    ],
+    "defaults": {
+      "openai_api": {
+        "trains_on_inputs": false,
+        "keeps_data": true
+      },
+      "twilio": {
+        "trains_on_inputs": false,
+        "keeps_data": true
+      },
+      "mailchimp": {
+        "trains_on_inputs": false,
+        "keeps_data": true
+      },
+      "zapier": {
+        "trains_on_inputs": false,
+        "keeps_data": true
+      },
+      "dropbox": {
+        "trains_on_inputs": false,
+        "keeps_data": true
+      }
+    }
+  }
 }

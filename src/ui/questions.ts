@@ -3,12 +3,17 @@
 import questionsJson from "../../data/questions.json";
 import { derive, openKeys } from "../engine/derive";
 import { test, type Env } from "../engine/expr";
-import type { Derivation, Flow, FlowNode, RuleSet } from "../engine/types";
+import type { Derivation, Flow, FlowEdge, FlowNode, RuleSet } from "../engine/types";
+import { ruleSet } from "../engine/ruleset";
+import { BOUNDARY_X, companyFromCard } from "./flowOps";
 
 export interface Setting {
   set?: Record<string, unknown>;
   fields?: Record<string, unknown>;
   flow?: Record<string, unknown>;
+  /** Wire a company (by directory id) in from this node, bringing its card; or take it off again. */
+  connect?: string;
+  disconnect?: string;
 }
 
 export interface Answer extends Setting {
@@ -88,16 +93,55 @@ export function stepsFor(flow: Flow, d: Derivation): Step[] {
 }
 
 export function apply(flow: Flow, nodeId: string | null, s: Setting): Flow {
-  return {
+  let out = {
     ...flow,
     ...(s.flow ?? {}),
     nodes: flow.nodes.map((n) => (n.id === nodeId ? { ...n, levers: { ...n.levers, ...(s.set ?? {}) }, fields: { ...n.fields, ...(s.fields ?? {}) } } : n)),
   } as Flow;
+  if (s.connect && nodeId) out = connectCompany(out, nodeId, s.connect);
+  if (s.disconnect && nodeId) out = disconnectCompany(out, nodeId, s.disconnect);
+  return out;
+}
+
+const uid = (p: string) => `${p}_${Math.random().toString(36).slice(2, 8)}`;
+
+/** A connector's other end becomes a company on the canvas, wired from the tool, with its card and switch defaults. */
+function connectCompany(flow: Flow, fromId: string, companyId: string): Flow {
+  let company = flow.nodes.find((n) => n.type === "company" && n.fields.company_id === companyId);
+  let nodes = flow.nodes;
+  if (!company) {
+    const below = Math.max(40, ...flow.nodes.filter((n) => n.type === "company").map((n) => n.position.y + 200));
+    company = companyFromCard(companyId, ruleSet, { x: BOUNDARY_X + 60, y: below });
+    const defaults = ruleSet.products.connectors?.defaults[companyId];
+    if (defaults) Object.assign(company.levers, defaults);
+    company.fields.via_connector = true;
+    nodes = [...nodes, company];
+  }
+  if (flow.edges.some((e) => e.from === fromId && e.to === company!.id)) return { ...flow, nodes };
+  const edge: FlowEdge = { id: uid("e"), from: fromId, to: company.id, kind: "carries", data_id: null };
+  return { ...flow, nodes, edges: [...flow.edges, edge] };
+}
+
+/** Untick a connector: the wire goes, and the company with it unless something else still sends to it. */
+function disconnectCompany(flow: Flow, fromId: string, companyId: string): Flow {
+  const company = flow.nodes.find((n) => n.type === "company" && n.fields.company_id === companyId);
+  if (!company) return flow;
+  const edges = flow.edges.filter((e) => !(e.from === fromId && e.to === company.id));
+  const stillFed = edges.some((e) => e.to === company.id && e.kind !== "sub_processor");
+  if (stillFed) return { ...flow, edges };
+  const gone = new Set([company.id, ...edges.filter((e) => e.kind === "sub_processor" && e.from === company.id).map((e) => e.to)]);
+  return { ...flow, nodes: flow.nodes.filter((n) => !gone.has(n.id)), edges: edges.filter((e) => !gone.has(e.from) && !gone.has(e.to)) };
 }
 
 export function matches(flow: Flow, node: FlowNode | null, s: Setting): boolean {
   const same = (x: unknown, y: unknown) => (x ?? null) === (y ?? null);
   const f = flow as unknown as Record<string, unknown>;
+  const wired = (companyId: string) => {
+    const c = flow.nodes.find((n) => n.type === "company" && n.fields.company_id === companyId);
+    return !!c && flow.edges.some((e) => e.from === node?.id && e.to === c.id);
+  };
+  if (s.connect && !wired(s.connect)) return false;
+  if (s.disconnect && wired(s.disconnect)) return false;
   return (
     Object.entries(s.set ?? {}).every(([k, v]) => same(node?.levers[k], v)) &&
     Object.entries(s.fields ?? {}).every(([k, v]) => same(node?.fields[k], v)) &&

@@ -191,6 +191,7 @@ export function derive(flow: Flow, set: RuleSet, opts: { cheapest?: boolean } = 
     if (n.type === "system") {
       const product = set.products.products[String(n.fields.product_id ?? "")];
       v.has_plans = !!product?.plans;
+      v.connectable = !!set.products.connectors?.products.includes(String(n.fields.product_id ?? ""));
     }
     if (n.type === "purpose") {
       const sources = [...new Set([...reach[n.id]]

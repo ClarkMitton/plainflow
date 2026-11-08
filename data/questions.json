@@ -336,6 +336,67 @@
       ]
     },
     {
+      "id": "connectors",
+      "type": "checklist",
+      "target": "system",
+      "show_when": "connectable",
+      "ask": "Does {title} connect to any service outside your tenant?",
+      "why": "An automation, an app or an agent can pass data on to another company through a connector. Each one is a supplier of its own, with its own agreement, and the answer is wrong by a whole supplier if it is left out.",
+      "example": "A Power Automate flow that sends a text through Twilio, or asks OpenAI to summarise a form response.",
+      "items": [
+        {
+          "label": "OpenAI, through the API or a connector",
+          "hint": "Not the ChatGPT app: the platform behind it. Data goes to OpenAI in the US.",
+          "on": {
+            "connect": "openai_api"
+          },
+          "off": {
+            "disconnect": "openai_api"
+          }
+        },
+        {
+          "label": "Twilio, for texts or calls",
+          "hint": "Phone numbers and message content leave the tenant.",
+          "on": {
+            "connect": "twilio"
+          },
+          "off": {
+            "disconnect": "twilio"
+          }
+        },
+        {
+          "label": "Mailchimp, for mailing lists",
+          "hint": "Names, emails and open or click tracking leave the tenant.",
+          "on": {
+            "connect": "mailchimp"
+          },
+          "off": {
+            "disconnect": "mailchimp"
+          }
+        },
+        {
+          "label": "Zapier, to pass data between services",
+          "hint": "Every app on the other side of a Zap is a supplier too.",
+          "on": {
+            "connect": "zapier"
+          },
+          "off": {
+            "disconnect": "zapier"
+          }
+        },
+        {
+          "label": "Dropbox, for files",
+          "hint": "File storage outside the tenant.",
+          "on": {
+            "connect": "dropbox"
+          },
+          "off": {
+            "disconnect": "dropbox"
+          }
+        }
+      ]
+    },
+    {
       "id": "hard_checks",
       "type": "checklist",
       "target": "purpose",

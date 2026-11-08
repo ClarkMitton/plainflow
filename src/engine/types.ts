@@ -170,6 +170,8 @@ export interface Products {
   research_checked?: string;
   plan_labels: Record<string, string>;
   companies: Record<string, { name: string; region_default: string; dpa_url: string | null; notes: string }>;
+  /** Products that can pass data on through connectors, and the switch defaults for the companies they reach. */
+  connectors?: { note: string; products: string[]; defaults: Record<string, { trains_on_inputs: boolean; keeps_data: boolean }> };
   products: Record<string, Product>;
   custom_app_hosting: { note: string; options: [string, string][] };
   supplier_questions: string[];

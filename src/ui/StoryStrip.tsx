@@ -19,7 +19,9 @@ export function StoryStrip() {
   const receiving = of("company", (n) => n.levers.role !== "sub_processor" && Number(d.facts[n.id]?.receives_tier ?? -1) >= 0 && !toolNames.has(n.title.trim().toLowerCase()));
   // A supplier runs the tool for you; a partner decides things with you, so it's "shared with", not "run by".
   const isPartner = (n: FlowNode) => n.levers.role === "joint_controller" || n.levers.role === "independent_controller";
-  const companies = receiving.filter((n) => !isPartner(n));
+  // A connector's other end doesn't run the tool; the data goes on to it.
+  const onward = receiving.filter((n) => !isPartner(n) && n.fields.via_connector === true);
+  const companies = receiving.filter((n) => !isPartner(n) && n.fields.via_connector !== true);
   const partners = receiving.filter(isPartner);
   const purposes = of("purpose");
 
@@ -69,6 +71,7 @@ export function StoryStrip() {
       {subjects.length > 0 && <> about {list(subjects, true)}</>}
       {systems.length > 0 && <> into {list(systems)}</>}
       {companies.length > 0 && <>, run by {list(companies)}</>}
+      {onward.length > 0 && <>, and on to {list(onward)}</>}
       {partners.length > 0 && <>, shared with {list(partners)}</>}
       {purposes.length > 0 && <>, to {list(purposes, true)}</>}.
     </div>

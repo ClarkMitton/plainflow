@@ -6,7 +6,7 @@ import { ruleSet } from "../engine/ruleset";
 import type { Derivation, Flow } from "../engine/types";
 import { flowFromSentence, type Sentence } from "./flowOps";
 import { policyAnswer, stillNo } from "./plain";
-import { apply, isDecisive, stepsFor } from "./questions";
+import { apply, isDecisive, matches, stepsFor } from "./questions";
 import { lighterRoutes } from "./lighter";
 import { buildPack } from "./packBuild";
 
@@ -185,5 +185,30 @@ describe("a Google college", () => {
     expect(lighterRoutes(appGoogle, derive(appGoogle, ruleSet), ruleSet).map((r) => r.feature.id)).toEqual(["appsheet"]);
     // Without saying, a canvas already on Google Workspace is read as a Google tenant; otherwise Microsoft.
     expect(lighterRoutes(chat, derive(chat, ruleSet), ruleSet)[0].feature.id).toBe("copilot_chat");
+  });
+});
+
+describe("connectors", () => {
+  it("a Power Automate flow that texts through Twilio gets Twilio on the canvas as a supplier, and off again", () => {
+    const flow = build({ role: "Admin staff", data: [{ kind: "contact", label: "names and contact details" }], about: { kind: "parents", label: "parents" }, under18: "all_adults", product: "power_platform", purpose: choices.purpose("messages", "send messages") });
+    const d = derive(flow, ruleSet);
+    const step = stepsFor(flow, d).find((s) => s.q.id === "connectors")!;
+    expect(step, "the connectors question is asked for Power Platform").toBeTruthy();
+    expect(step.items.map((i) => i.label)).toContain("Twilio, for texts or calls");
+    const twilio = step.items.find((i) => i.label.startsWith("Twilio"))!;
+    expect(matches(flow, step.node, twilio.on)).toBe(false);
+    const on = apply(flow, step.node!.id, twilio.on);
+    const company = on.nodes.find((n) => n.type === "company" && n.fields.company_id === "twilio")!;
+    expect(company).toBeTruthy();
+    expect(on.edges.some((e) => e.from === step.node!.id && e.to === company.id)).toBe(true);
+    expect(matches(on, step.node, twilio.on)).toBe(true);
+    const d2 = derive(on, ruleSet);
+    const ids = d2.requirements.filter((r) => r.node === company.id && r.status === "to_do").map((r) => r.id);
+    expect(ids).toEqual(expect.arrayContaining(["dpa_card", "supplier_questions", "transfer_mechanism"]));
+    const off = apply(on, step.node!.id, twilio.off);
+    expect(off.nodes.some((n) => n.fields.company_id === "twilio")).toBe(false);
+    // Copilot alone is not asked: it has no connectors to wire.
+    const copilot = build({ role: "Teacher", data: [{ kind: "work", label: "student work (essays, assignments)" }], about: { kind: "students", label: "students (16 plus)" }, under18: "some_under_18", product: "m365_copilot", purpose: choices.purpose("feedback", "draft feedback") });
+    expect(stepsFor(copilot, derive(copilot, ruleSet)).some((s) => s.q.id === "connectors")).toBe(false);
   });
 });
